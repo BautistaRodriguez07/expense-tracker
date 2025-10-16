@@ -7,7 +7,7 @@ export const Footer = () => {
         <span>Expenso </span>
         <span>&copy;{new Date().getFullYear()}</span>
       </Link>
-      <Link href="/" className="mx-3 text-purple-700">
+      <Link href="/" className="mx-3 text-cyan-700">
         Privacy &amp; Legal
       </Link>
     </div>

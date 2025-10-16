@@ -1,20 +1,14 @@
 "use client";
 
+import { IoMenu, IoWalletOutline } from "react-icons/io5";
+import { useUIStore } from "@/store/ui/ui-store";
+import { UserAvatar } from "../user-avatar/UserAvatar";
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
-} from "@radix-ui/react-dropdown-menu";
-
-import {
-  IoMenu,
-  IoPersonCircleOutline,
-  IoWalletOutline,
-} from "react-icons/io5";
-import { useUIStore } from "@/store/ui/ui-store";
-import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
-// import { ExpensoLogo } from "../logos/ExpensoLogo";
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export const TopMenu = () => {
   const openMenu = useUIStore(state => state.openSideMenu);
@@ -41,10 +35,7 @@ export const TopMenu = () => {
       <div className="flex gap-3">
         {/* profile */}
 
-        {/* <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar> */}
+        <UserAvatar userName="David" />
 
         {/* menu */}
 
