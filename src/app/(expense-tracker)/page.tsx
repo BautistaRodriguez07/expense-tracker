@@ -9,15 +9,15 @@ export default function HomePage() {
     <div>
       <CustomTitle title="Hola, David" subTitle='Grupo "Familia' />
 
-      <div className="py-6 text-start">
-        <p className="text-gray-600 text-sm font-medium">Gastos del mes</p>
-        <p className="text-2xl font-bold text-cyan-700">$1.500.000</p>
-      </div>
+      <div className="sm:grid sm:grid-cols-3 gap-2 card-container my-4">
+        <div className="absolute text-start">
+          <p className="text-sm font-medium">Gastos del mes</p>
+          <p className="text-2xl font-bold text-cyan-700">$1.500.000</p>
+        </div>
 
-      <div className="sm:grid sm:grid-cols-3 gap-2">
         <div className=" sm:col-span-2">
           {/* <ChartPieInteractive /> */}
-          <div className="h-[300px] bg-gray-200 rounded flex items-center justify-center text-3xl">
+          <div className="h-[300px]  rounded flex items-center justify-center text-3xl">
             Pie Chart
           </div>
         </div>
@@ -26,11 +26,11 @@ export default function HomePage() {
 
           <div className="flex gap-2 sm:block flex-nowrap">
             {/* user */}
-            <div className="flex gap-2 items-center justify-start bg-slate-200 shadow p-1 rounded-xl mb-2">
+            <div className="flex gap-2 items-center justify-start btn btn-info p-1 mb-2">
               <UserAvatar userName="Gonzalo" title="Gonzalo" />
             </div>
             {/* user 2 */}
-            <div className="flex gap-2 items-center justify-start border p-1 rounded-xl mb-2">
+            <div className="flex gap-2 items-center justify-start p-1 btn mb-2">
               <UserAvatar userName="Gabriela" title="Gabriela" />
             </div>
           </div>
@@ -41,7 +41,7 @@ export default function HomePage() {
 
       <div className="overflow-auto flex gap-2">
         {/* pago pendiente 1 */}
-        <div className="bg-white border rounded-xl p-3 min-w-80">
+        <div className="card-container p-3 mb-5 min-w-80">
           <UserAvatar
             userName="Gonzalo"
             title="Gonzalo"
@@ -53,13 +53,13 @@ export default function HomePage() {
           </div>
 
           <div className="flex justify-between p-3">
-            <Button variant={"outline"}>descartar</Button>
-            <Button className="bg-cyan-700 hover:bg-cyan-600">Pagar</Button>
+            <Button className="btn-danger">descartar</Button>
+            <Button className="btn-success">Pagar</Button>
           </div>
         </div>
 
-        {/* pago pendiente 1 */}
-        <div className="bg-white border rounded-xl p-3 min-w-80">
+        {/* pago pendiente 2 */}
+        <div className="card-container mb-5 p-3 min-w-80">
           <UserAvatar
             userName="Gonzalo"
             title="Gonzalo"
@@ -71,8 +71,8 @@ export default function HomePage() {
           </div>
 
           <div className="flex justify-between p-3">
-            <Button variant={"outline"}>descartar</Button>
-            <Button className="bg-cyan-700 hover:bg-cyan-600">Pagar</Button>
+            <Button className="btn-danger">descartar</Button>
+            <Button className="btn-success">Pagar</Button>
           </div>
         </div>
       </div>
@@ -87,12 +87,9 @@ export default function HomePage() {
 
         <ul className="space-y-2">
           {/* 1 */}
-          <li className="flex justify-between items-center bg-white p-3 rounded-xl shadow">
+          <li className="flex justify-between items-center card-container">
             <div className="flex items-center gap-3">
-              <IoFastFood
-                size={20}
-                className="bg-cyan-200 p-1 rounded-full text-cyan-700"
-              />
+              <IoFastFood size={40} className=" p-1 rounded-full" />
               <div className="flex flex-col">
                 <span className="font-medium text-gray-800">Comida</span>
                 <span className="text-gray-500 text-sm">usuario</span>
@@ -108,21 +105,18 @@ export default function HomePage() {
           </li>
 
           {/* 2 */}
-          <li className="flex justify-between items-center bg-white p-3 rounded-xl border-2 border-cyan-700">
+          <li className="flex justify-between items-center card-container">
             <div className="flex items-center gap-3">
-              <IoFastFood
-                size={20}
-                className="bg-cyan-200 p-1 rounded-full text-cyan-700"
-              />
+              <IoFastFood size={40} className=" p-1 rounded-full" />
               <div className="flex flex-col">
-                <span className="font-medium text-cyan-700">Comida</span>
+                <span className="font-medium ">Comida</span>
                 <span className="text-sm">usuario</span>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <div className="flex flex-col items-end">
-                <span className="font-medium text-cyan-700">$25.06</span>
-                <span className=" text-sm text-cyan-700">Today</span>
+                <span className="font-medium ">$25.06</span>
+                <span className=" text-sm ">Today</span>
               </div>
               <IoChevronForwardOutline size={18} className="text-gray-400" />
             </div>
