@@ -2,13 +2,15 @@
 
 import { IoMenu, IoWalletOutline } from "react-icons/io5";
 import { useUIStore } from "@/store/ui/ui-store";
-import { UserAvatar } from "../user-avatar/UserAvatar";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { UserAvatar } from "@/components";
+import Link from "next/link";
 
 export const TopMenu = () => {
   const openMenu = useUIStore(state => state.openSideMenu);
@@ -16,13 +18,15 @@ export const TopMenu = () => {
   return (
     <div className="flex justify-between items-center p-4 ">
       {/* logo */}
-      <IoWalletOutline size={40} />
+      <Link href="/">
+        <IoWalletOutline size={40} className="cursor-pointer" />
+      </Link>
 
       {/* space selector */}
 
       <div className="flex-1 items-center justify-center flex">
         <DropdownMenu>
-          <DropdownMenuTrigger className="bg-gray-100 p-2 mx-5 rounded-xl w-full max-w-xl">
+          <DropdownMenuTrigger className="bg-light p-2 txt mx-5 rounded-xl w-full max-w-xl">
             Space selector
           </DropdownMenuTrigger>
           <DropdownMenuContent>
@@ -34,12 +38,13 @@ export const TopMenu = () => {
 
       <div className="flex gap-3">
         {/* profile */}
-
-        <UserAvatar userName="David" />
+        <Link href="/profile">
+          <UserAvatar userName="David" />
+        </Link>
 
         {/* menu */}
 
-        <div onClick={openMenu}>
+        <div onClick={openMenu} className="cursor-pointer">
           <IoMenu size={40} />
         </div>
       </div>
