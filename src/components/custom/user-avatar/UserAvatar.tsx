@@ -11,7 +11,7 @@ export const UserAvatar = ({ userName, legend, imageUrl, title }: Props) => {
   return (
     <div className="flex flex-col">
       <div className="flex items-center gap-2 p-1">
-        <Avatar className="border-gray-300 border">
+        <Avatar className="border-gray-300 border text-black">
           <AvatarImage src={`${imageUrl ?? userName.slice(0, 2)} `} />
           <AvatarFallback>{userName.slice(0, 2)}</AvatarFallback>
         </Avatar>

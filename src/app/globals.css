@@ -47,7 +47,7 @@
   --bg-dark: hsl(220 21% 90%);
   --bg: hsl(220 46% 96%);
   --bg-light: hsl(220 100% 100%);
-  --text-default: hsl(221 47% 5%);
+  --text: hsl(221 47% 5%);
   --text-muted: hsl(220 11% 29%);
   --highlight: hsl(220 100% 100%);
   --border: hsl(220 7% 52%);
@@ -100,7 +100,7 @@
   --bg-dark: hsl(223 41% 2%);
   --bg: hsl(220 26% 5%);
   --bg-light: hsl(220 15% 9%);
-  --text-default: hsl(220 100% 96%);
+  --text: hsl(220 100% 96%);
   --text-muted: hsl(220 13% 71%);
   --highlight: hsl(220 9% 40%);
   --border: hsl(220 11% 29%);
@@ -155,7 +155,7 @@
 } */
 
 body {
-  color: var(--text-muted);
+  color: var(--text);
   background-color: var(--bg-dark);
 }
 
@@ -203,6 +203,11 @@ body {
 .btn-info {
   background-color: var(--info);
   border: 0px;
+  color: white;
+}
+
+.link {
+  color: var(--info);
 }
 /* 
 .div-container:hover {

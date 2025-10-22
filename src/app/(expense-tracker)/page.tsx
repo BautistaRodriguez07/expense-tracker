@@ -37,18 +37,18 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="font-semibold pb-3">pagos pendientes</div>
+      <div className="font-semibold pb-3 text-lg">pagos pendientes</div>
 
       <div className="overflow-auto flex gap-2">
         {/* pago pendiente 1 */}
-        <div className="card-container p-3 mb-5 min-w-80">
+        <div className="card-container p-3 mb-5 mx-2 min-w-80">
           <UserAvatar
             userName="Gonzalo"
             title="Gonzalo"
             legend="Comida evento"
           />
           <div className="py-2">
-            <span className="ml-2">Vence: </span>
+            <span className="text-gray-700 ml-2">Vence: </span>
             <span className="font-semibold text-red-500">10/04/2025</span>
           </div>
 
@@ -59,14 +59,14 @@ export default function HomePage() {
         </div>
 
         {/* pago pendiente 2 */}
-        <div className="card-container mb-5 p-3 min-w-80">
+        <div className="card-container mb-5 mx-2 p-3 min-w-80">
           <UserAvatar
             userName="Gonzalo"
             title="Gonzalo"
             legend="Comida evento"
           />
           <div className="py-2">
-            <span className="ml-2">Vence: </span>
+            <span className="ml-2 text-gray-700">Vence: </span>
             <span className="font-semibold text-red-500">10/04/2025</span>
           </div>
 
@@ -77,10 +77,10 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="space-y-3 mt-10">
+      <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <span className="font-semibold">Últimos gastos</span>
-          <Link href={"/"} className="text-cyan-700 font-medium">
+          <span className="font-semibold text-lg">Últimos gastos</span>
+          <Link href={"/"} className="link underline font-medium">
             Ver más
           </Link>
         </div>
@@ -99,24 +99,6 @@ export default function HomePage() {
               <div className="flex flex-col items-end">
                 <span className="font-medium text-gray-800">$25.06</span>
                 <span className="text-gray-500 text-sm">Today</span>
-              </div>
-              <IoChevronForwardOutline size={18} className="text-gray-400" />
-            </div>
-          </li>
-
-          {/* 2 */}
-          <li className="flex justify-between items-center card-container">
-            <div className="flex items-center gap-3">
-              <IoFastFood size={40} className=" p-1 rounded-full" />
-              <div className="flex flex-col">
-                <span className="font-medium ">Comida</span>
-                <span className="text-sm">usuario</span>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="flex flex-col items-end">
-                <span className="font-medium ">$25.06</span>
-                <span className=" text-sm ">Today</span>
               </div>
               <IoChevronForwardOutline size={18} className="text-gray-400" />
             </div>
