@@ -148,12 +148,6 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-/* @layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-} */
-
 body {
   color: var(--text);
   background-color: var(--bg-dark);
@@ -170,23 +164,14 @@ body {
   background-color: var(--bg-light);
 }
 
+/* BUTTONS */
 .btn {
   background: var(--bg-light);
-  /* padding: 1.5rem; */
   color: var(--text-default);
   font-weight: 700;
   border-radius: 1rem;
-  /* margin-top: 1.5rem; */
   border: var(--border-card);
   border-top: solid 2px var(--highlight);
-  box-shadow: var(--combined-shadow);
-}
-.card-container {
-  background: var(--bg);
-  padding: 1.5rem;
-  border-radius: 1rem;
-  border: var(--border-card);
-  border-top: solid 3px var(--highlight);
   box-shadow: var(--combined-shadow);
 }
 
@@ -206,10 +191,16 @@ body {
   color: white;
 }
 
+/* CARD */
+.card-container {
+  background: var(--bg);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  border: var(--border-card);
+  border-top: solid 3px var(--highlight);
+  box-shadow: var(--combined-shadow);
+}
+
 .link {
   color: var(--info);
 }
-/* 
-.div-container:hover {
-  background: var(--gradient-hover)
-} */
