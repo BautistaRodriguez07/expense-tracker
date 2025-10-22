@@ -6,7 +6,7 @@ export const PendingPayments = () => {
       <CustomTitle
         title="Pagos pendientes"
         tag="h3"
-        className="text-lg py-2 text-gray-700"
+        className="text-lg py-2 txt-muted"
       />
 
       <PendingPayment />

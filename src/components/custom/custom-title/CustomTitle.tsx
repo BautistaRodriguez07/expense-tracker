@@ -8,7 +8,7 @@ interface Props {
 
 export const CustomTitle = ({ tag, title, className = "" }: Props) => {
   const Tag = tag;
-  const baseClass = cn("font-bold text-3xl", className);
+  const baseClass = cn("font-bold text-3xl txt", className);
 
   return <Tag className={baseClass}>{title}</Tag>;
 };

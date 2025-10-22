@@ -47,8 +47,8 @@
   --bg-dark: hsl(220 21% 90%);
   --bg: hsl(220 46% 96%);
   --bg-light: hsl(220 100% 100%);
-  --text: hsl(221 47% 5%);
-  --text-muted: hsl(220 11% 29%);
+  --txt: hsl(221 47% 5%);
+  --txt-muted: hsl(220 11% 29%);
   --highlight: hsl(220 100% 100%);
   --border: hsl(220 7% 52%);
   --border-muted: hsl(220 10% 63%);
@@ -100,8 +100,8 @@
   --bg-dark: hsl(223 41% 2%);
   --bg: hsl(220 26% 5%);
   --bg-light: hsl(220 15% 9%);
-  --text: hsl(220 100% 96%);
-  --text-muted: hsl(220 13% 71%);
+  --txt: hsl(220 100% 96%);
+  --txt-muted: hsl(220 13% 71%);
   --highlight: hsl(220 9% 40%);
   --border: hsl(220 11% 29%);
   --border-muted: hsl(220 16% 19%);
@@ -163,31 +163,41 @@ body {
 .bg-light {
   background-color: var(--bg-light);
 }
+.txt {
+  color: var(--txt);
+}
+.txt-muted {
+  color: var(--txt-muted);
+}
 
 /* BUTTONS */
 .btn {
   background: var(--bg-light);
-  color: var(--text-default);
+  color: var(--txt);
   font-weight: 700;
   border-radius: 1rem;
   border: var(--border-card);
   border-top: solid 2px var(--highlight);
   box-shadow: var(--combined-shadow);
+  cursor: pointer;
 }
 
 .btn-success {
   background-color: var(--success);
   border: 0px;
+  cursor: pointer;
 }
 
 .btn-danger {
   background-color: var(--danger);
+  cursor: pointer;
   border: 0px;
 }
 
 .btn-info {
   background-color: var(--info);
   border: 0px;
+  cursor: pointer;
   color: white;
 }
 
@@ -197,7 +207,7 @@ body {
   padding: 1.5rem;
   border-radius: 1rem;
   border: var(--border-card);
-  border-top: solid 3px var(--highlight);
+  border-top: solid 2px var(--highlight);
   box-shadow: var(--combined-shadow);
 }
 
