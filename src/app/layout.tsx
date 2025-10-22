@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components";
+import { ThemeProvider } from "next-themes";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,9 +20,17 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
+  // const [loaded, setLoaded] = useState(false);
+
+  // useEffect(() => {
+  //   setLoaded(true);
+  // }, []);
+
+  // if (!loaded) {
+  //   return <>{children}</>;
+  // }
+
   return (
     <html lang="en">
       <body
