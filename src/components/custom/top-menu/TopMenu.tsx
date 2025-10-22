@@ -1,0 +1,48 @@
+"use client";
+
+import { IoMenu, IoWalletOutline } from "react-icons/io5";
+import { useUIStore } from "@/store/ui/ui-store";
+import { UserAvatar } from "../user-avatar/UserAvatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+export const TopMenu = () => {
+  const openMenu = useUIStore(state => state.openSideMenu);
+
+  return (
+    <div className="flex justify-between items-center p-4 ">
+      {/* logo */}
+      <IoWalletOutline size={40} />
+
+      {/* space selector */}
+
+      <div className="flex-1 items-center justify-center flex">
+        <DropdownMenu>
+          <DropdownMenuTrigger className="bg-gray-100 p-2 mx-5 rounded-xl w-full max-w-xl">
+            Space selector
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem>Personal account</DropdownMenuItem>
+            <DropdownMenuItem>Group 1</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      <div className="flex gap-3">
+        {/* profile */}
+
+        <UserAvatar userName="David" />
+
+        {/* menu */}
+
+        <div onClick={openMenu}>
+          <IoMenu size={40} />
+        </div>
+      </div>
+    </div>
+  );
+};
