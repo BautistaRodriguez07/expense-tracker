@@ -1,13 +1,12 @@
 import { cn } from "@/lib/utils";
-import { JSX } from "react";
 
 interface Props {
   title: string;
-  tag?: keyof JSX.IntrinsicElements;
-  className: string;
+  tag: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+  className?: string;
 }
 
-export const CustomTitle = ({ tag = "h1", title, className = "" }: Props) => {
+export const CustomTitle = ({ tag, title, className = "" }: Props) => {
   const Tag = tag;
   const baseClass = cn("font-bold text-3xl", className);
 

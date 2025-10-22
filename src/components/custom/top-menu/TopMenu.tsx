@@ -2,13 +2,14 @@
 
 import { IoMenu, IoWalletOutline } from "react-icons/io5";
 import { useUIStore } from "@/store/ui/ui-store";
-import { UserAvatar } from "../user-avatar/UserAvatar";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { UserAvatar } from "@/components";
 
 export const TopMenu = () => {
   const openMenu = useUIStore(state => state.openSideMenu);
