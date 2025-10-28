@@ -1,17 +1,20 @@
 import { CustomTitle, HistoryItem } from "@/components";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 
 export const HistoryList = () => {
+  const t = useTranslations("historyList");
+
   return (
     <>
       <div className="flex items-center justify-between">
         <CustomTitle
-          title="Últimos gastos"
+          title={t("latestExpenses")}
           tag="h3"
           className="text-lg py-2 txt-muted"
         />
         <Link href={"/"} className="link underline font-medium">
-          Ver más
+          {t("viewMore")}
         </Link>
       </div>
 

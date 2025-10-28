@@ -1,0 +1,47 @@
+{
+  "chartContainer": {
+    "monthlyExpenses": "Monthly expenses"
+  },
+  "footer": "Privacy &amp; Legal",
+  "historyItem": {
+    "food": "Food"
+  },
+  "historyList": {
+    "latestExpenses": "Latest expenses",
+    "viewMore": "View more"
+  },
+  "home": {
+    "subTitle": "Group",
+    "title": "Hello"
+  },
+  "notFound": {
+    "contact": "Contact the support",
+    "homeLink": "return to the home page"
+  },
+  "pendingPayment": {
+    "cancel": "cancel",
+    "expirationDate": "expiration date",
+    "pay": "pay"
+  },
+  "pendingPayments": {
+    "title": "Pending payments"
+  },
+  "settings": {
+    "account": "My account",
+    "email": "Email",
+    "image": "Profile image",
+    "language": "Language",
+    "name": "Name",
+    "theme": "Theme",
+    "title": "Profile"
+  },
+  "sidebar": {
+    "home": "Home",
+    "settings": "Settings"
+  },
+  "topMenu": {
+    "group": "Group",
+    "personalAccount": "Personal account",
+    "spaceSelector": "Space selector"
+  }
+}

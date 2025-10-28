@@ -1,10 +1,16 @@
 import { CustomTitle, Users } from "@/components";
+import { useTranslations } from "next-intl";
 
 export const ChartContainer = () => {
+  const t = useTranslations("chartContainer");
   return (
     <div className="sm:grid sm:grid-cols-3 gap-2 card-container my-4">
       {/* title */}
-      <CustomTitle title="Gastos del mes" tag="h4" className="text-lg txt" />
+      <CustomTitle
+        title={t("monthlyExpenses")}
+        tag="h4"
+        className="text-lg txt"
+      />
       <CustomTitle title="1.500.000" tag="h4" className="text-xl txt-muted" />
 
       {/* chart */}

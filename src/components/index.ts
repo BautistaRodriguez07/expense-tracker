@@ -2,6 +2,8 @@ export * from "./custom/top-menu/TopMenu";
 
 export * from "./custom/sidebar/Sidebar";
 
+export * from "./custom/locale/LocaleSwitcher";
+
 export * from "./custom/theme/theme-provider";
 export * from "./custom/theme/ToggleTheme";
 

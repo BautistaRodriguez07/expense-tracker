@@ -10,9 +10,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { UserAvatar } from "@/components";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 
 export const TopMenu = () => {
+  const t = useTranslations("topMenu");
+
   const openMenu = useUIStore(state => state.openSideMenu);
 
   return (
@@ -27,11 +30,11 @@ export const TopMenu = () => {
       <div className="flex-1 items-center justify-center flex">
         <DropdownMenu>
           <DropdownMenuTrigger className="bg-light p-2 txt mx-5 rounded-xl w-full max-w-xl">
-            Space selector
+            {t("spaceSelector")}
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem>Personal account</DropdownMenuItem>
-            <DropdownMenuItem>Group 1</DropdownMenuItem>
+            <DropdownMenuItem>{t("personalAccount")}</DropdownMenuItem>
+            <DropdownMenuItem>{t("group")} 1</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
