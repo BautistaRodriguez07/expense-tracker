@@ -1,14 +1,4 @@
-// import { SignIn } from "@clerk/nextjs";
-
 import { SignInForm } from "@/components";
-
-// export default function Page() {
-//   return (
-//     <div>
-//       <SignIn />
-//     </div>
-//   );
-// }
 
 export default function Page() {
   return (
