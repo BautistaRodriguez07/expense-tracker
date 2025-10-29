@@ -1,6 +1,8 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 
 export const Footer = () => {
+  const t = useTranslations("sidebar");
   return (
     <div className="flex w-full justify-center text-xs my-5">
       <Link href="/">
@@ -8,7 +10,7 @@ export const Footer = () => {
         <span>&copy;{new Date().getFullYear()}</span>
       </Link>
       <Link href="/" className="mx-3 link underline">
-        Privacy &amp; Legal
+        {t("settings")}
       </Link>
     </div>
   );

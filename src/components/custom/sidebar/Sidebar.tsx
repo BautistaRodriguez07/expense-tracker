@@ -1,8 +1,9 @@
 "use client";
 
+import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { useUIStore } from "@/store/ui/ui-store";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 import {
   IoCloseOutline,
   IoHomeOutline,
@@ -10,6 +11,7 @@ import {
 } from "react-icons/io5";
 
 export const Sidebar = () => {
+  const t = useTranslations("sidebar");
   const { isSideMenuOpen, closeSideMenu } = useUIStore(state => state);
 
   return (
@@ -38,7 +40,7 @@ export const Sidebar = () => {
           className="flex items-center w-full  my-5 p-3 rounded gap-4"
         >
           <IoHomeOutline size={30} />
-          <span className="text-xl">Home</span>
+          <span className="text-xl">{t("home")}</span>
         </Link>
 
         <Link
@@ -47,7 +49,7 @@ export const Sidebar = () => {
           className="flex items-center w-full my-5 p-3 rounded gap-4"
         >
           <IoSettingsOutline size={30} />
-          <span className="text-xl">Settings</span>
+          <span className="text-xl">{t("settings")}</span>
         </Link>
       </nav>
     </>

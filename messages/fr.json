@@ -1,0 +1,52 @@
+{
+  "chartContainer": {
+    "monthlyExpenses": "Dépenses mensuelles"
+  },
+  "footer": "Confidentialité &amp; Légal",
+  "historyItem": {
+    "food": "Nourriture"
+  },
+  "historyList": {
+    "latestExpenses": "Dernières dépenses",
+    "viewMore": "Voir plus"
+  },
+  "home": {
+    "subTitle": "Groupe",
+    "title": "Bonjour"
+  },
+  "locale": {
+    "en": "Anglais",
+    "es": "Espagnol",
+    "fr": "Français"
+  },
+  "notFound": {
+    "contact": "Contacter le support",
+    "homeLink": "retourner à la page d'accueil"
+  },
+  "pendingPayment": {
+    "cancel": "annuler",
+    "expirationDate": "date d'expiration",
+    "pay": "payer"
+  },
+  "pendingPayments": {
+    "title": "Paiements en attente"
+  },
+  "settings": {
+    "account": "Mon compte",
+    "email": "Email",
+    "image": "Image de profil",
+    "language": "Langue",
+    "name": "Nom",
+    "theme": "Thème",
+    "title": "Profil"
+  },
+  "sidebar": {
+    "home": "Accueil",
+    "settings": "Paramètres"
+  },
+  "topMenu": {
+    "group": "Groupe",
+    "personalAccount": "Compte personnel",
+    "spaceSelector": "Sélecteur d'espace"
+  }
+}
