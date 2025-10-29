@@ -14,6 +14,11 @@
     "subTitle": "Group",
     "title": "Hello"
   },
+  "locale": {
+    "en": "English",
+    "es": "Spanish",
+    "fr": "French"
+  },
   "notFound": {
     "contact": "Contact the support",
     "homeLink": "return to the home page"
