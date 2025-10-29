@@ -1,5 +1,21 @@
-import { SignIn } from "@clerk/nextjs";
+// import { SignIn } from "@clerk/nextjs";
+
+import { SignInForm } from "@/components";
+
+// export default function Page() {
+//   return (
+//     <div>
+//       <SignIn />
+//     </div>
+//   );
+// }
 
 export default function Page() {
-  return <SignIn />;
+  return (
+    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+      <div className="w-full max-w-sm">
+        <SignInForm />
+      </div>
+    </div>
+  );
 }

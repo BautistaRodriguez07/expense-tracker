@@ -9,6 +9,10 @@ export * from "./custom/footer/Footer";
 
 export * from "./custom/custom-title/CustomTitle";
 
+export * from "./custom/signIn-form/signIn-form";
+
+export * from "./custom/custom-title/CustomTitle";
+
 export * from "./custom/charts/pie-chart/PieChart";
 export * from "./custom/charts/chart-container/ChartContainer";
 

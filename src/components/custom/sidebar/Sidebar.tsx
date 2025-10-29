@@ -3,7 +3,6 @@
 import { cn } from "@/lib/utils";
 import { useUIStore } from "@/store/ui/ui-store";
 import { SignInButton, SignOutButton, useAuth } from "@clerk/nextjs";
-import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 import {
   IoCloseOutline,
@@ -48,7 +47,7 @@ export const Sidebar = () => {
               className="flex items-center w-full  my-5 p-3 rounded gap-4"
             >
               <IoHomeOutline size={30} />
-              <span className="text-xl">Home</span>
+              <span className="text-xl w-full">Home</span>
             </Link>
 
             <Link
@@ -57,7 +56,7 @@ export const Sidebar = () => {
               className="flex items-center w-full my-5 p-3 rounded gap-4"
             >
               <IoSettingsOutline size={30} />
-              <span className="text-xl">Settings</span>
+              <span className="text-xl w-full">Settings</span>
             </Link>
 
             <div
@@ -65,7 +64,7 @@ export const Sidebar = () => {
               className="flex items-center w-full my-5 p-3 rounded gap-4 cursor-pointer"
             >
               <IoLogOutOutline size={30} />
-              <span className="text-xl">
+              <span className="text-xl w-full">
                 <SignOutButton />
               </span>
             </div>
@@ -77,7 +76,7 @@ export const Sidebar = () => {
             className="flex items-center w-full my-5 p-3 rounded gap-4 cursor-pointer"
           >
             <IoLogInOutline size={30} />
-            <span className="text-xl">
+            <span className="text-xl w-full">
               <SignInButton />
             </span>
           </div>
