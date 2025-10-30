@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { useUIStore } from "@/store/ui/ui-store";
 // import { useTranslations } from "next-intl";
 import { SignInButton, SignOutButton, useAuth } from "@clerk/nextjs";
+import { useTranslations } from "next-intl";
 import {
   IoCloseOutline,
   IoHomeOutline,
@@ -14,9 +15,8 @@ import {
 } from "react-icons/io5";
 
 export const Sidebar = () => {
-  // const t = useTranslations("sidebar");
+  const t = useTranslations("sidebar");
   const { isSideMenuOpen, closeSideMenu } = useUIStore(state => state);
-
   const { isSignedIn } = useAuth();
 
   return (
@@ -49,7 +49,7 @@ export const Sidebar = () => {
               className="flex items-center w-full  my-5 p-3 rounded gap-4"
             >
               <IoHomeOutline size={30} />
-              <span className="text-xl w-full">Home</span>
+              <span className="text-xl w-full">{t("home")}</span>
             </Link>
 
             <Link
@@ -58,7 +58,7 @@ export const Sidebar = () => {
               className="flex items-center w-full my-5 p-3 rounded gap-4"
             >
               <IoSettingsOutline size={30} />
-              <span className="text-xl w-full">Settings</span>
+              <span className="text-xl w-full">{t("settings")}</span>
             </Link>
 
             <div

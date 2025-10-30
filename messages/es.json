@@ -2,7 +2,9 @@
   "chartContainer": {
     "monthlyExpenses": "Gastos mensuales"
   },
-  "footer": "Privacidad &amp; Legal",
+  "footer": {
+    "footer": "Privacidad y Legal"
+  },
   "historyItem": {
     "food": "Comida"
   },

@@ -2,7 +2,9 @@
   "chartContainer": {
     "monthlyExpenses": "Monthly expenses"
   },
-  "footer": "Privacy &amp; Legal",
+  "footer": {
+    "footer": "Privacy & Legal"
+  },
   "historyItem": {
     "food": "Food"
   },
