@@ -4,15 +4,20 @@ import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { useUIStore } from "@/store/ui/ui-store";
 import { useTranslations } from "next-intl";
+import { SignInButton, SignOutButton, useAuth } from "@clerk/nextjs";
 import {
   IoCloseOutline,
   IoHomeOutline,
+  IoLogInOutline,
+  IoLogOutOutline,
   IoSettingsOutline,
 } from "react-icons/io5";
 
 export const Sidebar = () => {
   const t = useTranslations("sidebar");
   const { isSideMenuOpen, closeSideMenu } = useUIStore(state => state);
+
+  const { isSignedIn } = useAuth();
 
   return (
     <>
@@ -34,23 +39,50 @@ export const Sidebar = () => {
           <IoCloseOutline size={40} onClick={closeSideMenu} />
         </div>
 
-        <Link
-          onClick={closeSideMenu}
-          href="/"
-          className="flex items-center w-full  my-5 p-3 rounded gap-4"
-        >
-          <IoHomeOutline size={30} />
-          <span className="text-xl">{t("home")}</span>
-        </Link>
+        {/* if is singed in */}
 
-        <Link
-          onClick={closeSideMenu}
-          href="/settings"
-          className="flex items-center w-full my-5 p-3 rounded gap-4"
-        >
-          <IoSettingsOutline size={30} />
-          <span className="text-xl">{t("settings")}</span>
-        </Link>
+        {isSignedIn && (
+          <>
+            <Link
+              onClick={closeSideMenu}
+              href="/"
+              className="flex items-center w-full  my-5 p-3 rounded gap-4"
+            >
+              <IoHomeOutline size={30} />
+              <span className="text-xl w-full">Home</span>
+            </Link>
+
+            <Link
+              onClick={closeSideMenu}
+              href="/settings"
+              className="flex items-center w-full my-5 p-3 rounded gap-4"
+            >
+              <IoSettingsOutline size={30} />
+              <span className="text-xl w-full">Settings</span>
+            </Link>
+
+            <div
+              onClick={closeSideMenu}
+              className="flex items-center w-full my-5 p-3 rounded gap-4 cursor-pointer"
+            >
+              <IoLogOutOutline size={30} />
+              <span className="text-xl w-full">
+                <SignOutButton />
+              </span>
+            </div>
+          </>
+        )}
+        {!isSignedIn && (
+          <div
+            onClick={closeSideMenu}
+            className="flex items-center w-full my-5 p-3 rounded gap-4 cursor-pointer"
+          >
+            <IoLogInOutline size={30} />
+            <span className="text-xl w-full">
+              <SignInButton />
+            </span>
+          </div>
+        )}
       </nav>
     </>
   );

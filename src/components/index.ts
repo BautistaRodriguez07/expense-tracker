@@ -11,6 +11,11 @@ export * from "./custom/footer/Footer";
 
 export * from "./custom/custom-title/CustomTitle";
 
+export * from "./auth/signIn-form";
+export * from "./auth/signUp-form";
+
+export * from "./custom/custom-title/CustomTitle";
+
 export * from "./custom/charts/pie-chart/PieChart";
 export * from "./custom/charts/chart-container/ChartContainer";
 
