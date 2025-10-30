@@ -3,7 +3,7 @@
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { useUIStore } from "@/store/ui/ui-store";
-import { useTranslations } from "next-intl";
+// import { useTranslations } from "next-intl";
 import { SignInButton, SignOutButton, useAuth } from "@clerk/nextjs";
 import {
   IoCloseOutline,
@@ -14,7 +14,7 @@ import {
 } from "react-icons/io5";
 
 export const Sidebar = () => {
-  const t = useTranslations("sidebar");
+  // const t = useTranslations("sidebar");
   const { isSideMenuOpen, closeSideMenu } = useUIStore(state => state);
 
   const { isSignedIn } = useAuth();
