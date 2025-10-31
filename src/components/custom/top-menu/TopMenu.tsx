@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { UserAvatar } from "@/components";
+// import { UserAvatar } from "@/components";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 
@@ -41,9 +41,9 @@ export const TopMenu = () => {
 
       <div className="flex gap-3">
         {/* profile */}
-        <Link href="/profile">
+        {/* <Link href="/profile">
           <UserAvatar userName="David" />
-        </Link>
+        </Link> */}
 
         {/* menu */}
 

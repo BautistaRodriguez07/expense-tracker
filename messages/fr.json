@@ -2,7 +2,9 @@
   "chartContainer": {
     "monthlyExpenses": "Dépenses mensuelles"
   },
-  "footer": "Confidentialité &amp; Légal",
+  "footer": {
+    "footer": "Confidentialité & Légal"
+  },
   "historyItem": {
     "food": "Nourriture"
   },

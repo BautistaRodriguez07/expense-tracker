@@ -9,16 +9,14 @@ import { IoLogoGoogle } from "react-icons/io5";
 import * as Clerk from "@clerk/elements/common";
 import * as SignIn from "@clerk/elements/sign-in";
 import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
 
 export function SignInForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   return (
-    <div
-      className={cn("flex flex-col gap-6 text-center", className)}
-      {...props}
-    >
+    <div className={cn("flex flex-col text-center", className)} {...props}>
       <Card className="card-container">
         <SignIn.Root>
           <SignIn.Step name="start">
@@ -48,25 +46,33 @@ export function SignInForm({
                   />
                   <Clerk.FieldError className="mt-2 block text-xs text-red-600" />
                 </Clerk.Field>
-                <Clerk.Field name="password" className="group/field relative">
-                  <Clerk.Input
-                    type="password"
-                    placeholder="Password"
-                    required
-                    className="w-full p-1 border border-gray-300 rounded-lg"
-                  />
-                  <Clerk.FieldError className="mt-2 block text-xs text-red-600" />
-                </Clerk.Field>
 
+                <div className="flex flex-col gap-2">
+                  <Clerk.Field name="password" className="group/field relative">
+                    <Clerk.Input
+                      type="password"
+                      placeholder="Password"
+                      required
+                      className="w-full p-1 border border-gray-300 rounded-lg"
+                    />
+                    <Clerk.FieldError className="mt-2 block text-xs text-red-600" />
+                  </Clerk.Field>
+                  <Link
+                    href="/forgot-password"
+                    className="flex justify-end px-3"
+                  >
+                    <span className="link underline">Forgot password?</span>
+                  </Link>
+                </div>
                 <SignIn.Action submit className="btn p-1 mt-3">
                   Sign In
                 </SignIn.Action>
 
-                <div className="flex items-center gap-3 ">
+                {/* <div className="flex items-center gap-3 ">
                   <Separator className="flex-1" />
                   <span className="text-sm text-gray-400">or</span>
                   <Separator className="flex-1" />
-                </div>
+                </div> */}
 
                 <Clerk.Connection
                   name="google"

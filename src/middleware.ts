@@ -8,6 +8,8 @@ const intlMiddleware = createIntlMiddleware(routing);
 const isPublicRoute = createRouteMatcher([
   "/sign-in(.*)",
   "/sign-up(.*)",
+  "/forgot-password(.*)",
+  "/:locale/forgot-password(.*)",
   "/",
   "/:locale",
 ]);
