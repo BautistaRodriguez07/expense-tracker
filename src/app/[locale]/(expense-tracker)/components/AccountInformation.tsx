@@ -17,7 +17,17 @@ export const AccountInformation = () => {
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (inputValues.image.length > 0) {
-      user?.setProfileImage({ file: inputValues.image });
+      try {
+        const base64Response = await fetch(inputValues.image);
+        const blob = await base64Response.blob();
+        const file = new File([blob], "profile.jpg", { type: blob.type });
+
+        await user?.setProfileImage({ file });
+
+        setInputValues({ image: "" });
+      } catch (error) {
+        console.error("Error:", error);
+      }
     }
   };
 
@@ -32,7 +42,7 @@ export const AccountInformation = () => {
     reader.readAsDataURL(file);
     reader.onloadend = () => {
       if (typeof reader.result === "string") {
-        setInputValues(prev => ({ ...prev, image: reader.result }));
+        setInputValues(prev => ({ ...prev, image: reader.result as string }));
       }
     };
   };
@@ -113,7 +123,13 @@ export const AccountInformation = () => {
       </div>
 
       <div className="flex items-center justify-end mt-5">
-        <Button className="btn-success rounded-xl">Save</Button>
+        <Button
+          type="submit"
+          className="btn-success rounded-xl"
+          disabled={!inputValues.image}
+        >
+          Save
+        </Button>
       </div>
     </form>
   );
