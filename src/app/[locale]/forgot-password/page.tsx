@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useAuth, useClerk, useSignIn } from "@clerk/nextjs";
+import { useAuth, useSignIn } from "@clerk/nextjs";
 import type { NextPage } from "next";
 import { useRouter } from "next/navigation";
 import { CustomTitle } from "@/components";
@@ -17,7 +17,6 @@ const ForgotPasswordPage: NextPage = () => {
   const router = useRouter();
   const { isSignedIn } = useAuth();
   const { isLoaded, signIn, setActive } = useSignIn();
-  const clerk = useClerk();
 
   useEffect(() => {
     if (isSignedIn) router.push("/");
@@ -25,7 +24,7 @@ const ForgotPasswordPage: NextPage = () => {
 
   if (!isLoaded) return null;
 
-  /** STEP 1: Enviar el código al correo */
+  // Send the password reset code to the user's email
   async function create(e: React.FormEvent) {
     e.preventDefault();
     setError("");

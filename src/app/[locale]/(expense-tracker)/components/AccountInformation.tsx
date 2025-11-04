@@ -5,14 +5,19 @@ import { Separator } from "@/components/ui/separator";
 import { useUser } from "@clerk/nextjs";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { IoCloseOutline } from "react-icons/io5";
 
 export const AccountInformation = () => {
   const t = useTranslations("settings");
   const { user, isLoaded } = useUser();
+  const [usernameDisabled, setUsernameDisabled] = useState<boolean>(true);
+  const usernameRef = useRef<HTMLInputElement | null>(null);
 
-  const [inputValues, setInputValues] = useState({ image: "" });
+  const [inputValues, setInputValues] = useState({
+    image: "",
+    username: "",
+  });
 
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -24,17 +29,21 @@ export const AccountInformation = () => {
 
         await user?.setProfileImage({ file });
 
-        setInputValues({ image: "" });
+        setInputValues({ ...inputValues, image: "" });
       } catch (error) {
         console.error("Error:", error);
       }
+    }
+
+    if (inputValues.username.length > 0) {
+      user?.update({ username: inputValues.username });
     }
   };
 
   const clearImage = () => {
     const input = document.getElementById("image") as HTMLInputElement | null;
     if (input) input.value = "";
-    setInputValues({ image: "" });
+    setInputValues({ ...inputValues, image: "" });
   };
 
   const convertToBase64AndSet = (file: File) => {
@@ -78,7 +87,7 @@ export const AccountInformation = () => {
                 onClick={clearImage}
                 variant="destructive"
                 size="icon"
-                className="absolute -top-1 -right-1 size-6 rounded-full"
+                className="absolute -top-1 -right-1 size-6 rounded-full cursor-pointer"
               >
                 <IoCloseOutline className="text-lg" />
               </Button>
@@ -96,7 +105,7 @@ export const AccountInformation = () => {
             />
             <label
               htmlFor="image"
-              className="cursor-pointer text-sm font-medium btn px-1"
+              className="cursor-pointer text-sm font-medium btn px-3 py-2"
             >
               {t("edit")}
             </label>
@@ -107,9 +116,32 @@ export const AccountInformation = () => {
       <Separator className="my-5" />
 
       {/* name */}
-      <div className="flex flex-col items-start justify-between text-lg">
-        <p className="txt font-medium">{t("name")}</p>
-        <p className="font-semibold txt-muted">{user.fullName}</p>
+      <div className="flex justify-between items-center">
+        <div className="flex flex-col items-start justify-between text-lg">
+          <div className="txt font-medium">{t("name")}</div>
+          <input
+            className="font-semibold txt-muted"
+            type="text"
+            name="username"
+            id="username"
+            ref={usernameRef}
+            onChange={handleInput}
+            defaultValue={user.fullName ?? "Username"}
+            disabled={usernameDisabled}
+          />
+        </div>
+        <Button
+          type="button"
+          onClick={() => {
+            setUsernameDisabled(false);
+            setTimeout(() => {
+              usernameRef.current?.focus();
+            }, 100);
+          }}
+          className="cursor-pointer text-sm font-medium btn  px-3 py-2"
+        >
+          {t("edit")}
+        </Button>
       </div>
 
       <Separator className="my-5" />
