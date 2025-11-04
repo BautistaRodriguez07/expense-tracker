@@ -18,7 +18,7 @@
   },
   "locale": {
     "en": "English",
-    "es": "Spanish",
+    "es": "Español",
     "fr": "French"
   },
   "notFound": {
@@ -35,10 +35,13 @@
   },
   "settings": {
     "account": "My account",
+    "edit": "Edit",
     "email": "Email",
     "image": "Profile image",
     "language": "Language",
     "name": "Name",
+    "signin": "Sign in",
+    "signout": "Sign out",
     "theme": "Theme",
     "title": "Profile"
   },

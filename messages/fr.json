@@ -35,10 +35,13 @@
   },
   "settings": {
     "account": "Mon compte",
+    "edit": "Modifier",
     "email": "Email",
     "image": "Image de profil",
     "language": "Langue",
     "name": "Nom",
+    "signin": "Se connecter",
+    "signout": "Se déconnecter",
     "theme": "Thème",
     "title": "Profil"
   },
