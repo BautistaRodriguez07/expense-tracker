@@ -18,7 +18,7 @@
   },
   "locale": {
     "en": "English",
-    "es": "Español",
+    "es": "Spanish",
     "fr": "French"
   },
   "notFound": {
@@ -40,6 +40,7 @@
     "image": "Profile image",
     "language": "Language",
     "name": "Name",
+    "preferences": "Preferences",
     "signin": "Sign in",
     "signout": "Sign out",
     "theme": "Theme",

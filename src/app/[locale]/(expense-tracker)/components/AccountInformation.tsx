@@ -5,45 +5,56 @@ import { Separator } from "@/components/ui/separator";
 import { useUser } from "@clerk/nextjs";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { IoCloseOutline } from "react-icons/io5";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  AccountInformationSchema,
+  AccountInformationType,
+} from "@/schema/AccountInformationSchema";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { useEffect } from "react";
 
 export const AccountInformation = () => {
   const t = useTranslations("settings");
   const { user, isLoaded } = useUser();
-  const [usernameDisabled, setUsernameDisabled] = useState<boolean>(true);
-  const usernameRef = useRef<HTMLInputElement | null>(null);
 
-  const [inputValues, setInputValues] = useState({
-    image: "",
-    username: "",
+  // const initialValues = {
+  //   username: user?.firstName ?? "",
+  //   image: user?.imageUrl as File | undefined,
+  // };
+
+  const form = useForm<AccountInformationType>({
+    resolver: zodResolver(AccountInformationSchema),
+    defaultValues: {
+      username: "",
+      image: undefined,
+    },
   });
 
-  const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (inputValues.image.length > 0) {
-      try {
-        const base64Response = await fetch(inputValues.image);
-        const blob = await base64Response.blob();
-        const file = new File([blob], "profile.jpg", { type: blob.type });
+  const { isDirty } = form.formState;
 
-        await user?.setProfileImage({ file });
+  const handleSubmit = async (data: AccountInformationType) => {
+    if (!user) return;
 
-        setInputValues({ ...inputValues, image: "" });
-      } catch (error) {
-        console.error("Error:", error);
+    try {
+      if (data.image instanceof File) {
+        await user.setProfileImage({ file: data.image });
       }
-    }
 
-    if (inputValues.username.length > 0) {
-      user?.update({ username: inputValues.username });
-    }
-  };
+      if (data.username && data.username.length > 3) {
+        await user.update({ firstName: data.username });
+      }
+      await user.reload();
 
-  const clearImage = () => {
-    const input = document.getElementById("image") as HTMLInputElement | null;
-    if (input) input.value = "";
-    setInputValues({ ...inputValues, image: "" });
+      form.reset({
+        username: user.firstName ?? "",
+        image: undefined,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const convertToBase64AndSet = (file: File) => {
@@ -51,58 +62,99 @@ export const AccountInformation = () => {
     reader.readAsDataURL(file);
     reader.onloadend = () => {
       if (typeof reader.result === "string") {
-        setInputValues(prev => ({ ...prev, image: reader.result as string }));
       }
     };
   };
 
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, files } = e.target;
     if (name === "image" && files && files[0]) {
+      user?.setProfileImage({ file: files[0] });
       convertToBase64AndSet(files[0]);
     }
   };
 
+  useEffect(() => {
+    if (isLoaded && user) {
+      form.setValue("username", user?.firstName ?? "");
+    }
+  }, [user, isLoaded, form]);
+
   if (!isLoaded || !user) return <div>Loading...</div>;
 
+  console.log(form.formState.errors);
+
   return (
-    <form onSubmit={submitForm} className="card-container">
+    <form onSubmit={form.handleSubmit(handleSubmit)}>
       {/* image section */}
       <div className="flex items-center justify-between mb-6">
-        <p className="txt font-medium">{t("image")}</p>
+        <p className="txt font-medium text-lg">{t("image")}</p>
 
         <div className="flex items-center gap-4">
-          {/* img */}
-          <div className="relative">
-            <Image
-              className="rounded-full object-cover border size-20"
-              src={inputValues.image || user.imageUrl}
-              alt="User image"
-              width={80}
-              height={80}
-            />
-            {inputValues.image && (
-              <Button
-                type="button"
-                onClick={clearImage}
-                variant="destructive"
-                size="icon"
-                className="absolute -top-1 -right-1 size-6 rounded-full cursor-pointer"
-              >
-                <IoCloseOutline className="text-lg" />
-              </Button>
+          <Controller
+            name="image"
+            control={form.control}
+            render={({
+              field: { value, onChange, ...fieldProps },
+              fieldState,
+            }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel
+                  hidden
+                  htmlFor="form-rhf-input-image"
+                  className="txt font-medium text-md"
+                >
+                  Image
+                </FieldLabel>
+                <Input
+                  type="file"
+                  {...fieldProps}
+                  id="image"
+                  name="image"
+                  aria-invalid={fieldState.invalid}
+                  className="hidden"
+                  onChange={e => {
+                    const file = e.target.files?.[0];
+                    onChange(file || null);
+                  }}
+                />
+
+                {/* image preview */}
+
+                <div className="relative">
+                  <Image
+                    className="rounded-full object-cover border size-20"
+                    src={
+                      value instanceof File
+                        ? URL.createObjectURL(value)
+                        : user.imageUrl
+                    }
+                    alt="User image"
+                    width={80}
+                    height={80}
+                  />
+                  {value instanceof File && (
+                    <Button
+                      type="button"
+                      onClick={() => onChange(null)}
+                      variant="destructive"
+                      size="icon"
+                      className="absolute -top-1 -right-1 size-6 rounded-full cursor-pointer"
+                    >
+                      <IoCloseOutline className="text-lg" />
+                    </Button>
+                  )}
+                </div>
+
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
             )}
-          </div>
+          />
 
           {/* Edit */}
           <div>
-            <input
-              type="file"
-              id="image"
-              name="image"
-              onChange={handleInput}
-              hidden
-            />
             <label
               htmlFor="image"
               className="cursor-pointer text-sm font-medium btn px-3 py-2"
@@ -117,49 +169,57 @@ export const AccountInformation = () => {
 
       {/* name */}
       <div className="flex justify-between items-center">
-        <div className="flex flex-col items-start justify-between text-lg">
-          <div className="txt font-medium">{t("name")}</div>
-          <input
-            className="font-semibold txt-muted"
-            type="text"
-            name="username"
-            id="username"
-            ref={usernameRef}
-            onChange={handleInput}
-            defaultValue={user.fullName ?? "Username"}
-            disabled={usernameDisabled}
-          />
-        </div>
-        <Button
-          type="button"
-          onClick={() => {
-            setUsernameDisabled(false);
-            setTimeout(() => {
-              usernameRef.current?.focus();
-            }, 100);
-          }}
-          className="cursor-pointer text-sm font-medium btn  px-3 py-2"
-        >
-          {t("edit")}
-        </Button>
+        <Controller
+          name="username"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel
+                htmlFor="form-rhf-input-username"
+                className="txt font-medium text-md"
+              >
+                <span className="txt font-medium text-lg">{t("name")}</span>
+              </FieldLabel>
+              <Input
+                className="border-0 shadow-none bg-light"
+                {...field}
+                name="username"
+                aria-invalid={fieldState.invalid}
+                placeholder={user?.firstName ?? "name"}
+                autoComplete="username"
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
       </div>
 
       <Separator className="my-5" />
 
       {/* email */}
       <div className="flex flex-col items-start justify-between text-lg">
-        <p className="txt font-medium">{t("email")}</p>
-        <p className="font-semibold txt-muted">
+        <span className="txt font-medium text-lg">{t("email")}</span>
+        <span className="font-semibold txt-muted text-md">
           {user.emailAddresses[0]?.emailAddress}
-        </p>
+        </span>
       </div>
 
-      <div className="flex items-center justify-end mt-5">
+      <div className="flex items-center justify-end mt-5 gap-2">
         <Button
-          type="submit"
-          className="btn-success rounded-xl"
-          disabled={!inputValues.image}
+          type="button"
+          className="btn"
+          onClick={() =>
+            form.reset({
+              username: user.firstName ?? "",
+              image: undefined,
+            })
+          }
+          disabled={!isDirty}
         >
+          Reset
+        </Button>
+
+        <Button type="submit" className="btn" disabled={!isDirty}>
           Save
         </Button>
       </div>

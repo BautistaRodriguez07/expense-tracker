@@ -8,7 +8,7 @@ export default function SettingsPage() {
   const t = useTranslations("settings");
   return (
     <div className="w-full items-center justify-center flex flex-col">
-      <div className="md:w-2xl lg:w-3xl">
+      <div className="md:w-2xl lg:w-3xl w-full">
         <CustomTitle title={t("title")} tag="h1" className="py-3" />
         <CustomTitle
           title={t("account")}
@@ -16,10 +16,12 @@ export default function SettingsPage() {
           className="py-3 txt-muted text-xl"
         />
         {/* account information */}
-        <AccountInformation />
+        <div className="card-container">
+          <AccountInformation />
+        </div>
         {/* preferences */}
         <CustomTitle
-          title="Preferences"
+          title={t("preferences")}
           tag="h2"
           className="py-3 txt-muted text-xl"
         />
