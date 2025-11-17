@@ -8,7 +8,7 @@ import { CustomTitle } from "../custom/custom-title/CustomTitle";
 import { IoLogoGoogle } from "react-icons/io5";
 import * as Clerk from "@clerk/elements/common";
 import * as SignIn from "@clerk/elements/sign-in";
-import { Separator } from "@/components/ui/separator";
+// import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 
 export function SignInForm({

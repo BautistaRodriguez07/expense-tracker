@@ -14,17 +14,19 @@ export default function HomePage({ params }: { params: { locale: string } }) {
   setRequestLocale(locale);
 
   return (
-    <div>
-      <HomeTitle />
+    <div className=" flex flex-col items-center justify-center min-h-screen">
+      <div className="max-w-3xl w-full">
+        <HomeTitle />
 
-      {/* Chart information */}
-      <ChartContainer />
+        {/* Chart information */}
+        <ChartContainer />
 
-      {/* Pending payments */}
-      <PendingPayments />
+        {/* Pending payments */}
+        <PendingPayments />
 
-      {/* history */}
-      <HistoryList />
+        {/* history */}
+        <HistoryList />
+      </div>
     </div>
   );
 }

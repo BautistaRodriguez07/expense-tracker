@@ -35,10 +35,14 @@
   },
   "settings": {
     "account": "Mi cuenta",
+    "edit": "Editar",
     "email": "Correo electrónico",
     "image": "Imagen de perfil",
     "language": "Idioma",
     "name": "Nombre",
+    "preferences": "Preferencias",
+    "signin": "Iniciar sesión",
+    "signout": "Cerrar sesión",
     "theme": "Tema",
     "title": "Perfil"
   },

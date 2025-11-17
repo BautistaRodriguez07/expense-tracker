@@ -12,6 +12,7 @@ import {
 // import { UserAvatar } from "@/components";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
+import { cn } from "@/lib/utils";
 
 export const TopMenu = () => {
   const t = useTranslations("topMenu");
@@ -19,7 +20,7 @@ export const TopMenu = () => {
   const openMenu = useUIStore(state => state.openSideMenu);
 
   return (
-    <div className="flex justify-between items-center p-4 ">
+    <div className="flex justify-between items-center p-4 bg">
       {/* logo */}
       <Link href="/">
         <IoWalletOutline size={40} className="cursor-pointer" />
@@ -29,10 +30,12 @@ export const TopMenu = () => {
 
       <div className="flex-1 items-center justify-center flex">
         <DropdownMenu>
-          <DropdownMenuTrigger className="bg-light p-2 txt mx-5 rounded-xl w-full max-w-xl">
+          <DropdownMenuTrigger className="btn p-2 txt mx-5 rounded-xl w-full max-w-xl">
             {t("spaceSelector")}
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
+          <DropdownMenuContent
+            className={cn("card-container txt-muted font-medium", "!p-1")}
+          >
             <DropdownMenuItem>{t("personalAccount")}</DropdownMenuItem>
             <DropdownMenuItem>{t("group")} 1</DropdownMenuItem>
           </DropdownMenuContent>
