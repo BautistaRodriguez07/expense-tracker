@@ -59,7 +59,7 @@ export default function LocaleSwitcher() {
     <>
       <Select value={locale} onValueChange={switchLocale}>
         <SelectTrigger className="text-lg font-semibold txt card-container">
-          <SelectValue placeholder="Theme" />
+          <SelectValue placeholder="language" />
         </SelectTrigger>
         <SelectContent className={cn("card-container ", "!p-1")}>
           {LOCALE_OPTIONS.map(({ value, label }) => (
