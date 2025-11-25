@@ -1,5 +1,6 @@
 "use server";
 
+import { ExpenseInterface } from "@/interfaces/ExpenseInterface";
 import { SpaceMemberInterface } from "@/interfaces/SpaceInterface";
 import prisma from "@/lib/prisma";
 import { getExpenseById, getSpaceById, getUserByClerkId } from "@/lib/users";
@@ -11,8 +12,36 @@ import {
 } from "@/schema/NewExpenseSchema";
 import { currentUser } from "@clerk/nextjs/server";
 
-export async function CreateExpense(
-  expense: CreateExpenseType,
+export async function getExpenseData(
+  formData: FormData
+): Promise<BaseExpenseType> {
+  const name = formData.get("name") as string;
+  const amount = formData.get("amount");
+  const currency = formData.get("currency") as string;
+  const expireDate = formData.get("expireDate");
+  const category = formData.get("category") as string;
+  const responsible = formData.get("responsible") as string;
+  const note = formData.get("note") as string;
+  const tags = formData.get("tags");
+  const receipt = formData.get("receipt");
+  const status = formData.get("status") as string;
+  const expenseData: CreateExpenseType = {
+    name,
+    amount: Number(amount),
+    currency,
+    expireDate: new Date(expireDate as string),
+    category,
+    responsible,
+    note,
+    tags: tags ? JSON.parse(tags as string) : [],
+    receipt: receipt ? JSON.parse(receipt as string) : [],
+    status,
+  };
+  return expenseData;
+}
+
+export async function createExpense(
+  formData: FormData,
   spaceId: string
 ): Promise<BaseExpenseType> {
   try {
@@ -23,7 +52,7 @@ export async function CreateExpense(
     }
 
     // Validate expense data against schema
-    const result = BaseExpenseSchema.safeParse(expense as BaseExpenseType);
+    const result = BaseExpenseSchema.safeParse(formData);
     if (!result.success) {
       throw new Error(result.error.message);
     }

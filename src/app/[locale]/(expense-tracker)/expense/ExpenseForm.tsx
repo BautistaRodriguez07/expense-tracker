@@ -24,8 +24,9 @@ import { Form } from "@/components/ui/form";
 import { Field, FieldContent, FieldLabel } from "@/components/ui/field";
 import { OPTIONS } from "@/components/ui/creatable-selector";
 import MultipleSelector from "@/components/ui/multiple-selector";
+import { createExpense } from "@/features/expense/actions/create-update-expense";
 
-const onSubmit = (data: BaseExpenseType) => {};
+const onSubmit = (formData: FormData) => {};
 
 export const ExpenseForm = () => {
   const form = useForm<BaseExpenseType>({
@@ -46,6 +47,7 @@ export const ExpenseForm = () => {
       note: "",
     },
   });
+
   return (
     <Form {...form}>
       <form

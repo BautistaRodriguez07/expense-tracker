@@ -12,22 +12,52 @@ export async function createOrUpdateUser(
       clerkUser.lastName || ""
     }`.trim();
 
-    const user = await prisma.user.upsert({
-      where: { clerk_id: clerkUser.id },
-      update: {
-        name: fullName,
-        email: clerkUser.emailAddresses[0].emailAddress,
-        updated_at: new Date(),
-      },
-      create: {
-        clerk_id: clerkUser.id,
-        name: fullName,
-        email: clerkUser.emailAddresses[0].emailAddress,
-        password_hash: "",
-      },
-    });
+    const email = clerkUser.emailAddresses[0].emailAddress;
 
-    return user;
+    return await prisma.$transaction(async tx => {
+      // 1. Buscamos si el usuario ya existe
+      const existingUser = await tx.user.findUnique({
+        where: { clerk_id: clerkUser.id },
+      });
+
+      if (existingUser) {
+        return await tx.user.update({
+          where: { id: existingUser.id },
+          data: {
+            name: fullName,
+            email: email,
+            updated_at: new Date(),
+          },
+        });
+      }
+
+      // 2. Creamos el usuario PRIMERO
+      const newUser = await tx.user.create({
+        data: {
+          clerk_id: clerkUser.id,
+          name: fullName,
+          email: email,
+          password_hash: "",
+        },
+      });
+
+      // 3. Creamos el espacio y vinculamos al usuario ya creado
+      await tx.space.create({
+        data: {
+          name: "Mi Espacio Personal",
+          default_currency: "USD",
+          owner_id: newUser.id, // Vinculamos como dueño
+          members: {
+            create: {
+              user_id: newUser.id, // Vinculamos como miembro explícitamente
+              role: "owner",
+            },
+          },
+        },
+      });
+
+      return newUser;
+    });
   } catch (error) {
     console.error("Error creating or updating user:", error);
     throw error;

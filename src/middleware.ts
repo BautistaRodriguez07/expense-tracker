@@ -18,6 +18,12 @@ const isPublicRoute = createRouteMatcher([
 export default clerkMiddleware((auth, req) => {
   const { pathname } = req.nextUrl;
 
+  // SI ES UNA RUTA DE API/WEBHOOK, NO APLIQUES INTL MIDDLEWARE
+  if (pathname.startsWith("/api/webhooks")) {
+    return;
+  }
+
+  // 2. Lógica existente de Auth
   if (pathname.startsWith("/sign-in") || pathname.startsWith("/sign-up")) {
     if (!isPublicRoute(req)) {
       auth.protect();
@@ -25,6 +31,7 @@ export default clerkMiddleware((auth, req) => {
     return;
   }
 
+  // 3. Aplicar intl solo si no es webhook
   const response = intlMiddleware(req);
 
   if (!isPublicRoute(req)) {
