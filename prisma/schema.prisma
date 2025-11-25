@@ -1,0 +1,261 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------- ENUMS ----------------------
+
+enum theme {
+  light
+  dark
+}
+
+enum language {
+  english
+  spanish
+  french
+}
+
+enum currency {
+  USD
+  EUR
+  ARS
+  GBP
+  BRL
+}
+
+enum sizes {
+  sm
+  md
+  lg
+}
+
+enum space_role {
+  owner
+  admin
+  user
+}
+
+enum invitation_status {
+  pending
+  accepted
+  rejected
+  expired
+}
+
+// ---------------------- MODELS ----------------------
+
+model User {
+  id            Int     @id @default(autoincrement())
+  clerk_id      String  @unique
+  name          String
+  email         String  @unique
+  password_hash String?
+
+  settings_theme     theme    @default(light)
+  settings_language  language @default(english)
+  settings_font_size sizes    @default(md)
+
+  is_active  Boolean  @default(true)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  spaces_owned     Space[]           @relation("SpaceOwner")
+  spaceMembers     SpaceMember[]
+  spaceInvitations SpaceInvitation[] @relation("InvitationInvitedBy")
+  expenses_paid    Expense[]         @relation("ExpensePaidBy")
+  expenses_created Expense[]         @relation("ExpenseCreatedBy")
+  expenses_updated Expense[]         @relation("ExpenseUpdatedBy")
+  expenses_deleted Expense[]         @relation("ExpenseDeletedBy")
+  expenseSplits    ExpenseSplit[]
+  receiptsUploaded ExpenseReceipt[]
+
+  @@map("user")
+}
+
+// ----------------------------------------------------
+
+model Space {
+  id               Int      @id @default(autoincrement())
+  name             String
+  default_currency currency @default(USD)
+  owner_id         Int
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
+  deleted_at DateTime?
+
+  owner       User              @relation("SpaceOwner", fields: [owner_id], references: [id])
+  members     SpaceMember[]
+  invitations SpaceInvitation[]
+  expenses    Expense[]
+  tags        Tag[]
+
+  @@map("space")
+}
+
+// ----------------------------------------------------
+
+model SpaceMember {
+  id       Int @id @default(autoincrement())
+  user_id  Int
+  space_id Int
+
+  role      space_role @default(user)
+  joined_at DateTime   @default(now())
+
+  user  User  @relation(fields: [user_id], references: [id])
+  space Space @relation(fields: [space_id], references: [id])
+
+  @@unique([user_id, space_id])
+  @@map("space_member")
+}
+
+// ----------------------------------------------------
+
+model SpaceInvitation {
+  id            Int    @id @default(autoincrement())
+  space_id      Int
+  invited_by    Int
+  invited_email String
+
+  status       invitation_status @default(pending)
+  token        String            @unique
+  expires_at   DateTime
+  created_at   DateTime          @default(now())
+  responded_at DateTime?
+
+  space     Space @relation(fields: [space_id], references: [id])
+  invitedBy User  @relation("InvitationInvitedBy", fields: [invited_by], references: [id])
+
+  @@index([space_id, invited_email])
+  @@map("space_invitation")
+}
+
+// ----------------------------------------------------
+
+model Category {
+  id    Int     @id @default(autoincrement())
+  name  String  @unique
+  color String
+  icon  String?
+
+  created_at DateTime @default(now())
+
+  expenses Expense[]
+
+  @@map("category")
+}
+
+// ----------------------------------------------------
+
+model Expense {
+  id          Int      @id @default(autoincrement())
+  space_id    Int
+  name        String
+  description String?
+  amount      Decimal  @db.Decimal(10, 2)
+  currency    currency
+
+  date    DateTime
+  paid_by Int
+
+  category_id Int
+
+  created_by Int
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
+  updated_by Int?
+  deleted_at DateTime?
+  deleted_by Int?
+
+  space     Space    @relation(fields: [space_id], references: [id])
+  paidBy    User     @relation("ExpensePaidBy", fields: [paid_by], references: [id])
+  category  Category @relation(fields: [category_id], references: [id])
+  createdBy User     @relation("ExpenseCreatedBy", fields: [created_by], references: [id])
+  updatedBy User?    @relation("ExpenseUpdatedBy", fields: [updated_by], references: [id])
+  deletedBy User?    @relation("ExpenseDeletedBy", fields: [deleted_by], references: [id])
+
+  splits   ExpenseSplit[]
+  receipts ExpenseReceipt[]
+  tags     ExpenseTag[]
+
+  @@index([space_id])
+  @@index([paid_by])
+  @@index([category_id])
+  @@index([date])
+  @@map("expense")
+}
+
+// ----------------------------------------------------
+
+model ExpenseSplit {
+  id         Int @id @default(autoincrement())
+  expense_id Int
+  user_id    Int
+
+  amount  Decimal   @db.Decimal(10, 2)
+  is_paid Boolean   @default(false)
+  paid_at DateTime?
+
+  expense Expense @relation(fields: [expense_id], references: [id])
+  user    User    @relation(fields: [user_id], references: [id])
+
+  @@unique([expense_id, user_id])
+  @@map("expense_split")
+}
+
+// ----------------------------------------------------
+
+model ExpenseReceipt {
+  id         Int    @id @default(autoincrement())
+  expense_id Int
+  file_url   String
+
+  uploaded_by Int
+  uploaded_at DateTime @default(now())
+
+  expense    Expense @relation(fields: [expense_id], references: [id])
+  uploadedBy User    @relation(fields: [uploaded_by], references: [id])
+
+  @@map("expense_receipt")
+}
+
+// ----------------------------------------------------
+
+model Tag {
+  id       Int    @id @default(autoincrement())
+  space_id Int
+  name     String
+
+  created_at DateTime  @default(now())
+  deleted_at DateTime?
+
+  space    Space        @relation(fields: [space_id], references: [id])
+  expenses ExpenseTag[]
+
+  @@unique([space_id, name])
+  @@map("tag")
+}
+
+// ----------------------------------------------------
+
+model ExpenseTag {
+  expense_id Int
+  tag_id     Int
+
+  expense Expense @relation(fields: [expense_id], references: [id])
+  tag     Tag     @relation(fields: [tag_id], references: [id])
+
+  @@id([expense_id, tag_id])
+  @@map("expense_tag")
+}

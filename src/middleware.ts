@@ -12,6 +12,7 @@ const isPublicRoute = createRouteMatcher([
   "/:locale/forgot-password(.*)",
   "/",
   "/:locale",
+  "/api/webhooks(.*)",
 ]);
 
 export default clerkMiddleware((auth, req) => {

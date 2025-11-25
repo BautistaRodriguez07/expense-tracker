@@ -1,36 +1,109 @@
-'use server';
+"use server";
 
-import { BaseExpenseType, CreateExpenseType, UpdateExpenseType } from "@/schema/NewExpenseSchema";
-import { z } from "zod";
+import { SpaceMemberInterface } from "@/interfaces/SpaceInterface";
+import prisma from "@/lib/prisma";
+import { getExpenseById, getSpaceById, getUserByClerkId } from "@/lib/users";
+import {
+  BaseExpenseSchema,
+  BaseExpenseType,
+  CreateExpenseType,
+  UpdateExpenseType,
+} from "@/schema/NewExpenseSchema";
+import { currentUser } from "@clerk/nextjs/server";
 
-export function CreateExpense(expense: CreateExpenseType, spaceId: string): Promise<BaseExpenseType> {
+export async function CreateExpense(
+  expense: CreateExpenseType,
+  spaceId: string
+): Promise<BaseExpenseType> {
+  try {
     // get user from session
-    
+    const clerkUser = await currentUser();
+    if (!clerkUser) {
+      throw new Error("User not authenticated");
+    }
+
     // Validate expense data against schema
-    z.safeParse(expense);
-    
+    const result = BaseExpenseSchema.safeParse(expense as BaseExpenseType);
+    if (!result.success) {
+      throw new Error(result.error.message);
+    }
+
     // 1. is user authenticated?
-    -> No -> Throw new Error('User not authenticated');
+    const user = await getUserByClerkId(clerkUser.id);
+    if (!user) {
+      throw new Error("User not found");
+    }
 
     // 2. si el usuario pertenece al space?
+    const space = await getSpaceById(spaceId);
+    if (!space) {
+      throw new Error("Space not found");
+    }
+    if (
+      !space.members.some(
+        (member: SpaceMemberInterface) => member.user_id === user?.id
+      )
+    ) {
+      throw new Error("User not a member of the space");
+    }
 
-    // 3. User has permission: 
-    -> Invalid -> Throw new Error('Invalid expense data');
+    // Create expense in DB
+    const newExpense = await prisma.expense.create({
+      data: result.data,
+    });
 
-    // 4. Create expense in DB
-
-    // 5. return created expense
-
+    return newExpense;
+  } catch (error) {
+    console.error("Error creating expense:", error);
+    throw error;
+  }
 }
 
-export function updateExpense(expense: UpdateExpenseType, spaceId: string): Promise<BaseExpenseType> {
+export async function updateExpense(
+  //   expenseType: UpdateExpenseType,
+  expenseId: string,
+  spaceId: string
+): Promise<UpdateExpenseType> {
+  try {
     // get user from session
-
+    const clerkUser = await currentUser();
+    if (!clerkUser) {
+      throw new Error("User not authenticated");
+    }
     // 1. is user authenticated?
+    const user = await getUserByClerkId(clerkUser.id);
+    if (!user) {
+      throw new Error("User not found");
+    }
 
     // 2. si el usuario pertenece al space?
+    const space = await getSpaceById(spaceId);
+    if (!space) {
+      throw new Error("Space not found");
+    }
+    if (
+      !space.members.some(
+        (member: SpaceMemberInterface) => member.user_id === user?.id
+      )
+    ) {
+      throw new Error("User not a member of the space");
+    }
 
     // 3. Validar que el gasto existe
+    const expense = await getExpenseById(expenseId);
+    if (!expense) {
+      throw new Error("Expense not found");
+    }
 
     // 4. User has permission: (solo podes editar si sos el creador o un admin o el responsable asignado)
+
+    const updatedExpense = await prisma.expense.update({
+      where: { id: expenseId },
+      data: expense,
+    });
+    return updatedExpense;
+  } catch (error) {
+    console.error("Error updating expense:", error);
+    throw error;
+  }
 }
