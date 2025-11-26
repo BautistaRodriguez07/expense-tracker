@@ -20,9 +20,13 @@ async function main() {
 
   await prisma.category.createMany({
     data: [
-      { name: "Comida", color: "#FF5733", icon: "🍔" },
-      { name: "Transporte", color: "#33FF57", icon: "🚗" },
-      { name: "Hogar", color: "#3357FF", icon: "🏠" },
+      { name: "Food", color: "#FF5733", icon: "🍔" },
+      { name: "Transport", color: "#33FF57", icon: "🚗" },
+      { name: "Home", color: "#3357FF", icon: "🏠" },
+      { name: "Entertainment", color: "#FF5733", icon: "🎉" },
+      { name: "Health", color: "#33FF57", icon: "🏥" },
+      { name: "Shopping", color: "#3357FF", icon: "🛒" },
+      { name: "Other", color: "#FF5733", icon: "💰" },
     ],
   });
 

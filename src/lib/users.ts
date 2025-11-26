@@ -1,4 +1,3 @@
-// lib/users.js
 import { UserInterface } from "@/interfaces/UserInterface";
 import prisma from "./prisma";
 import { SpaceInterface } from "@/interfaces/SpaceInterface";
@@ -15,7 +14,6 @@ export async function createOrUpdateUser(
     const email = clerkUser.emailAddresses[0].emailAddress;
 
     return await prisma.$transaction(async tx => {
-      // 1. Buscamos si el usuario ya existe
       const existingUser = await tx.user.findUnique({
         where: { clerk_id: clerkUser.id },
       });
@@ -31,7 +29,6 @@ export async function createOrUpdateUser(
         });
       }
 
-      // 2. Creamos el usuario PRIMERO
       const newUser = await tx.user.create({
         data: {
           clerk_id: clerkUser.id,
@@ -41,15 +38,14 @@ export async function createOrUpdateUser(
         },
       });
 
-      // 3. Creamos el espacio y vinculamos al usuario ya creado
       await tx.space.create({
         data: {
           name: "Mi Espacio Personal",
           default_currency: "USD",
-          owner_id: newUser.id, // Vinculamos como dueño
+          owner_id: newUser.id,
           members: {
             create: {
-              user_id: newUser.id, // Vinculamos como miembro explícitamente
+              user_id: newUser.id,
               role: "owner",
             },
           },

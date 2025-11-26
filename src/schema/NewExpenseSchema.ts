@@ -38,7 +38,7 @@ export const BaseExpenseSchema = z
 
     responsible: z.string().min(1, "You must select a responsible person."),
 
-    status: z.string().min(1, "You must select a status."),
+    status: z.string().default("pending"),
 
     expireDate: z.date().refine(
       dateStr => {

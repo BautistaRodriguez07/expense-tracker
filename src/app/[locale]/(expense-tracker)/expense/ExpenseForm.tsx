@@ -26,9 +26,27 @@ import { OPTIONS } from "@/components/ui/creatable-selector";
 import MultipleSelector from "@/components/ui/multiple-selector";
 import { createExpense } from "@/features/expense/actions/create-update-expense";
 
-const onSubmit = (formData: FormData) => {};
+import { useTransition } from "react";
+import { Category } from "@prisma/client";
 
-export const ExpenseForm = () => {
+interface ExpenseFormProps {
+  categories: Category[];
+  spaceMembers: {
+    id: number;
+    name: string;
+    email: string;
+    role: string;
+  }[];
+  spaceId: number;
+}
+
+export const ExpenseForm = ({
+  categories,
+  spaceMembers,
+  spaceId,
+}: ExpenseFormProps) => {
+  const [isPending, startTransition] = useTransition();
+
   const form = useForm<BaseExpenseType>({
     resolver: zodResolver(
       BaseExpenseSchema
@@ -40,13 +58,55 @@ export const ExpenseForm = () => {
       name: "",
       category: "",
       responsible: "",
-      status: "",
+      status: "pending",
       expireDate: new Date(),
 
       tags: [],
       note: "",
     },
   });
+
+  const onSubmit = (data: BaseExpenseType) => {
+    console.log("onsubmit called with data:", data);
+    const formData = new FormData();
+
+    // Agregar campos simples
+    formData.append("name", data.name);
+    formData.append("amount", data.amount.toString());
+    formData.append("currency", data.currency);
+    formData.append("category", data.category);
+    formData.append("responsible", data.responsible);
+    formData.append("status", data.status || "pending");
+    formData.append("note", data.note || "");
+    formData.append("expireDate", data.expireDate.toISOString());
+
+    //handle receipts
+    if (data.receipt && data.receipt.length > 0) {
+      data.receipt.forEach(file => {
+        formData.append("receipt", file);
+      });
+    }
+
+    //handle tags
+    if (data.tags) {
+      formData.append("tags", JSON.stringify(data.tags));
+    }
+
+    console.log("Calling createExpense with spaceId:", spaceId);
+
+    startTransition(async () => {
+      const result = await createExpense(formData, spaceId.toString());
+
+      if (result?.success) {
+        console.log("Expense created!", result.expense);
+        form.reset();
+      } else {
+        console.error("Error:", result?.error);
+      }
+    });
+  };
+
+  console.log("Form errors:", form.formState.errors);
 
   return (
     <Form {...form}>
@@ -191,18 +251,15 @@ export const ExpenseForm = () => {
                       className={cn("card-container", "!p-1")}
                     >
                       <SelectGroup>
-                        <SelectItem
-                          className="bg text-lg font-semibold"
-                          value="john_doe"
-                        >
-                          John Doe
-                        </SelectItem>
-                        <SelectItem
-                          className="bg text-lg font-semibold"
-                          value="jane_smith"
-                        >
-                          Jane Smith
-                        </SelectItem>
+                        {spaceMembers.map(member => (
+                          <SelectItem
+                            key={member.id}
+                            className="bg text-lg font-semibold"
+                            value={member.id.toString()}
+                          >
+                            {member.name}
+                          </SelectItem>
+                        ))}
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -234,19 +291,16 @@ export const ExpenseForm = () => {
                       position="popper"
                       className={cn("card-container", "!p-1")}
                     >
-                      <SelectGroup>
-                        <SelectItem
-                          className="bg text-lg font-semibold"
-                          value="travel"
-                        >
-                          Travel
-                        </SelectItem>
-                        <SelectItem
-                          className="bg text-lg font-semibold"
-                          value="food"
-                        >
-                          Food
-                        </SelectItem>
+                      <SelectGroup className="max-h-40 overflow-y-auto">
+                        {categories.map(category => (
+                          <SelectItem
+                            key={category.id}
+                            className="bg text-lg font-semibold"
+                            value={category.name}
+                          >
+                            {category.name}
+                          </SelectItem>
+                        ))}
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -316,12 +370,11 @@ export const ExpenseForm = () => {
           />
 
           <Separator className="my-5" />
-
-          <div className="w-full items-end flex justify-end mt-10">
-            <Button type="submit" className="btn">
-              Submit
-            </Button>
-          </div>
+        </div>
+        <div className="w-full items-end flex justify-end mt-10">
+          <Button type="submit" className="btn" disabled={isPending}>
+            {isPending ? "Submitting..." : "Submit"}
+          </Button>
         </div>
       </form>
     </Form>

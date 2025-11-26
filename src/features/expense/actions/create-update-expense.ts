@@ -1,90 +1,91 @@
 "use server";
 
-import { ExpenseInterface } from "@/interfaces/ExpenseInterface";
 import { SpaceMemberInterface } from "@/interfaces/SpaceInterface";
 import prisma from "@/lib/prisma";
 import { getExpenseById, getSpaceById, getUserByClerkId } from "@/lib/users";
 import {
   BaseExpenseSchema,
-  BaseExpenseType,
-  CreateExpenseType,
   UpdateExpenseType,
 } from "@/schema/NewExpenseSchema";
 import { currentUser } from "@clerk/nextjs/server";
-
-export async function getExpenseData(
-  formData: FormData
-): Promise<BaseExpenseType> {
-  const name = formData.get("name") as string;
-  const amount = formData.get("amount");
-  const currency = formData.get("currency") as string;
-  const expireDate = formData.get("expireDate");
-  const category = formData.get("category") as string;
-  const responsible = formData.get("responsible") as string;
-  const note = formData.get("note") as string;
-  const tags = formData.get("tags");
-  const receipt = formData.get("receipt");
-  const status = formData.get("status") as string;
-  const expenseData: CreateExpenseType = {
-    name,
-    amount: Number(amount),
-    currency,
-    expireDate: new Date(expireDate as string),
-    category,
-    responsible,
-    note,
-    tags: tags ? JSON.parse(tags as string) : [],
-    receipt: receipt ? JSON.parse(receipt as string) : [],
-    status,
-  };
-  return expenseData;
-}
+import { revalidatePath } from "next/cache";
 
 export async function createExpense(
   formData: FormData,
-  spaceId: string
-): Promise<BaseExpenseType> {
+  spaceId?: string // Hacemos spaceId opcional
+) {
   try {
-    // get user from session
+    // 1. Autenticación
     const clerkUser = await currentUser();
-    if (!clerkUser) {
-      throw new Error("User not authenticated");
-    }
+    if (!clerkUser) throw new Error("User not authenticated");
 
-    // Validate expense data against schema
-    const result = BaseExpenseSchema.safeParse(formData);
-    if (!result.success) {
-      throw new Error(result.error.message);
-    }
-
-    // 1. is user authenticated?
     const user = await getUserByClerkId(clerkUser.id);
-    if (!user) {
-      throw new Error("User not found");
+    if (!user) throw new Error("User not found in database");
+
+    // 2. Resolver Space ID (Si no viene, usamos el primero del usuario)
+    let targetSpaceId = spaceId ? parseInt(spaceId) : null;
+
+    if (!targetSpaceId) {
+      // Buscar el primer espacio del usuario
+      const userSpaceMember = await prisma.spaceMember.findFirst({
+        where: { user_id: user.id },
+        select: { space_id: true },
+      });
+
+      if (!userSpaceMember)
+        throw new Error("User does not belong to any space");
+      targetSpaceId = userSpaceMember.space_id;
     }
 
-    // 2. si el usuario pertenece al space?
-    const space = await getSpaceById(spaceId);
-    if (!space) {
-      throw new Error("Space not found");
-    }
-    if (
-      !space.members.some(
-        (member: SpaceMemberInterface) => member.user_id === user?.id
-      )
-    ) {
-      throw new Error("User not a member of the space");
-    }
+    const rawData = {
+      name: formData.get("name"),
+      amount: Number(formData.get("amount")),
+      currency: formData.get("currency"),
+      date: new Date(formData.get("expireDate") as string),
+      category: formData.get("category"),
+      responsible: formData.get("responsible"),
+      status: formData.get("status"),
+      note: formData.get("note"),
+    };
 
-    // Create expense in DB
-    const newExpense = await prisma.expense.create({
-      data: result.data,
+    //find category by name
+    const categoryName = rawData.category as string;
+    let category = await prisma.category.findFirst({
+      where: { name: { equals: categoryName, mode: "insensitive" } },
     });
 
-    return newExpense;
+    //if no category, use the first one
+    if (!category) {
+      category = await prisma.category.findFirst();
+      if (!category) throw new Error("No categories found in DB. Run seed.");
+    }
+
+    //create expense
+    const newExpense = await prisma.expense.create({
+      data: {
+        name: rawData.name as string,
+        amount: rawData.amount,
+        currency: rawData.currency as string,
+        date: rawData.date,
+        description: rawData.note as string,
+
+        space_id: targetSpaceId,
+        category_id: category.id,
+        paid_by: rawData.responsible
+          ? parseInt(rawData.responsible as string)
+          : user.id,
+        created_by: user.id,
+      },
+    });
+
+    revalidatePath("/expense");
+    return { success: true, expense: newExpense };
   } catch (error) {
     console.error("Error creating expense:", error);
-    throw error;
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
   }
 }
 
