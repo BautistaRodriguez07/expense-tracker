@@ -42,8 +42,7 @@ enum sizes {
 
 enum space_role {
   owner
-  admin
-  user
+  member
 }
 
 enum invitation_status {
@@ -61,6 +60,8 @@ model User {
   name          String
   email         String  @unique
   password_hash String?
+
+  is_system_admin Boolean @default(false)
 
   settings_theme     theme    @default(light)
   settings_language  language @default(english)
@@ -111,7 +112,7 @@ model SpaceMember {
   user_id  Int
   space_id Int
 
-  role      space_role @default(user)
+  role      space_role @default(member)
   joined_at DateTime   @default(now())
 
   user  User  @relation(fields: [user_id], references: [id])

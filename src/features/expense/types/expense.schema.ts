@@ -72,6 +72,11 @@ export const BaseExpenseSchema = z
     }
   );
 
+export const UpdateExpenseSchema = BaseExpenseSchema.partial().extend({
+  id: z.string().min(1, "You must select an expense."),
+});
+export const CreateExpenseSchema = BaseExpenseSchema.omit({ id: true });
+
 export type BaseExpenseType = z.infer<typeof BaseExpenseSchema>;
-export type CreateExpenseType = z.infer<Omit<typeof BaseExpenseSchema, "id">>;
-export type UpdateExpenseType = z.infer<"id" & Partial<BaseExpenseType>>;
+export type CreateExpenseType = z.infer<typeof CreateExpenseSchema>;
+export type UpdateExpenseType = z.infer<typeof UpdateExpenseSchema>;

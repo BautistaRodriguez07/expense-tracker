@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   AccountInformationSchema,
   AccountInformationType,
-} from "@/schema/AccountInformationSchema";
+} from "@/features/user/types/account-information.schema";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useEffect } from "react";

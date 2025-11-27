@@ -12,4 +12,5 @@ export interface UserInterface {
   is_active: boolean;
   created_at: Date;
   updated_at: Date;
+  is_system_admin: boolean;
 }

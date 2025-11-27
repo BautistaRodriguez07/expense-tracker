@@ -1,12 +1,13 @@
 "use client";
 
 import {
-  BaseExpenseSchema,
+  CreateExpenseSchema,
+  UpdateExpenseSchema,
   type BaseExpenseType,
-} from "@/schema/NewExpenseSchema";
+} from "@/features/expense/types/expense.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm, type Resolver } from "react-hook-form";
-import { Calendar22 } from "../../../../components/custom/calendar/Calendar";
+import { Calendar22 } from "../../../components/custom/calendar/Calendar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -24,7 +25,10 @@ import { Form } from "@/components/ui/form";
 import { Field, FieldContent, FieldLabel } from "@/components/ui/field";
 import { OPTIONS } from "@/components/ui/creatable-selector";
 import MultipleSelector from "@/components/ui/multiple-selector";
-import { createExpense } from "@/features/expense/actions/create-update-expense";
+import {
+  createExpense,
+  updateExpense,
+} from "@/features/expense/actions/create-update-expense.action";
 
 import { useTransition } from "react";
 import { Category } from "@prisma/client";
@@ -38,39 +42,69 @@ interface ExpenseFormProps {
     role: string;
   }[];
   spaceId: number;
+  expense?: {
+    id: string;
+    name: string;
+    amount: number;
+    currency: string;
+    date: Date;
+    category_id: string;
+    paid_by: number;
+    description?: string;
+  } | null;
 }
 
 export const ExpenseForm = ({
   categories,
   spaceMembers,
   spaceId,
+  expense,
 }: ExpenseFormProps) => {
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<BaseExpenseType>({
-    resolver: zodResolver(
-      BaseExpenseSchema
-    ) as unknown as Resolver<BaseExpenseType>,
-    defaultValues: {
-      amount: 0,
-      currency: "",
-      receipt: [],
-      name: "",
-      category: "",
-      responsible: "",
-      status: "pending",
-      expireDate: new Date(),
+  const isEditing = !!expense?.id;
 
-      tags: [],
-      note: "",
-    },
+  const schema = isEditing ? UpdateExpenseSchema : CreateExpenseSchema;
+
+  const form = useForm<BaseExpenseType>({
+    resolver: zodResolver(schema) as unknown as Resolver<BaseExpenseType>,
+    defaultValues: expense
+      ? {
+          id: expense.id,
+          amount: expense.amount,
+          currency: expense.currency,
+          name: expense.name,
+          category: expense.category_id,
+          responsible: expense.paid_by.toString(),
+          status: "pending",
+          expireDate: new Date(expense.date),
+          tags: [],
+          note: expense.description || "",
+          receipt: [],
+        }
+      : {
+          amount: 0,
+          currency: "",
+          receipt: [],
+          name: "",
+          category: "",
+          responsible: "",
+          status: "pending",
+          expireDate: new Date(),
+          tags: [],
+          note: "",
+        },
   });
 
   const onSubmit = (data: BaseExpenseType) => {
-    console.log("onsubmit called with data:", data);
+    if (isPending) return;
     const formData = new FormData();
 
-    // Agregar campos simples
+    // if is editing, add the ID
+    if (expense?.id) {
+      formData.append("id", expense.id);
+    }
+
     formData.append("name", data.name);
     formData.append("amount", data.amount.toString());
     formData.append("currency", data.currency);
@@ -92,21 +126,22 @@ export const ExpenseForm = ({
       formData.append("tags", JSON.stringify(data.tags));
     }
 
-    console.log("Calling createExpense with spaceId:", spaceId);
-
     startTransition(async () => {
-      const result = await createExpense(formData, spaceId.toString());
+      // ✅ Llamar a la función correcta según el modo
+      const result = isEditing
+        ? await updateExpense(formData, expense!.id, spaceId.toString())
+        : await createExpense(formData, spaceId.toString());
 
       if (result?.success) {
-        console.log("Expense created!", result.expense);
-        form.reset();
+        console.log(`Expense ${isEditing ? "updated" : "created"}!`);
+        if (!isEditing) {
+          form.reset();
+        }
       } else {
         console.error("Error:", result?.error);
       }
     });
   };
-
-  console.log("Form errors:", form.formState.errors);
 
   return (
     <Form {...form}>
@@ -296,7 +331,7 @@ export const ExpenseForm = ({
                           <SelectItem
                             key={category.id}
                             className="bg text-lg font-semibold"
-                            value={category.name}
+                            value={category.id.toString()}
                           >
                             {category.name}
                           </SelectItem>
@@ -373,7 +408,13 @@ export const ExpenseForm = ({
         </div>
         <div className="w-full items-end flex justify-end mt-10">
           <Button type="submit" className="btn" disabled={isPending}>
-            {isPending ? "Submitting..." : "Submit"}
+            {isPending
+              ? isEditing
+                ? "Updating..."
+                : "Creating..."
+              : isEditing
+              ? "Update Expense"
+              : "Create Expense"}
           </Button>
         </div>
       </form>

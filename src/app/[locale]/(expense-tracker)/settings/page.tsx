@@ -2,7 +2,7 @@ import { CustomTitle, ToggleTheme } from "@/components";
 import LocaleSwitcher from "@/components/custom/locale/LocaleSwitcher";
 import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "next-intl";
-import { AccountInformation } from "../components/AccountInformation";
+import { AccountInformation } from "../../../../features/user/components/account-information";
 
 export default function SettingsPage() {
   const t = useTranslations("settings");

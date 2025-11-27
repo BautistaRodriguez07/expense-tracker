@@ -11,8 +11,8 @@ export * from "./custom/footer/Footer";
 
 export * from "./custom/custom-title/CustomTitle";
 
-export * from "./auth/signIn-form";
-export * from "./auth/signUp-form";
+export * from "./auth/sign-in-form";
+export * from "./auth/sign-up-form";
 
 export * from "./custom/custom-title/CustomTitle";
 

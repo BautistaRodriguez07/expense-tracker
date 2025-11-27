@@ -1,11 +1,18 @@
-import { UserInterface } from "@/interfaces/UserInterface";
+// lib/users.ts
+import { UserInterface } from "@/features/user/types/user.types";
 import prisma from "./prisma";
-import { SpaceInterface } from "@/interfaces/SpaceInterface";
-import { ExpenseInterface } from "@/interfaces/ExpenseInterface";
+import { SpaceInterface } from "@/features/space/types/space.types";
+import { ExpenseInterface } from "@/features/expense/types/expense.types";
+import { clerkClient } from "@clerk/nextjs/server";
+
+type CreateUserResult = {
+  user: UserInterface;
+  spaceId: number;
+};
 
 export async function createOrUpdateUser(
   clerkUser: UserInterface
-): Promise<UserInterface> {
+): Promise<CreateUserResult> {
   try {
     const fullName = `${clerkUser.firstName || ""} ${
       clerkUser.lastName || ""
@@ -13,13 +20,14 @@ export async function createOrUpdateUser(
 
     const email = clerkUser.emailAddresses[0].emailAddress;
 
-    return await prisma.$transaction(async tx => {
+    const result = await prisma.$transaction(async tx => {
       const existingUser = await tx.user.findUnique({
         where: { clerk_id: clerkUser.id },
       });
 
+      // Si el usuario ya existe, solo actualizar datos básicos
       if (existingUser) {
-        return await tx.user.update({
+        const updatedUser = await tx.user.update({
           where: { id: existingUser.id },
           data: {
             name: fullName,
@@ -27,8 +35,20 @@ export async function createOrUpdateUser(
             updated_at: new Date(),
           },
         });
+
+        // Obtener el spaceId existente
+        const spaceMember = await tx.spaceMember.findFirst({
+          where: { user_id: existingUser.id },
+          select: { space_id: true },
+        });
+
+        return {
+          user: updatedUser,
+          spaceId: spaceMember?.space_id || 0,
+        };
       }
 
+      // Crear nuevo usuario
       const newUser = await tx.user.create({
         data: {
           clerk_id: clerkUser.id,
@@ -38,7 +58,8 @@ export async function createOrUpdateUser(
         },
       });
 
-      await tx.space.create({
+      // Crear espacio predeterminado
+      const newSpace = await tx.space.create({
         data: {
           name: "Mi Espacio Personal",
           default_currency: "USD",
@@ -52,8 +73,22 @@ export async function createOrUpdateUser(
         },
       });
 
-      return newUser;
+      return {
+        user: newUser,
+        spaceId: newSpace.id,
+      };
     });
+
+    // ✅ Actualizar metadata de Clerk con el activeSpaceId
+    if (result.spaceId) {
+      await clerkClient.users.updateUserMetadata(clerkUser.id, {
+        publicMetadata: {
+          activeSpaceId: result.spaceId,
+        },
+      });
+    }
+
+    return result;
   } catch (error) {
     console.error("Error creating or updating user:", error);
     throw error;

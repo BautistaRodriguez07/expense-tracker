@@ -1,15 +1,15 @@
+// app/api/webhooks/clerk/route.ts
 import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
 import { createOrUpdateUser } from "@/lib/users";
 
 export async function POST(req: Request) {
-  // Puedes encontrar esto en el Dashboard de Clerk -> Webhooks -> elige el webhook
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
 
   if (!WEBHOOK_SECRET) {
     throw new Error(
-      "Por favor agrega WEBHOOK_SECRET del Dashboard de Clerk a .env o .env.local"
+      "Please add WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local"
     );
   }
 
@@ -19,23 +19,19 @@ export async function POST(req: Request) {
   const svix_timestamp = headerPayload.get("svix-timestamp");
   const svix_signature = headerPayload.get("svix-signature");
 
-  // Si no hay headers, devolver error
   if (!svix_id || !svix_timestamp || !svix_signature) {
-    return new Response("Error: faltan headers svix", {
+    return new Response("Error: missing svix headers", {
       status: 400,
     });
   }
 
-  // Obtener el cuerpo de la petición
   const payload = await req.json();
   const body = JSON.stringify(payload);
 
-  // Crear una nueva instancia de Svix con tu secreto
   const wh = new Webhook(WEBHOOK_SECRET);
 
   let evt: WebhookEvent;
 
-  // Verificar el payload con los headers
   try {
     evt = wh.verify(body, {
       "svix-id": svix_id,
@@ -43,8 +39,8 @@ export async function POST(req: Request) {
       "svix-signature": svix_signature,
     }) as WebhookEvent;
   } catch (err) {
-    console.error("Error verificando webhook:", err);
-    return new Response("Error de verificación", {
+    console.error("Error verifying webhook:", err);
+    return new Response("Error verifying webhook", {
       status: 400,
     });
   }
@@ -56,10 +52,8 @@ export async function POST(req: Request) {
     const { id, email_addresses, first_name, last_name } = evt.data;
 
     try {
-      // Mapear datos de Clerk al formato esperado por createOrUpdateUser
-      // Nota: Usamos 'as any' porque la interfaz UserInterface espera tipos específicos
-      // pero createOrUpdateUser maneja el mapeo internamente.
-      await createOrUpdateUser({
+      // ✅ Crear/actualizar usuario y obtener spaceId
+      const result = await createOrUpdateUser({
         id: id,
         firstName: first_name,
         lastName: last_name,
@@ -68,10 +62,16 @@ export async function POST(req: Request) {
         })),
       } as any);
 
-      return new Response("Usuario creado/actualizado", { status: 200 });
+      console.log(
+        `✅ Usuario ${eventType === "user.created" ? "created" : "updated"}:`,
+        id,
+        `- Active Space: ${result.spaceId}`
+      );
+
+      return new Response("User created/updated", { status: 200 });
     } catch (error) {
-      console.error("Error procesando datos de usuario:", error);
-      return new Response("Error procesando datos", { status: 500 });
+      console.error("Error processing user data:", error);
+      return new Response("Error processing user data", { status: 500 });
     }
   }
 

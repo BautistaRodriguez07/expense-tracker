@@ -1,12 +1,6 @@
-import {
-  ChartContainer,
-  CustomTitle,
-  HistoryList,
-  PendingPayments,
-} from "@/components";
-import { useTranslations } from "next-intl";
+import { ChartContainer, HistoryList, PendingPayments } from "@/components";
 import { setRequestLocale } from "next-intl/server";
-import { HomeTitle } from "./components/HomeTitle";
+import { HomeTitle } from "../../../features/user/components/home-title";
 
 export default function HomePage({ params }: { params: { locale: string } }) {
   const { locale } = params;
