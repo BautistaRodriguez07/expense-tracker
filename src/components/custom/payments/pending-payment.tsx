@@ -6,7 +6,7 @@ export const PendingPayment = () => {
   const t = useTranslations("pendingPayment");
   return (
     <div className="overflow-auto flex gap-2">
-      {/* pago pendiente 1 */}
+      {/* pending payment 1 */}
       <div className="card-container p-3 mb-5 mx-1 min-w-80">
         <UserAvatar userName="Gonzalo" title="Gonzalo" legend="Comida evento" />
         <div className="py-2">

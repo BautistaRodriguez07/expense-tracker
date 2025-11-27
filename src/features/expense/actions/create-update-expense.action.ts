@@ -7,7 +7,7 @@ import {
   serializeExpense,
   type SerializedExpense,
 } from "../utils/serialize-expense";
-import { requireExpenseAccess } from "../expense.guard";
+import { requireExpenseAccess } from "../guards/expense.guard";
 import type { Option } from "@/components/ui/multiple-selector";
 
 type ActionResult = {
@@ -149,7 +149,7 @@ export async function deleteExpense(
     // delete using the service
     await ExpenseService.delete(expenseId, auth.dbUser.id);
 
-    // Revalidar rutas
+    // Revalidate routes
     revalidatePath("/");
     revalidatePath("/expense");
     revalidatePath("/expense/list");

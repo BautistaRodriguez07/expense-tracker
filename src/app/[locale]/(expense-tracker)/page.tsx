@@ -1,6 +1,7 @@
 import { ChartContainer, HistoryList, PendingPayments } from "@/components";
 import { setRequestLocale } from "next-intl/server";
 import { HomeTitle } from "../../../features/user/components/home-title";
+import { Users } from "@/components/custom/user/users-list";
 
 export default function HomePage({ params }: { params: { locale: string } }) {
   const { locale } = params;
@@ -13,7 +14,9 @@ export default function HomePage({ params }: { params: { locale: string } }) {
         <HomeTitle />
 
         {/* Chart information */}
-        <ChartContainer />
+        <ChartContainer>
+          <Users />
+        </ChartContainer>
 
         {/* Pending payments */}
         <PendingPayments />

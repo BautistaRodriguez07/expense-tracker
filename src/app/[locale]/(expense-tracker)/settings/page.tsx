@@ -1,5 +1,5 @@
 import { CustomTitle, ToggleTheme } from "@/components";
-import LocaleSwitcher from "@/components/custom/locale/LocaleSwitcher";
+import LocaleSwitcher from "@/components/custom/locale/locale-switcher";
 import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "next-intl";
 import { AccountInformation } from "../../../../features/user/components/account-information";

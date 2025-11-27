@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FieldDescription, FieldGroup } from "@/components/ui/field";
 
-import { CustomTitle } from "../custom/custom-title/CustomTitle";
+import { CustomTitle } from "../custom/custom-title/custom-title";
 import { IoLogoGoogle } from "react-icons/io5";
 import * as Clerk from "@clerk/elements/common";
 import * as SignIn from "@clerk/elements/sign-in";

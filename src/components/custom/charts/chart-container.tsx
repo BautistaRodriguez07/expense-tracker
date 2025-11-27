@@ -1,7 +1,8 @@
-import { CustomTitle, Users } from "@/components";
+import { CustomTitle } from "@/components";
 import { useTranslations } from "next-intl";
+import { PropsWithChildren } from "react";
 
-export const ChartContainer = () => {
+export const ChartContainer = ({ children }: PropsWithChildren) => {
   const t = useTranslations("chartContainer");
   return (
     <div className="sm:grid sm:grid-cols-3 gap-2 card-container my-4">
@@ -22,7 +23,7 @@ export const ChartContainer = () => {
       </div>
 
       {/* users */}
-      <Users />
+      {children}
     </div>
   );
 };

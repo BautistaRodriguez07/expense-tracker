@@ -1,8 +1,8 @@
 "use server";
 
-import { requireWorkspaceAccess } from "../auth/guards/workspace.guard";
-import { AuthResult } from "../auth/services/auth.service";
-import { ExpenseService } from "./services/expense.service";
+import { requireWorkspaceAccess } from "../../auth/guards/workspace.guard";
+import { AuthResult } from "../../auth/services/auth.service";
+import { ExpenseService } from "../services/expense.service";
 
 type ExpenseValidationOptions = {
   action: "edit" | "delete";

@@ -25,7 +25,7 @@ export async function createOrUpdateUser(
         where: { clerk_id: clerkUser.id },
       });
 
-      // Si el usuario ya existe, solo actualizar datos básicos
+      // If the user already exists, only update basic data
       if (existingUser) {
         const updatedUser = await tx.user.update({
           where: { id: existingUser.id },
@@ -36,7 +36,7 @@ export async function createOrUpdateUser(
           },
         });
 
-        // Obtener el spaceId existente
+        // Get the existing spaceId
         const spaceMember = await tx.spaceMember.findFirst({
           where: { user_id: existingUser.id },
           select: { space_id: true },
@@ -48,7 +48,7 @@ export async function createOrUpdateUser(
         };
       }
 
-      // Crear nuevo usuario
+      // Create new user
       const newUser = await tx.user.create({
         data: {
           clerk_id: clerkUser.id,
@@ -58,10 +58,10 @@ export async function createOrUpdateUser(
         },
       });
 
-      // Crear espacio predeterminado
+      // Create default space
       const newSpace = await tx.space.create({
         data: {
-          name: "Mi Espacio Personal",
+          name: "My Personal Space",
           default_currency: "USD",
           owner_id: newUser.id,
           members: {
@@ -79,7 +79,7 @@ export async function createOrUpdateUser(
       };
     });
 
-    // ✅ Actualizar metadata de Clerk con el activeSpaceId
+    // ✅ Update Clerk metadata with the activeSpaceId
     if (result.spaceId) {
       await clerkClient.users.updateUserMetadata(clerkUser.id, {
         publicMetadata: {

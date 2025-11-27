@@ -9,7 +9,7 @@ export const HistoryItem = () => {
         <IoFastFood size={40} className=" p-1 rounded-full" />
         <div className="flex flex-col">
           <span className="font-medium txt">{t("food")}</span>
-          <span className="txt-muted text-sm">usuario</span>
+          <span className="txt-muted text-sm">user</span>
         </div>
       </div>
       <div className="flex items-center gap-3">

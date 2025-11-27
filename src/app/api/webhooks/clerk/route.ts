@@ -13,7 +13,7 @@ export async function POST(req: Request) {
     );
   }
 
-  // Obtener los headers
+  // Get the headers
   const headerPayload = await headers();
   const svix_id = headerPayload.get("svix-id");
   const svix_timestamp = headerPayload.get("svix-timestamp");
@@ -45,14 +45,14 @@ export async function POST(req: Request) {
     });
   }
 
-  // Manejar el evento
+  // Handle the event
   const eventType = evt.type;
 
   if (eventType === "user.created" || eventType === "user.updated") {
     const { id, email_addresses, first_name, last_name } = evt.data;
 
     try {
-      // ✅ Crear/actualizar usuario y obtener spaceId
+      // ✅ Create/update user and get spaceId
       const result = await createOrUpdateUser({
         id: id,
         firstName: first_name,
@@ -63,7 +63,7 @@ export async function POST(req: Request) {
       } as any);
 
       console.log(
-        `✅ Usuario ${eventType === "user.created" ? "created" : "updated"}:`,
+        `✅ User ${eventType === "user.created" ? "created" : "updated"}:`,
         id,
         `- Active Space: ${result.spaceId}`
       );
