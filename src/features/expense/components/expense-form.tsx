@@ -23,7 +23,6 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Form } from "@/components/ui/form";
 import { Field, FieldContent, FieldLabel } from "@/components/ui/field";
-import { OPTIONS } from "@/components/ui/creatable-selector";
 import MultipleSelector from "@/components/ui/multiple-selector";
 import {
   createExpense,
@@ -32,6 +31,7 @@ import {
 
 import { useTransition } from "react";
 import { Category } from "@prisma/client";
+import type { Option } from "@/components/ui/multiple-selector";
 
 interface ExpenseFormProps {
   categories: Category[];
@@ -42,6 +42,7 @@ interface ExpenseFormProps {
     role: string;
   }[];
   spaceId: number;
+  tags: Option[];
   expense?: {
     id: string;
     name: string;
@@ -51,6 +52,7 @@ interface ExpenseFormProps {
     category_id: string;
     paid_by: number;
     description?: string;
+    tags?: Option[];
   } | null;
 }
 
@@ -58,6 +60,7 @@ export const ExpenseForm = ({
   categories,
   spaceMembers,
   spaceId,
+  tags,
   expense,
 }: ExpenseFormProps) => {
   const [isPending, startTransition] = useTransition();
@@ -78,7 +81,7 @@ export const ExpenseForm = ({
           responsible: expense.paid_by.toString(),
           status: "pending",
           expireDate: new Date(expense.date),
-          tags: [],
+          tags: expense.tags || [],
           note: expense.description || "",
           receipt: [],
         }
@@ -387,7 +390,7 @@ export const ExpenseForm = ({
                   <div className="w-60">
                     <MultipleSelector
                       {...field}
-                      defaultOptions={OPTIONS}
+                      defaultOptions={tags}
                       placeholder="Select or create tags..."
                       creatable
                       value={field.value}

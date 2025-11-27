@@ -6,6 +6,7 @@ import { getSpaceMembers } from "@/features/space/actions/get-space-members.acti
 import { validateAuth } from "@/features/auth/services/auth.service";
 import { redirect } from "next/navigation";
 import { getCategories } from "@/features/expense/actions/get-categories.action";
+import { getTags } from "@/features/expense/actions/get-tags.action";
 
 export default async function ExpensePage() {
   // validate authentication
@@ -16,9 +17,10 @@ export default async function ExpensePage() {
   }
 
   // get data needed in parallel (cached)
-  const [categories, spaceMembers] = await Promise.all([
+  const [categories, spaceMembers, tags] = await Promise.all([
     getCategories(),
     getSpaceMembers(auth.spaceId),
+    getTags(auth.spaceId),
   ]);
 
   return (
@@ -29,6 +31,7 @@ export default async function ExpensePage() {
           categories={categories}
           spaceMembers={spaceMembers}
           spaceId={auth.spaceId}
+          tags={tags}
         />
       </div>
     </div>

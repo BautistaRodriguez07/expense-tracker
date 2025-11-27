@@ -31,6 +31,11 @@ const getExpensesQuery = cache(
             name: true,
           },
         },
+        tags: {
+          include: {
+            tag: true,
+          },
+        },
       },
       orderBy: {
         created_at: "desc",

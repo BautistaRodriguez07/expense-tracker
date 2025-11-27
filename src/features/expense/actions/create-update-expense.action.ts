@@ -7,6 +7,8 @@ import {
   serializeExpense,
   type SerializedExpense,
 } from "../utils/serialize-expense";
+import { requireExpenseAccess } from "../expense.guard";
+import type { Option } from "@/components/ui/multiple-selector";
 
 type ActionResult = {
   success: boolean;
@@ -14,6 +16,29 @@ type ActionResult = {
   expense?: SerializedExpense;
   error?: string;
 };
+
+async function processExpenseTags(
+  formData: FormData,
+  expenseId: number,
+  spaceId: number,
+  removeIfEmpty: boolean = false
+): Promise<void> {
+  const tagsJson = formData.get("tags") as string;
+
+  if (tagsJson) {
+    try {
+      const tags: Option[] = JSON.parse(tagsJson);
+      const tagIds = await ExpenseService.createOrFindTags(tags, spaceId);
+      await ExpenseService.associateTags(expenseId, tagIds);
+    } catch (error) {
+      console.error("Error processing tags:", error);
+      // Continue even if tags fail
+    }
+  } else if (removeIfEmpty) {
+    // If no tags provided and removeIfEmpty is true, remove all tags
+    await ExpenseService.associateTags(expenseId, []);
+  }
+}
 
 /**
  * create a new expense
@@ -46,6 +71,9 @@ export async function createExpense(
     // create using the service (which has business validations)
     const newExpense = await ExpenseService.create(data);
 
+    // handle tags
+    await processExpenseTags(formData, newExpense.id, targetSpaceId);
+
     revalidatePath("/");
     revalidatePath("/expense");
 
@@ -68,27 +96,9 @@ export async function updateExpense(
   spaceId: string
 ): Promise<ActionResult> {
   try {
-    const targetSpaceId = parseInt(spaceId);
-
-    // generic workspace validation
-    const auth = await requireWorkspaceAccess(targetSpaceId);
-
-    // verify that the expense belongs to the workspace
-    const belongsToWorkspace = await ExpenseService.belongsToWorkspace(
-      expenseId,
-      targetSpaceId
-    );
-
-    if (!belongsToWorkspace) {
-      throw new Error("Expense does not belong to this workspace");
-    }
-
-    // verify that the user can edit the expense
-    const canEdit = await ExpenseService.canUserEdit(expenseId, auth.dbUser.id);
-
-    if (!canEdit) {
-      throw new Error("You don't have permission to edit this expense");
-    }
+    const auth = await requireExpenseAccess(expenseId, spaceId, {
+      action: "edit",
+    });
 
     // parse form data
     const updateData = {
@@ -107,6 +117,8 @@ export async function updateExpense(
       updateData,
       auth.dbUser.id
     );
+
+    await processExpenseTags(formData, updatedExpense.id, auth.spaceId, true);
 
     revalidatePath("/");
     revalidatePath("/expense");
@@ -130,28 +142,9 @@ export async function deleteExpense(
   spaceId: string
 ): Promise<ActionResult> {
   try {
-    // validacion repetida mover
-    const targetSpaceId = parseInt(spaceId);
-
-    // generic workspace validation
-    const auth = await requireWorkspaceAccess(targetSpaceId);
-
-    // verify that the expense belongs to the workspace
-    const belongsToWorkspace = await ExpenseService.belongsToWorkspace(
-      expenseId,
-      targetSpaceId
-    );
-
-    if (!belongsToWorkspace) {
-      throw new Error("Expense does not belong to this workspace");
-    }
-
-    // verify that the user can delete the expense (creator or admin)
-    const canEdit = await ExpenseService.canUserEdit(expenseId, auth.dbUser.id);
-
-    if (!canEdit) {
-      throw new Error("You don't have permission to delete this expense");
-    }
+    const auth = await requireExpenseAccess(expenseId, spaceId, {
+      action: "delete",
+    });
 
     // delete using the service
     await ExpenseService.delete(expenseId, auth.dbUser.id);
@@ -159,6 +152,7 @@ export async function deleteExpense(
     // Revalidar rutas
     revalidatePath("/");
     revalidatePath("/expense");
+    revalidatePath("/expense/list");
 
     return { success: true };
   } catch (error) {

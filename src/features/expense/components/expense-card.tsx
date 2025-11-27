@@ -1,16 +1,14 @@
-// features/expense/components/expense-card.tsx
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import type { SerializedExpense } from "../utils/serialize-expense";
 import Link from "next/link";
+import { deleteExpense } from "../actions/create-update-expense.action";
 
 type ExpenseCardProps = {
-  expense: SerializedExpense & {
-    category: { id: number; name: string };
-    paidBy: { id: number; name: string; email: string };
-    createdBy: { id: number; name: string };
-  };
+  expense: SerializedExpense;
 };
 
 export function ExpenseCard({ expense }: ExpenseCardProps) {
@@ -25,6 +23,18 @@ export function ExpenseCard({ expense }: ExpenseCardProps) {
     currency: expense.currency,
   }).format(expense.amount);
 
+  const handleDelete = async () => {
+    const result = await deleteExpense(
+      expense.id.toString(),
+      expense.space_id.toString()
+    );
+    if (result.success) {
+      window.location.reload();
+    } else {
+      alert(result.error || "Failed to delete expense");
+    }
+  };
+
   return (
     <div className="card-container mb-4">
       {/* Header */}
@@ -32,14 +42,25 @@ export function ExpenseCard({ expense }: ExpenseCardProps) {
         <div className="flex-1">
           <h3 className="txt text-xl font-semibold">{expense.name}</h3>
           <p className="txt-muted text-sm">
-            Created by {expense.createdBy.name} · {formattedDate}
+            Created by {expense.createdBy?.name || "Unknown"} · {formattedDate}
           </p>
         </div>
         <div className="text-right">
           <p className="txt text-2xl font-bold">{formattedAmount}</p>
-          <Badge variant="outline" className="mt-1">
-            {expense.category.name}
-          </Badge>
+          <div className="flex flex-wrap gap-1 mt-1 justify-end">
+            {expense.category && (
+              <Badge variant="outline">{expense.category.name}</Badge>
+            )}
+            {expense.tags && expense.tags.length > 0 && (
+              <>
+                {expense.tags.map(tag => (
+                  <Badge key={tag.id} variant="secondary" className="text-xs">
+                    {tag.name}
+                  </Badge>
+                ))}
+              </>
+            )}
+          </div>
         </div>
       </div>
 
@@ -49,7 +70,9 @@ export function ExpenseCard({ expense }: ExpenseCardProps) {
       <div className="space-y-2">
         <div className="flex justify-between">
           <span className="txt-muted">Responsible:</span>
-          <span className="txt font-medium">{expense.paidBy.name}</span>
+          <span className="txt font-medium">
+            {expense.paidBy?.name || "Unknown"}
+          </span>
         </div>
 
         {expense.description && (
@@ -77,6 +100,9 @@ export function ExpenseCard({ expense }: ExpenseCardProps) {
             Edit
           </Button>
         </Link>
+        <Button size="sm" className="btn" onClick={handleDelete}>
+          Delete
+        </Button>
       </div>
     </div>
   );

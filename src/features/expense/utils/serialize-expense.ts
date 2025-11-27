@@ -1,4 +1,13 @@
-import type { Expense } from "@prisma/client";
+import type { Expense, ExpenseTag, Tag, Category, User } from "@prisma/client";
+
+type ExpenseWithRelations = Expense & {
+  category?: Category;
+  paidBy?: Pick<User, "id" | "name" | "email">;
+  createdBy?: Pick<User, "id" | "name">;
+  tags?: (ExpenseTag & {
+    tag: Tag;
+  })[];
+};
 
 export type SerializedExpense = Omit<
   Expense,
@@ -8,14 +17,30 @@ export type SerializedExpense = Omit<
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
+  tags?: {
+    id: number;
+    name: string;
+  }[];
+  category?: Category;
+  paidBy?: Pick<User, "id" | "name" | "email">;
+  createdBy?: Pick<User, "id" | "name">;
 };
 
-export function serializeExpense(expense: Expense): SerializedExpense {
+export function serializeExpense(
+  expense: ExpenseWithRelations
+): SerializedExpense {
   return {
     ...expense,
     amount: Number(expense.amount),
     created_at: expense.created_at.toISOString(),
     updated_at: expense.updated_at.toISOString(),
     deleted_at: expense.deleted_at?.toISOString() || null,
+    tags: expense.tags?.map(et => ({
+      id: et.tag.id,
+      name: et.tag.name,
+    })),
+    category: expense.category,
+    paidBy: expense.paidBy,
+    createdBy: expense.createdBy,
   };
 }

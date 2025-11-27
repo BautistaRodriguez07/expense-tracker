@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import { cache } from "react";
 import type { Expense } from "@prisma/client";
+import type { Option } from "@/components/ui/multiple-selector";
 
 export class ExpenseService {
   /**
@@ -51,7 +52,7 @@ export class ExpenseService {
     }
 
     return await prisma.expense.update({
-      where: { id: expenseId },
+      where: { id: Number(expenseId) },
       data: {
         ...data,
         updated_by: updatedBy,
@@ -64,8 +65,17 @@ export class ExpenseService {
    * delete an expense (soft delete)
    */
   static async delete(expenseId: string, deletedBy: number): Promise<void> {
+    const expense = await prisma.expense.findUnique({
+      where: { id: Number(expenseId) },
+      select: { deleted_at: true },
+    });
+
+    if (expense?.deleted_at) {
+      throw new Error("Expense is already deleted");
+    }
+
     await prisma.expense.update({
-      where: { id: expenseId },
+      where: { id: Number(expenseId) },
       data: {
         deleted_at: new Date(),
         deleted_by: deletedBy,
@@ -78,11 +88,16 @@ export class ExpenseService {
    */
   static getById = cache(async (expenseId: string): Promise<Expense | null> => {
     return await prisma.expense.findUnique({
-      where: { id: expenseId },
+      where: { id: Number(expenseId) },
       include: {
         category: true,
         paidBy: true,
         createdBy: true,
+        tags: {
+          include: {
+            tag: true,
+          },
+        },
       },
     });
   });
@@ -95,11 +110,11 @@ export class ExpenseService {
     spaceId: number
   ): Promise<boolean> {
     const expense = await prisma.expense.findUnique({
-      where: { id: expenseId },
-      select: { space_id: true },
+      where: { id: Number(expenseId) },
+      select: { space_id: true, deleted_at: true },
     });
 
-    return expense?.space_id === spaceId;
+    return expense?.space_id === spaceId && !expense?.deleted_at;
   }
 
   /**
@@ -111,15 +126,80 @@ export class ExpenseService {
     userId: number
   ): Promise<boolean> {
     const expense = await prisma.expense.findUnique({
-      where: { id: expenseId },
+      where: { id: Number(expenseId) },
       select: {
         created_by: true,
         paid_by: true,
+        deleted_at: true,
       },
     });
 
-    if (!expense) return false;
+    if (!expense || expense.deleted_at) return false;
 
     return expense.created_by === userId || expense.paid_by === userId;
+  }
+
+  /**
+   * create or find tags by name in a space
+   * returns array of tag IDs
+   */
+  static async createOrFindTags(
+    tagOptions: Option[],
+    spaceId: number
+  ): Promise<number[]> {
+    if (!tagOptions || tagOptions.length === 0) {
+      return [];
+    }
+
+    const tagIds: number[] = [];
+
+    for (const tagOption of tagOptions) {
+      // Try to find existing tag by name in this space
+      let tag = await prisma.tag.findFirst({
+        where: {
+          space_id: spaceId,
+          name: tagOption.label,
+          deleted_at: null,
+        },
+      });
+
+      // If tag doesn't exist, create it
+      if (!tag) {
+        tag = await prisma.tag.create({
+          data: {
+            name: tagOption.label,
+            space_id: spaceId,
+          },
+        });
+      }
+
+      tagIds.push(tag.id);
+    }
+
+    return tagIds;
+  }
+
+  /**
+   * associate tags with an expense
+   */
+  static async associateTags(
+    expenseId: number,
+    tagIds: number[]
+  ): Promise<void> {
+    // Remove existing tags
+    await prisma.expenseTag.deleteMany({
+      where: { expense_id: expenseId },
+    });
+
+    // Add new tags
+    if (tagIds.length > 0) {
+      await prisma.expenseTag.createMany({
+        data: tagIds.map(tagId => ({
+          expense_id: expenseId,
+          tag_id: tagId,
+        })),
+        skipDuplicates: true,
+      });
+    }
   }
 }
