@@ -1,9 +1,20 @@
-import { CustomTitle, HistoryItem } from "@/components";
+import { CustomTitle } from "@/components";
+import { getExpenses } from "@/features/expense/actions/get-expenses.action";
+import ExpenseSummary from "@/features/expense/components/expense-summary";
+import { SerializedExpense } from "@/features/expense/utils/serialize-expense";
 import { Link } from "@/i18n/navigation";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 
-export const HistoryList = () => {
-  const t = useTranslations("historyList");
+interface HistoryListProps {
+  spaceId: number;
+}
+
+export const HistoryList = async (props: HistoryListProps) => {
+  const { spaceId } = props;
+  const t = await getTranslations("historyList");
+  const expenses = await getExpenses(spaceId)
+
+console.log('>>>>expenses', expenses);
 
   return (
     <>
@@ -18,7 +29,9 @@ export const HistoryList = () => {
         </Link>
       </div>
 
-      <HistoryItem />
+      {expenses.map((expense) => (
+        <ExpenseSummary key={expense.id} expense={expense as SerializedExpense} />
+      ))}
     </>
   );
 };

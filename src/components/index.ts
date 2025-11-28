@@ -22,5 +22,6 @@ export * from "./custom/user/user-avatar";
 export * from "./custom/payments/pending-payment";
 export * from "./custom/payments/pending-payments";
 
-export * from "./custom/history/history-item";
 export * from "./custom/history/history-list";
+
+export * from "./custom/category-icon/category-icon";
