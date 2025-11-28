@@ -161,9 +161,9 @@ export const ExpenseForm = ({
             render={({ field, fieldState }) => (
               <div className="flex flex-col gap-3">
                 <div className="flex justify-between gap-3">
-                  <Label className="text-lg">name</Label>
+                  <Label className="text-xl font-semibold">name</Label>
                   <Input
-                    className="border-0 shadow-none bg-light"
+                    className="border-0 shadow-none bg-light text-lg font-semibold md:w-100 sm:w-60 w-full"
                     {...field}
                     placeholder="name"
                   />
@@ -184,9 +184,9 @@ export const ExpenseForm = ({
             render={({ field, fieldState }) => (
               <div className="flex flex-col gap-3">
                 <div className="flex justify-between gap-3">
-                  <Label className="text-lg">amount</Label>
+                  <Label className="text-xl font-semibold">amount</Label>
                   <Input
-                    className="border-0 shadow-none bg-light"
+                    className="border-0 shadow-none bg-light text-lg font-semibold md:w-100 sm:w-60 w-full"
                     {...field}
                     placeholder="amount"
                   />
@@ -207,9 +207,9 @@ export const ExpenseForm = ({
             render={({ field }) => (
               <div className="flex flex-col gap-3">
                 <div className="flex justify-between gap-3">
-                  <Label className="text-lg">note</Label>
+                  <Label className="text-xl font-semibold">note</Label>
                   <Input
-                    className="border-0 shadow-none bg-light"
+                    className="border-0 shadow-none bg-light text-lg font-semibold md:w-100 sm:w-60 w-full"
                     {...field}
                     placeholder="note"
                   />
@@ -225,14 +225,16 @@ export const ExpenseForm = ({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field orientation="horizontal" className="!items-center">
-                <FieldLabel className="text-lg w-auto">currency</FieldLabel>
+                <FieldLabel className="text-xl font-semibold w-auto">
+                  currency
+                </FieldLabel>
 
                 <FieldContent className="items-end">
                   <Select
                     value={field.value}
                     onValueChange={val => field.onChange(val)}
                   >
-                    <SelectTrigger className="text-lg font-semibold txt card-container w-60">
+                    <SelectTrigger className="text-lg font-semibold txt card-container w-56 sm:w-60">
                       <SelectValue placeholder="Select currency" />
                     </SelectTrigger>
                     <SelectContent
@@ -275,14 +277,16 @@ export const ExpenseForm = ({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field orientation="horizontal" className="!items-center">
-                <FieldLabel className="text-lg w-auto">responsible</FieldLabel>
+                <FieldLabel className="text-xl font-semibold w-auto">
+                  responsible
+                </FieldLabel>
 
                 <FieldContent className="items-end">
                   <Select
                     value={field.value}
                     onValueChange={val => field.onChange(val)}
                   >
-                    <SelectTrigger className="text-lg font-semibold txt card-container w-60">
+                    <SelectTrigger className="text-lg font-semibold txt card-container w-56 sm:w-60">
                       <SelectValue placeholder="Select responsible" />
                     </SelectTrigger>
                     <SelectContent
@@ -316,14 +320,16 @@ export const ExpenseForm = ({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field orientation="horizontal" className="!items-center">
-                <FieldLabel className="text-lg w-auto">category</FieldLabel>
+                <FieldLabel className="text-xl font-semibold w-auto">
+                  category
+                </FieldLabel>
 
                 <FieldContent className="items-end">
                   <Select
                     value={field.value}
                     onValueChange={val => field.onChange(val)}
                   >
-                    <SelectTrigger className="text-lg font-semibold txt card-container w-60">
+                    <SelectTrigger className="text-lg font-semibold txt card-container w-56 sm:w-60">
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent
@@ -360,7 +366,9 @@ export const ExpenseForm = ({
               <Field orientation="horizontal" className="!items-center">
                 <div className="flex flex-col w-full">
                   <div className="flex justify-between w-full">
-                    <FieldLabel className="text-lg">expiration date</FieldLabel>
+                    <FieldLabel className="text-xl font-semibold">
+                      expiration date
+                    </FieldLabel>
                     <FieldContent className="items-end">
                       <Calendar22
                         selectedDate={field.value}
@@ -385,10 +393,12 @@ export const ExpenseForm = ({
             name="tags"
             control={form.control}
             render={({ field }) => (
-              <div className="flex flex-col gap-3">
-                <div className="flex justify-between">
-                  <Label className="text-lg">tags</Label>
-                  <div className="w-60">
+              <Field orientation="horizontal" className="!items-center">
+                <FieldLabel className="text-xl font-semibold w-auto">
+                  tags
+                </FieldLabel>
+                <FieldContent className="items-end">
+                  <div className="w-56 sm:w-60">
                     <MultipleSelector
                       {...field}
                       defaultOptions={tags}
@@ -396,15 +406,11 @@ export const ExpenseForm = ({
                       creatable
                       value={field.value}
                       onChange={field.onChange}
-                      emptyIndicator={
-                        <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-                          no results found.
-                        </p>
-                      }
+                      emptyIndicator={<p>no results found.</p>}
                     />
                   </div>
-                </div>
-              </div>
+                </FieldContent>
+              </Field>
             )}
           />
 

@@ -4,6 +4,7 @@ import { PropsWithChildren } from "react";
 
 export const ChartContainer = ({ children }: PropsWithChildren) => {
   const t = useTranslations("chartContainer");
+
   return (
     <div className="sm:grid sm:grid-cols-3 gap-2 card-container my-4">
       {/* title */}

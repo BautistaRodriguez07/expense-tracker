@@ -5,7 +5,6 @@ import { ChevronDownIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
@@ -28,7 +27,7 @@ export function Calendar22({ selectedDate, onDateChange }: Calendar22Props) {
           <Button
             variant="outline"
             id="date"
-            className="text-lg font-semibold txt card-container justify-between w-60"
+            className="text-lg font-semibold txt card-container justify-between w-56 sm:w-60"
           >
             {date ? date.toLocaleDateString() : "Select date"}
             <ChevronDownIcon />

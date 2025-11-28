@@ -5,6 +5,7 @@ import { ExpenseCard } from "@/features/expense/components/expense-card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { IoChevronBackOutline } from "react-icons/io5";
 
 export default async function ExpenseListPage() {
   // Validate authentication
@@ -22,7 +23,14 @@ export default async function ExpenseListPage() {
       <div className="max-w-4xl w-full">
         {/* Header */}
         <div className="flex justify-between items-center py-3">
-          <CustomTitle tag="h1" title="All Expenses" />
+          <div className="flex gap-5">
+            <Link href="/">
+              <Button className="btn">
+                <IoChevronBackOutline className="w-4 h-4" />
+              </Button>
+            </Link>
+            <CustomTitle tag="h1" title="All Expenses" />
+          </div>
           <Link href="/expense/new">
             <Button className="btn">+ New Expense</Button>
           </Link>

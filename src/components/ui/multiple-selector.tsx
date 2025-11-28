@@ -461,6 +461,7 @@ const MultipleSelector = React.forwardRef<
         <div
           className={cn(
             "flex items-start justify-between rounded-md border border-input px-3 py-2 text-base ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 md:text-sm",
+            "text-lg font-semibold txt card-container w-full",
             {
               "cursor-text": !disabled && selected.length !== 0,
             },
@@ -573,7 +574,11 @@ const MultipleSelector = React.forwardRef<
         <div className="relative">
           {open && (
             <CommandList
-              className="absolute top-1 z-10 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in"
+              className={cn(
+                "absolute top-1 z-10 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in",
+
+                "z-[1]"
+              )}
               onMouseLeave={() => {
                 setOnScrollbar(false);
               }}
@@ -597,7 +602,10 @@ const MultipleSelector = React.forwardRef<
                     <CommandGroup
                       key={key}
                       heading={key}
-                      className="h-full overflow-auto"
+                      className={cn(
+                        "h-full overflow-auto",
+                        "card-container !p-1"
+                      )}
                     >
                       <>
                         {dropdowns.map(option => {
@@ -622,6 +630,7 @@ const MultipleSelector = React.forwardRef<
                               }}
                               className={cn(
                                 "cursor-pointer",
+                                "bg text-lg font-semibold",
                                 option.disable &&
                                   "cursor-default text-muted-foreground"
                               )}
