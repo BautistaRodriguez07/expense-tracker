@@ -6,17 +6,22 @@ import { Separator } from "@/components/ui/separator";
 import type { SerializedExpense } from "../utils/serialize-expense";
 import Link from "next/link";
 import { deleteExpense } from "../actions/create-update-expense.action";
+import { useTranslations } from "next-intl";
 
 type ExpenseCardProps = {
   expense: SerializedExpense;
 };
 
 export function ExpenseCard({ expense }: ExpenseCardProps) {
-  const formattedDate = new Date(expense.date).toLocaleDateString("es-AR", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
+  const t = useTranslations("expense");
+  const formattedDate = new Date(expense.date).toLocaleDateString(
+    t("defaultLocale"),
+    {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    }
+  );
 
   const formattedAmount = new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -42,7 +47,8 @@ export function ExpenseCard({ expense }: ExpenseCardProps) {
         <div className="flex-1">
           <h3 className="txt text-xl font-semibold">{expense.name}</h3>
           <p className="txt-muted text-sm">
-            Created by {expense.createdBy?.name || "Unknown"} · {formattedDate}
+            {t("createdBy")} {expense.createdBy?.name || "Unknown"} ·{" "}
+            {formattedDate}
           </p>
         </div>
         <div className="text-right">
@@ -69,7 +75,7 @@ export function ExpenseCard({ expense }: ExpenseCardProps) {
       {/* Details */}
       <div className="space-y-2">
         <div className="flex justify-between">
-          <span className="txt-muted">Responsible:</span>
+          <span className="txt-muted">{t("responsible")}:</span>
           <span className="txt font-medium">
             {expense.paidBy?.name || "Unknown"}
           </span>
@@ -79,7 +85,7 @@ export function ExpenseCard({ expense }: ExpenseCardProps) {
           <>
             <Separator className="my-2" />
             <div>
-              <span className="txt-muted text-sm">Note:</span>
+              <span className="txt-muted text-sm">{t("note")}:</span>
               <p className="txt text-sm mt-1">{expense.description}</p>
             </div>
           </>
@@ -92,16 +98,16 @@ export function ExpenseCard({ expense }: ExpenseCardProps) {
       <div className="flex justify-end gap-2">
         <Link href={`/expense/${expense.id}`}>
           <Button variant="outline" size="sm" className="btn">
-            View Details
+            {t("viewDetails")}
           </Button>
         </Link>
         <Link href={`/expense/edit/${expense.id}`}>
           <Button size="sm" className="btn">
-            Edit
+            {t("edit")}
           </Button>
         </Link>
         <Button size="sm" className="btn" onClick={handleDelete}>
-          Delete
+          {t("delete")}
         </Button>
       </div>
     </div>

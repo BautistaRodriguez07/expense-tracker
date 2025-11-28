@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { IoChevronBackOutline } from "react-icons/io5";
+import { getTranslations } from "next-intl/server";
 
 export default async function ExpenseListPage() {
+  const t = await getTranslations("expense");
   // Validate authentication
   const auth = await validateAuth();
 
@@ -29,10 +31,10 @@ export default async function ExpenseListPage() {
                 <IoChevronBackOutline className="w-4 h-4" />
               </Button>
             </Link>
-            <CustomTitle tag="h1" title="All Expenses" />
+            <CustomTitle tag="h1" title={t("allExpenses")} />
           </div>
           <Link href="/expense/new">
-            <Button className="btn">+ New Expense</Button>
+            <Button className="btn">{t("newExpense")}</Button>
           </Link>
         </div>
 
@@ -40,11 +42,11 @@ export default async function ExpenseListPage() {
         <div className="card-container mb-6">
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
-              <p className="txt-muted text-sm">Total Expenses</p>
+              <p className="txt-muted text-sm">{t("totalExpenses")}</p>
               <p className="txt text-2xl font-bold">{expenses.length}</p>
             </div>
             <div>
-              <p className="txt-muted text-sm">Total Amount</p>
+              <p className="txt-muted text-sm">{t("totalAmount")}</p>
               <p className="txt text-2xl font-bold">
                 {new Intl.NumberFormat("es-AR", {
                   style: "currency",
@@ -53,7 +55,7 @@ export default async function ExpenseListPage() {
               </p>
             </div>
             <div>
-              <p className="txt-muted text-sm">Pending</p>
+              <p className="txt-muted text-sm">{t("pending")}</p>
               <p className="txt text-2xl font-bold">
                 {expenses.filter(e => !e.deleted_at).length}
               </p>
@@ -64,9 +66,9 @@ export default async function ExpenseListPage() {
         {/* Expenses List */}
         {expenses.length === 0 ? (
           <div className="card-container text-center py-12">
-            <p className="txt-muted text-lg mb-4">No expenses yet</p>
+            <p className="txt-muted text-lg mb-4">{t("noExpenses")}</p>
             <Link href="/expense/new">
-              <Button className="btn">Create your first expense</Button>
+              <Button className="btn">{t("createYourFirstExpense")}</Button>
             </Link>
           </div>
         ) : (

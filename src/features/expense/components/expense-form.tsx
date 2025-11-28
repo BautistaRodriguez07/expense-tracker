@@ -33,6 +33,7 @@ import { useTransition } from "react";
 import { Category } from "@prisma/client";
 import type { Option } from "@/components/ui/multiple-selector";
 import { Calendar22 } from "@/components/custom/calendar/calendar";
+import { useTranslations } from "next-intl";
 
 interface ExpenseFormProps {
   categories: Category[];
@@ -64,6 +65,7 @@ export const ExpenseForm = ({
   tags,
   expense,
 }: ExpenseFormProps) => {
+  const t = useTranslations("expense");
   const [isPending, startTransition] = useTransition();
 
   const isEditing = !!expense?.id;
@@ -161,11 +163,11 @@ export const ExpenseForm = ({
             render={({ field, fieldState }) => (
               <div className="flex flex-col gap-3">
                 <div className="flex justify-between gap-3">
-                  <Label className="text-xl font-semibold">name</Label>
+                  <Label className="text-xl font-semibold">{t("name")}</Label>
                   <Input
                     className="border-0 shadow-none bg-light text-lg font-semibold md:w-100 sm:w-60 w-full"
                     {...field}
-                    placeholder="name"
+                    placeholder={t("name")}
                   />
                 </div>
                 {fieldState.invalid && (
@@ -184,11 +186,11 @@ export const ExpenseForm = ({
             render={({ field, fieldState }) => (
               <div className="flex flex-col gap-3">
                 <div className="flex justify-between gap-3">
-                  <Label className="text-xl font-semibold">amount</Label>
+                  <Label className="text-xl font-semibold">{t("amount")}</Label>
                   <Input
                     className="border-0 shadow-none bg-light text-lg font-semibold md:w-100 sm:w-60 w-full"
                     {...field}
-                    placeholder="amount"
+                    placeholder={t("amount")}
                   />
                 </div>
                 {fieldState.invalid && (
@@ -207,11 +209,11 @@ export const ExpenseForm = ({
             render={({ field }) => (
               <div className="flex flex-col gap-3">
                 <div className="flex justify-between gap-3">
-                  <Label className="text-xl font-semibold">note</Label>
+                  <Label className="text-xl font-semibold">{t("note")}</Label>
                   <Input
                     className="border-0 shadow-none bg-light text-lg font-semibold md:w-100 sm:w-60 w-full"
                     {...field}
-                    placeholder="note"
+                    placeholder={t("note")}
                   />
                 </div>
               </div>
@@ -226,7 +228,7 @@ export const ExpenseForm = ({
             render={({ field, fieldState }) => (
               <Field orientation="horizontal" className="!items-center">
                 <FieldLabel className="text-xl font-semibold w-auto">
-                  currency
+                  {t("currency")}
                 </FieldLabel>
 
                 <FieldContent className="items-end">
@@ -235,7 +237,7 @@ export const ExpenseForm = ({
                     onValueChange={val => field.onChange(val)}
                   >
                     <SelectTrigger className="text-lg font-semibold txt card-container w-56 sm:w-60">
-                      <SelectValue placeholder="Select currency" />
+                      <SelectValue placeholder={t("selectCurrency")} />
                     </SelectTrigger>
                     <SelectContent
                       position="popper"
@@ -278,7 +280,7 @@ export const ExpenseForm = ({
             render={({ field, fieldState }) => (
               <Field orientation="horizontal" className="!items-center">
                 <FieldLabel className="text-xl font-semibold w-auto">
-                  responsible
+                  {t("responsible")}
                 </FieldLabel>
 
                 <FieldContent className="items-end">
@@ -287,7 +289,7 @@ export const ExpenseForm = ({
                     onValueChange={val => field.onChange(val)}
                   >
                     <SelectTrigger className="text-lg font-semibold txt card-container w-56 sm:w-60">
-                      <SelectValue placeholder="Select responsible" />
+                      <SelectValue placeholder={t("selectResponsible")} />
                     </SelectTrigger>
                     <SelectContent
                       position="popper"
@@ -321,7 +323,7 @@ export const ExpenseForm = ({
             render={({ field, fieldState }) => (
               <Field orientation="horizontal" className="!items-center">
                 <FieldLabel className="text-xl font-semibold w-auto">
-                  category
+                  {t("category")}
                 </FieldLabel>
 
                 <FieldContent className="items-end">
@@ -330,7 +332,7 @@ export const ExpenseForm = ({
                     onValueChange={val => field.onChange(val)}
                   >
                     <SelectTrigger className="text-lg font-semibold txt card-container w-56 sm:w-60">
-                      <SelectValue placeholder="Select category" />
+                      <SelectValue placeholder={t("selectCategory")} />
                     </SelectTrigger>
                     <SelectContent
                       position="popper"
@@ -367,7 +369,7 @@ export const ExpenseForm = ({
                 <div className="flex flex-col w-full">
                   <div className="flex justify-between w-full">
                     <FieldLabel className="text-xl font-semibold">
-                      expiration date
+                      {t("expirationDate")}
                     </FieldLabel>
                     <FieldContent className="items-end">
                       <Calendar22
@@ -395,18 +397,18 @@ export const ExpenseForm = ({
             render={({ field }) => (
               <Field orientation="horizontal" className="!items-center">
                 <FieldLabel className="text-xl font-semibold w-auto">
-                  tags
+                  {t("tags")}
                 </FieldLabel>
                 <FieldContent className="items-end">
                   <div className="w-56 sm:w-60">
                     <MultipleSelector
                       {...field}
                       defaultOptions={tags}
-                      placeholder="Select or create tags..."
+                      placeholder={t("selectOrCreateTags")}
                       creatable
                       value={field.value}
                       onChange={field.onChange}
-                      emptyIndicator={<p>no results found.</p>}
+                      emptyIndicator={<p>{t("noResultsFound")}</p>}
                     />
                   </div>
                 </FieldContent>
@@ -420,11 +422,11 @@ export const ExpenseForm = ({
           <Button type="submit" className="btn" disabled={isPending}>
             {isPending
               ? isEditing
-                ? "Updating..."
-                : "Creating..."
+                ? t("updating")
+                : t("creating")
               : isEditing
-              ? "Update Expense"
-              : "Create Expense"}
+              ? t("updateExpense")
+              : t("createExpense")}
           </Button>
         </div>
       </form>
