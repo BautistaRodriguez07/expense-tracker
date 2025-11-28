@@ -5,13 +5,12 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url   = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
 // ---------------------- ENUMS ----------------------
@@ -43,8 +42,7 @@ enum sizes {
 
 enum space_role {
   owner
-  admin
-  user
+  member
 }
 
 enum invitation_status {
@@ -54,31 +52,40 @@ enum invitation_status {
   expired
 }
 
+enum expense_status {
+  pending
+  paid
+  cancelled
+}
+
 // ---------------------- MODELS ----------------------
 
 model User {
-  id            Int       @id @default(autoincrement())
+  id            Int     @id @default(autoincrement())
+  clerk_id      String  @unique
   name          String
-  email         String    @unique
-  password_hash String
+  email         String  @unique
+  password_hash String?
 
-  settings_theme     theme     @default(light)
-  settings_language  language  @default(english)
-  settings_font_size sizes     @default(md)
+  is_system_admin Boolean @default(false)
 
-  is_active    Boolean   @default(true)
-  created_at   DateTime  @default(now())
-  updated_at   DateTime  @default(now())
+  settings_theme     theme    @default(light)
+  settings_language  language @default(english)
+  settings_font_size sizes    @default(md)
 
-  spaces_owned Space[]   @relation("SpaceOwner")
-  spaceMembers SpaceMember[]
-  spaceInvitations SpaceInvitation[] @relation("InvitationInvitedBy")
-  expenses_paid Expense[] @relation("ExpensePaidBy")
-  expenses_created Expense[] @relation("ExpenseCreatedBy")
-  expenses_updated Expense[] @relation("ExpenseUpdatedBy")
-  expenses_deleted Expense[] @relation("ExpenseDeletedBy")
-  expenseSplits ExpenseSplit[]
-  receiptsUploaded ExpenseReceipt[]
+  is_active  Boolean  @default(true)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  spaces_owned         Space[]           @relation("SpaceOwner")
+  spaceMembers         SpaceMember[]
+  spaceInvitations     SpaceInvitation[] @relation("InvitationInvitedBy")
+  expenses_responsible Expense[]         @relation("ExpenseResponsible")
+  expenses_created     Expense[]         @relation("ExpenseCreatedBy")
+  expenses_updated     Expense[]         @relation("ExpenseUpdatedBy")
+  expenses_deleted     Expense[]         @relation("ExpenseDeletedBy")
+  expenseSplits        ExpenseSplit[]
+  receiptsUploaded     ExpenseReceipt[]
 
   @@map("user")
 }
@@ -86,20 +93,20 @@ model User {
 // ----------------------------------------------------
 
 model Space {
-  id               Int       @id @default(autoincrement())
+  id               Int      @id @default(autoincrement())
   name             String
-  default_currency currency  @default(USD)
+  default_currency currency @default(USD)
   owner_id         Int
 
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
   deleted_at DateTime?
 
-  owner     User   @relation("SpaceOwner", fields: [owner_id], references: [id])
-  members   SpaceMember[]
+  owner       User              @relation("SpaceOwner", fields: [owner_id], references: [id])
+  members     SpaceMember[]
   invitations SpaceInvitation[]
-  expenses  Expense[]
-  tags      Tag[]
+  expenses    Expense[]
+  tags        Tag[]
 
   @@map("space")
 }
@@ -107,11 +114,11 @@ model Space {
 // ----------------------------------------------------
 
 model SpaceMember {
-  id       Int      @id @default(autoincrement())
+  id       Int @id @default(autoincrement())
   user_id  Int
   space_id Int
 
-  role      space_role @default(user)
+  role      space_role @default(member)
   joined_at DateTime   @default(now())
 
   user  User  @relation(fields: [user_id], references: [id])
@@ -124,19 +131,19 @@ model SpaceMember {
 // ----------------------------------------------------
 
 model SpaceInvitation {
-  id            Int      @id @default(autoincrement())
+  id            Int    @id @default(autoincrement())
   space_id      Int
   invited_by    Int
   invited_email String
 
-  status   invitation_status @default(pending)
-  token    String            @unique
-  expires_at  DateTime
-  created_at  DateTime @default(now())
+  status       invitation_status @default(pending)
+  token        String            @unique
+  expires_at   DateTime
+  created_at   DateTime          @default(now())
   responded_at DateTime?
 
-  space       Space @relation(fields: [space_id], references: [id])
-  invitedBy   User  @relation("InvitationInvitedBy", fields: [invited_by], references: [id])
+  space     Space @relation(fields: [space_id], references: [id])
+  invitedBy User  @relation("InvitationInvitedBy", fields: [invited_by], references: [id])
 
   @@index([space_id, invited_email])
   @@map("space_invitation")
@@ -145,8 +152,8 @@ model SpaceInvitation {
 // ----------------------------------------------------
 
 model Category {
-  id    Int    @id @default(autoincrement())
-  name  String @unique
+  id    Int     @id @default(autoincrement())
+  name  String  @unique
   color String
   icon  String?
 
@@ -160,38 +167,39 @@ model Category {
 // ----------------------------------------------------
 
 model Expense {
-  id          Int       @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   space_id    Int
   name        String
   description String?
-  amount      Decimal   @db.Decimal(10, 2)
+  amount      Decimal  @db.Decimal(10, 2)
   currency    currency
 
-  date       DateTime
-  paid_by    Int
+  date           DateTime
+  responsible_id Int?
+  status         expense_status @default(pending)
 
   category_id Int
 
   created_by Int
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
   updated_by Int?
   deleted_at DateTime?
   deleted_by Int?
 
-  space      Space    @relation(fields: [space_id], references: [id])
-  paidBy     User     @relation("ExpensePaidBy", fields: [paid_by], references: [id])
-  category   Category @relation(fields: [category_id], references: [id])
-  createdBy  User     @relation("ExpenseCreatedBy", fields: [created_by], references: [id])
-  updatedBy  User?    @relation("ExpenseUpdatedBy", fields: [updated_by], references: [id])
-  deletedBy  User?    @relation("ExpenseDeletedBy", fields: [deleted_by], references: [id])
+  space       Space    @relation(fields: [space_id], references: [id])
+  responsible User?    @relation("ExpenseResponsible", fields: [responsible_id], references: [id])
+  category    Category @relation(fields: [category_id], references: [id])
+  createdBy   User     @relation("ExpenseCreatedBy", fields: [created_by], references: [id])
+  updatedBy   User?    @relation("ExpenseUpdatedBy", fields: [updated_by], references: [id])
+  deletedBy   User?    @relation("ExpenseDeletedBy", fields: [deleted_by], references: [id])
 
   splits   ExpenseSplit[]
   receipts ExpenseReceipt[]
   tags     ExpenseTag[]
 
   @@index([space_id])
-  @@index([paid_by])
+  @@index([responsible_id])
   @@index([category_id])
   @@index([date])
   @@map("expense")
@@ -200,12 +208,12 @@ model Expense {
 // ----------------------------------------------------
 
 model ExpenseSplit {
-  id         Int      @id @default(autoincrement())
+  id         Int @id @default(autoincrement())
   expense_id Int
   user_id    Int
 
-  amount  Decimal @db.Decimal(10, 2)
-  is_paid Boolean @default(false)
+  amount  Decimal   @db.Decimal(10, 2)
+  is_paid Boolean   @default(false)
   paid_at DateTime?
 
   expense Expense @relation(fields: [expense_id], references: [id])
@@ -218,15 +226,15 @@ model ExpenseSplit {
 // ----------------------------------------------------
 
 model ExpenseReceipt {
-  id         Int      @id @default(autoincrement())
+  id         Int    @id @default(autoincrement())
   expense_id Int
   file_url   String
 
   uploaded_by Int
   uploaded_at DateTime @default(now())
 
-  expense Expense @relation(fields: [expense_id], references: [id])
-  uploadedBy User @relation(fields: [uploaded_by], references: [id])
+  expense    Expense @relation(fields: [expense_id], references: [id])
+  uploadedBy User    @relation(fields: [uploaded_by], references: [id])
 
   @@map("expense_receipt")
 }
@@ -234,14 +242,14 @@ model ExpenseReceipt {
 // ----------------------------------------------------
 
 model Tag {
-  id       Int      @id @default(autoincrement())
+  id       Int    @id @default(autoincrement())
   space_id Int
   name     String
 
-  created_at DateTime @default(now())
+  created_at DateTime  @default(now())
   deleted_at DateTime?
 
-  space   Space      @relation(fields: [space_id], references: [id])
+  space    Space        @relation(fields: [space_id], references: [id])
   expenses ExpenseTag[]
 
   @@unique([space_id, name])

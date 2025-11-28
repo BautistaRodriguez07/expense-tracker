@@ -1,17 +1,21 @@
-import {
-  ChartContainer,
-  CustomTitle,
-  HistoryList,
-  PendingPayments,
-} from "@/components";
-import { useTranslations } from "next-intl";
+import { ChartContainer, HistoryList, PendingPayments } from "@/components";
 import { setRequestLocale } from "next-intl/server";
-import { HomeTitle } from "./components/HomeTitle";
+import { HomeTitle } from "../../../features/user/components/home-title";
+import { Users } from "@/components/custom/user/users-list";
+import { validateAuth } from "@/features/auth/services/auth.service";
+import { redirect } from "next/navigation";
 
-export default function HomePage({ params }: { params: { locale: string } }) {
+export default async function HomePage({ params }: { params: { locale: string } }) {
   const { locale } = params;
 
   setRequestLocale(locale);
+
+  // validate authentication
+  const auth = await validateAuth();
+
+  if (!auth) {
+    redirect("/sign-in");
+  }
 
   return (
     <div className=" flex flex-col items-center justify-center min-h-screen">
@@ -19,13 +23,15 @@ export default function HomePage({ params }: { params: { locale: string } }) {
         <HomeTitle />
 
         {/* Chart information */}
-        <ChartContainer />
+        <ChartContainer>
+          <Users />
+        </ChartContainer>
 
         {/* Pending payments */}
         <PendingPayments />
 
         {/* history */}
-        <HistoryList />
+        <HistoryList spaceId={auth.spaceId} />
       </div>
     </div>
   );

@@ -44,7 +44,11 @@
     "signin": "Iniciar sesión",
     "signout": "Cerrar sesión",
     "theme": "Tema",
-    "title": "Perfil"
+    "title": "Perfil",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "reset": "Restablecer",
+    "save": "Guardar"
   },
   "sidebar": {
     "home": "Inicio",
@@ -54,5 +58,37 @@
     "group": "Grupo",
     "personalAccount": "Cuenta personal",
     "spaceSelector": "Selector de espacio"
+  },
+  "expense": {
+    "allExpenses": "Todos los gastos",
+    "newExpense": "Nuevo gasto",
+    "editExpense": "Editar gasto",
+    "totalExpenses": "Total de gastos",
+    "totalAmount": "Total amount",
+    "pending": "Pendiente",
+    "noExpenses": "No hay gastos todavía",
+    "createYourFirstExpense": "Crea tu primer gasto",
+    "createdBy": "Creado por",
+    "responsible": "Responsable",
+    "note": "Nota",
+    "viewDetails": "Ver detalles",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "defaultLocale": "es-AR",
+    "name": "Nombre",
+    "amount": "Cantidad",
+    "currency": "Moneda",
+    "selectCurrency": "Seleccionar moneda",
+    "selectResponsible": "Seleccionar responsable",
+    "selectCategory": "Seleccionar categoría",
+    "selectOrCreateTags": "Seleccionar o crear tags...",
+    "noResultsFound": "No se encontraron resultados.",
+    "updating": "Actualizando...",
+    "creating": "Creando...",
+    "updateExpense": "Actualizar gasto",
+    "createExpense": "Crear gasto",
+    "expirationDate": "Fecha de expiración",
+    "tags": "Tags",
+    "category": "Categoría"
   }
 }
