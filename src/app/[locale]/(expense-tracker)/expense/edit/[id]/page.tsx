@@ -46,7 +46,8 @@ export default async function ExpenseEditPage({
     currency: expense.currency,
     date: new Date(expense.date),
     category_id: expense.category_id.toString(),
-    paid_by: expense.paid_by,
+    responsible_id: expense.responsible_id || expense.responsible?.id || 0,
+    status: expense.status,
     description: expense.description || undefined,
     tags: expense.tags?.map(tag => ({
       label: tag.name,

@@ -18,6 +18,7 @@ import { useEffect } from "react";
 
 export const AccountInformation = () => {
   const t = useTranslations("settings");
+
   const { user, isLoaded } = useUser();
 
   // const initialValues = {
@@ -28,7 +29,8 @@ export const AccountInformation = () => {
   const form = useForm<AccountInformationType>({
     resolver: zodResolver(AccountInformationSchema),
     defaultValues: {
-      username: "",
+      firstName: "",
+      lastName: "",
       image: undefined,
     },
   });
@@ -43,13 +45,17 @@ export const AccountInformation = () => {
         await user.setProfileImage({ file: data.image });
       }
 
-      if (data.username && data.username.length > 3) {
-        await user.update({ firstName: data.username });
+      if (data.firstName && data.firstName.length > 3) {
+        await user.update({ firstName: data.firstName });
+      }
+      if (data.lastName && data.lastName.length > 3) {
+        await user.update({ lastName: data.lastName });
       }
       await user.reload();
 
       form.reset({
-        username: user.firstName ?? "",
+        firstName: user.firstName ?? "",
+        lastName: user.lastName ?? "",
         image: undefined,
       });
     } catch (error) {
@@ -76,11 +82,12 @@ export const AccountInformation = () => {
 
   useEffect(() => {
     if (isLoaded && user) {
-      form.setValue("username", user?.firstName ?? "");
+      form.setValue("firstName", user?.firstName ?? "");
+      form.setValue("lastName", user?.lastName ?? "");
     }
   }, [user, isLoaded, form]);
 
-  if (!isLoaded || !user) return <div>Loading...</div>;
+  if (!isLoaded || !user || !t) return <div>Loading...</div>;
 
   console.log(form.formState.errors);
 
@@ -170,22 +177,24 @@ export const AccountInformation = () => {
       {/* name */}
       <div className="flex justify-between items-center">
         <Controller
-          name="username"
+          name="firstName"
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel
-                htmlFor="form-rhf-input-username"
+                htmlFor="form-rhf-input-firstName"
                 className="txt font-medium text-md"
               >
-                <span className="txt font-medium text-lg">{t("name")}</span>
+                <span className="txt font-medium text-lg">
+                  {t("firstName")}
+                </span>
               </FieldLabel>
               <Input
                 className="border-0 shadow-none bg-light"
                 {...field}
-                name="username"
+                name="firstName"
                 aria-invalid={fieldState.invalid}
-                placeholder={user?.firstName ?? "name"}
+                placeholder={user?.firstName ?? t("firstName")}
                 autoComplete="username"
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -194,6 +203,34 @@ export const AccountInformation = () => {
         />
       </div>
 
+      <Separator className="my-5" />
+
+      {/* last name */}
+      <div className="flex justify-between items-center">
+        <Controller
+          name="lastName"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel
+                htmlFor="form-rhf-input-lastName"
+                className="txt font-medium text-md"
+              >
+                <span className="txt font-medium text-lg">{t("lastName")}</span>
+              </FieldLabel>
+              <Input
+                className="border-0 shadow-none bg-light"
+                {...field}
+                name="lastName"
+                aria-invalid={fieldState.invalid}
+                placeholder={user?.lastName ?? "lastName"}
+                autoComplete="lastName"
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+      </div>
       <Separator className="my-5" />
 
       {/* email */}
@@ -210,17 +247,18 @@ export const AccountInformation = () => {
           className="btn"
           onClick={() =>
             form.reset({
-              username: user.firstName ?? "",
+              firstName: user.firstName ?? "",
+              lastName: user.lastName ?? "",
               image: undefined,
             })
           }
           disabled={!isDirty}
         >
-          Reset
+          {t("reset")}
         </Button>
 
         <Button type="submit" className="btn" disabled={!isDirty}>
-          Save
+          {t("save")}
         </Button>
       </div>
     </form>

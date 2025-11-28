@@ -123,7 +123,7 @@ export async function canEditExpense(
     where: { id: expenseId },
     select: {
       created_by: true,
-      paid_by: true,
+      responsible_id: true,
       space_id: true,
     },
   });
@@ -139,7 +139,8 @@ export async function canEditExpense(
 
   // if is the creator or responsible
   const isOwnerOrResponsible =
-    expense.created_by === auth.dbUser.id || expense.paid_by === auth.dbUser.id;
+    expense.created_by === auth.dbUser.id ||
+    expense.responsible_id === auth.dbUser.id;
 
   if (
     isOwnerOrResponsible &&
@@ -193,7 +194,7 @@ export async function canMarkAsPaid(
   const expense = await prisma.expense.findUnique({
     where: { id: expenseId },
     select: {
-      paid_by: true,
+      responsible_id: true,
       space_id: true,
     },
   });
@@ -209,7 +210,7 @@ export async function canMarkAsPaid(
 
   // member can mark their own as paid
   if (
-    expense.paid_by === auth.dbUser.id &&
+    expense.responsible_id === auth.dbUser.id &&
     (await hasWorkspacePermission(auth, "expense.pay.own"))
   ) {
     return true;

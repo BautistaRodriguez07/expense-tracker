@@ -44,7 +44,11 @@
     "signin": "Se connecter",
     "signout": "Se déconnecter",
     "theme": "Thème",
-    "title": "Profil"
+    "title": "Profil",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "reset": "Réinitialiser",
+    "save": "Enregistrer"
   },
   "sidebar": {
     "home": "Accueil",
@@ -84,6 +88,7 @@
     "updateExpense": "Update expense",
     "createExpense": "Create expense",
     "expirationDate": "Expiration date",
-    "tags": "Tags"
+    "tags": "Tags",
+    "category": "Catégorie"
   }
 }

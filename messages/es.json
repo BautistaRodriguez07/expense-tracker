@@ -44,7 +44,11 @@
     "signin": "Iniciar sesión",
     "signout": "Cerrar sesión",
     "theme": "Tema",
-    "title": "Perfil"
+    "title": "Perfil",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "reset": "Restablecer",
+    "save": "Guardar"
   },
   "sidebar": {
     "home": "Inicio",
@@ -84,6 +88,7 @@
     "updateExpense": "Actualizar gasto",
     "createExpense": "Crear gasto",
     "expirationDate": "Fecha de expiración",
-    "tags": "Tags"
+    "tags": "Tags",
+    "category": "Categoría"
   }
 }

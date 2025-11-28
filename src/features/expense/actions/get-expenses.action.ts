@@ -18,7 +18,7 @@ const getExpensesQuery = cache(
       },
       include: {
         category: true,
-        paidBy: {
+        responsible: {
           select: {
             id: true,
             name: true,

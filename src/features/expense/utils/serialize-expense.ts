@@ -2,7 +2,7 @@ import type { Expense, ExpenseTag, Tag, Category, User } from "@prisma/client";
 
 type ExpenseWithRelations = Expense & {
   category?: Category;
-  paidBy?: Pick<User, "id" | "name" | "email">;
+  responsible?: Pick<User, "id" | "name" | "email"> | null;
   createdBy?: Pick<User, "id" | "name">;
   tags?: (ExpenseTag & {
     tag: Tag;
@@ -22,7 +22,7 @@ export type SerializedExpense = Omit<
     name: string;
   }[];
   category?: Category;
-  paidBy?: Pick<User, "id" | "name" | "email">;
+  responsible?: Pick<User, "id" | "name" | "email"> | null;
   createdBy?: Pick<User, "id" | "name">;
 };
 
@@ -40,7 +40,7 @@ export function serializeExpense(
       name: et.tag.name,
     })),
     category: expense.category,
-    paidBy: expense.paidBy,
+    responsible: expense.responsible,
     createdBy: expense.createdBy,
   };
 }

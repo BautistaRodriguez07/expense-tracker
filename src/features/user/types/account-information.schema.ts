@@ -4,14 +4,13 @@ const MAX_UPLOAD_SIZE = 1024 * 1024 * 3; // 3MB
 const ACCEPTED_FILE_TYPES = ["image/png", "image/jpeg"];
 
 export const AccountInformationSchema = z.object({
-  username: z
+  firstName: z
     .string()
-    .min(3, "Username must be at least 3 characters.")
-    .max(15, "Username must be at most 15 characters.")
-    .regex(
-      /^[a-zA-Z0-9_]+$/,
-      "Username can only contain letters, numbers, and underscores."
-    )
+    .min(3, "First name must be at least 3 characters.")
+    .optional(),
+  lastName: z
+    .string()
+    .min(3, "Last name must be at least 3 characters.")
     .optional(),
   image: z
 

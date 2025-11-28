@@ -60,12 +60,13 @@ export async function createExpense(
       currency: formData.get("currency") as string,
       date: new Date(formData.get("expireDate") as string),
       category_id: parseInt(formData.get("category") as string),
-      paid_by: formData.get("responsible")
-        ? parseInt(formData.get("responsible") as string)
-        : auth.dbUser.id,
       description: (formData.get("note") as string) || "",
       space_id: targetSpaceId,
       created_by: auth.dbUser.id,
+      responsible_id: parseInt(formData.get("responsible") as string),
+      status:
+        (formData.get("status") as "pending" | "paid" | "cancelled") ||
+        "pending",
     };
 
     // create using the service (which has business validations)
@@ -107,8 +108,11 @@ export async function updateExpense(
       currency: formData.get("currency") as string,
       date: new Date(formData.get("expireDate") as string),
       category_id: parseInt(formData.get("category") as string),
-      paid_by: parseInt(formData.get("responsible") as string),
       description: (formData.get("note") as string) || "",
+      responsible_id: parseInt(formData.get("responsible") as string),
+      status:
+        (formData.get("status") as "pending" | "paid" | "cancelled") ||
+        "pending",
     };
 
     // update using the service

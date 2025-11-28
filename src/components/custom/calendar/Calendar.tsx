@@ -27,7 +27,7 @@ export function Calendar22({ selectedDate, onDateChange }: Calendar22Props) {
           <Button
             variant="outline"
             id="date"
-            className="text-lg font-semibold txt card-container justify-between w-56 sm:w-60"
+            className="text-lg font-semibold txt card-container justify-between w-56 sm:w-60 md:w-100"
           >
             {date ? date.toLocaleDateString() : "Select date"}
             <ChevronDownIcon />

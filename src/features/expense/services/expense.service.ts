@@ -15,7 +15,8 @@ export class ExpenseService {
     description?: string;
     space_id: number;
     category_id: number;
-    paid_by: number;
+    responsible_id: number;
+    status?: "pending" | "paid" | "cancelled";
     created_by: number;
   }): Promise<Expense> {
     // business validations
@@ -42,7 +43,8 @@ export class ExpenseService {
       date: Date;
       description: string;
       category_id: number;
-      paid_by: number;
+      responsible_id: number;
+      status: "pending" | "paid" | "cancelled";
     }>,
     updatedBy: number
   ): Promise<Expense> {
@@ -91,7 +93,7 @@ export class ExpenseService {
       where: { id: Number(expenseId) },
       include: {
         category: true,
-        paidBy: true,
+        responsible: true,
         createdBy: true,
         tags: {
           include: {
@@ -129,14 +131,14 @@ export class ExpenseService {
       where: { id: Number(expenseId) },
       select: {
         created_by: true,
-        paid_by: true,
+        responsible_id: true,
         deleted_at: true,
       },
     });
 
     if (!expense || expense.deleted_at) return false;
 
-    return expense.created_by === userId || expense.paid_by === userId;
+    return expense.created_by === userId || expense.responsible_id === userId;
   }
 
   /**

@@ -18,11 +18,10 @@ const getExpenseQuery = cache(
       },
       include: {
         category: true,
-        paidBy: {
+        responsible: {
           select: {
             id: true,
             name: true,
-            email: true,
           },
         },
         createdBy: {

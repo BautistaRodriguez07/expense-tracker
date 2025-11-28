@@ -52,7 +52,8 @@ interface ExpenseFormProps {
     currency: string;
     date: Date;
     category_id: string;
-    paid_by: number;
+    responsible_id: number;
+    status?: "pending" | "paid" | "cancelled";
     description?: string;
     tags?: Option[];
   } | null;
@@ -81,8 +82,8 @@ export const ExpenseForm = ({
           currency: expense.currency,
           name: expense.name,
           category: expense.category_id,
-          responsible: expense.paid_by.toString(),
-          status: "pending",
+          responsible: expense.responsible_id.toString(),
+          status: expense.status || "pending",
           expireDate: new Date(expense.date),
           tags: expense.tags || [],
           note: expense.description || "",
@@ -236,7 +237,7 @@ export const ExpenseForm = ({
                     value={field.value}
                     onValueChange={val => field.onChange(val)}
                   >
-                    <SelectTrigger className="text-lg font-semibold txt card-container w-56 sm:w-60">
+                    <SelectTrigger className="text-lg font-semibold txt card-container w-56 sm:w-60 md:w-100">
                       <SelectValue placeholder={t("selectCurrency")} />
                     </SelectTrigger>
                     <SelectContent
@@ -288,7 +289,7 @@ export const ExpenseForm = ({
                     value={field.value}
                     onValueChange={val => field.onChange(val)}
                   >
-                    <SelectTrigger className="text-lg font-semibold txt card-container w-56 sm:w-60">
+                    <SelectTrigger className="text-lg font-semibold txt card-container w-56 sm:w-60 md:w-100">
                       <SelectValue placeholder={t("selectResponsible")} />
                     </SelectTrigger>
                     <SelectContent
@@ -331,7 +332,7 @@ export const ExpenseForm = ({
                     value={field.value}
                     onValueChange={val => field.onChange(val)}
                   >
-                    <SelectTrigger className="text-lg font-semibold txt card-container w-56 sm:w-60">
+                    <SelectTrigger className="text-lg font-semibold txt card-container w-56 sm:w-60 md:w-100">
                       <SelectValue placeholder={t("selectCategory")} />
                     </SelectTrigger>
                     <SelectContent
@@ -400,7 +401,7 @@ export const ExpenseForm = ({
                   {t("tags")}
                 </FieldLabel>
                 <FieldContent className="items-end">
-                  <div className="w-56 sm:w-60">
+                  <div className="w-56 sm:w-60 md:w-100">
                     <MultipleSelector
                       {...field}
                       defaultOptions={tags}

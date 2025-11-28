@@ -52,6 +52,12 @@ enum invitation_status {
   expired
 }
 
+enum expense_status {
+  pending
+  paid
+  cancelled
+}
+
 // ---------------------- MODELS ----------------------
 
 model User {
@@ -71,15 +77,15 @@ model User {
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
 
-  spaces_owned     Space[]           @relation("SpaceOwner")
-  spaceMembers     SpaceMember[]
-  spaceInvitations SpaceInvitation[] @relation("InvitationInvitedBy")
-  expenses_paid    Expense[]         @relation("ExpensePaidBy")
-  expenses_created Expense[]         @relation("ExpenseCreatedBy")
-  expenses_updated Expense[]         @relation("ExpenseUpdatedBy")
-  expenses_deleted Expense[]         @relation("ExpenseDeletedBy")
-  expenseSplits    ExpenseSplit[]
-  receiptsUploaded ExpenseReceipt[]
+  spaces_owned         Space[]           @relation("SpaceOwner")
+  spaceMembers         SpaceMember[]
+  spaceInvitations     SpaceInvitation[] @relation("InvitationInvitedBy")
+  expenses_responsible Expense[]         @relation("ExpenseResponsible")
+  expenses_created     Expense[]         @relation("ExpenseCreatedBy")
+  expenses_updated     Expense[]         @relation("ExpenseUpdatedBy")
+  expenses_deleted     Expense[]         @relation("ExpenseDeletedBy")
+  expenseSplits        ExpenseSplit[]
+  receiptsUploaded     ExpenseReceipt[]
 
   @@map("user")
 }
@@ -168,8 +174,9 @@ model Expense {
   amount      Decimal  @db.Decimal(10, 2)
   currency    currency
 
-  date    DateTime
-  paid_by Int
+  date           DateTime
+  responsible_id Int?
+  status         expense_status @default(pending)
 
   category_id Int
 
@@ -180,19 +187,19 @@ model Expense {
   deleted_at DateTime?
   deleted_by Int?
 
-  space     Space    @relation(fields: [space_id], references: [id])
-  paidBy    User     @relation("ExpensePaidBy", fields: [paid_by], references: [id])
-  category  Category @relation(fields: [category_id], references: [id])
-  createdBy User     @relation("ExpenseCreatedBy", fields: [created_by], references: [id])
-  updatedBy User?    @relation("ExpenseUpdatedBy", fields: [updated_by], references: [id])
-  deletedBy User?    @relation("ExpenseDeletedBy", fields: [deleted_by], references: [id])
+  space       Space    @relation(fields: [space_id], references: [id])
+  responsible User?    @relation("ExpenseResponsible", fields: [responsible_id], references: [id])
+  category    Category @relation(fields: [category_id], references: [id])
+  createdBy   User     @relation("ExpenseCreatedBy", fields: [created_by], references: [id])
+  updatedBy   User?    @relation("ExpenseUpdatedBy", fields: [updated_by], references: [id])
+  deletedBy   User?    @relation("ExpenseDeletedBy", fields: [deleted_by], references: [id])
 
   splits   ExpenseSplit[]
   receipts ExpenseReceipt[]
   tags     ExpenseTag[]
 
   @@index([space_id])
-  @@index([paid_by])
+  @@index([responsible_id])
   @@index([category_id])
   @@index([date])
   @@map("expense")

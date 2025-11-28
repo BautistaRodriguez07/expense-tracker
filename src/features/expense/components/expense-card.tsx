@@ -77,7 +77,7 @@ export function ExpenseCard({ expense }: ExpenseCardProps) {
         <div className="flex justify-between">
           <span className="txt-muted">{t("responsible")}:</span>
           <span className="txt font-medium">
-            {expense.paidBy?.name || "Unknown"}
+            {expense.responsible?.name || "Unknown"}
           </span>
         </div>
 
