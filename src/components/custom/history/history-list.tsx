@@ -12,9 +12,7 @@ interface HistoryListProps {
 export const HistoryList = async (props: HistoryListProps) => {
   const { spaceId } = props;
   const t = await getTranslations("historyList");
-  const expenses = await getExpenses(spaceId)
-
-console.log('>>>>expenses', expenses);
+  const expenses = await getExpenses(spaceId);
 
   return (
     <>
@@ -29,8 +27,15 @@ console.log('>>>>expenses', expenses);
         </Link>
       </div>
 
-      {expenses.map((expense) => (
-        <ExpenseSummary key={expense.id} expense={expense as SerializedExpense} />
+      {expenses.length === 0 && (
+        <p className="text-center txt-muted py-4">No expenses found.</p>
+      )}
+
+      {expenses.map(expense => (
+        <ExpenseSummary
+          key={expense.id}
+          expense={expense as SerializedExpense}
+        />
       ))}
     </>
   );

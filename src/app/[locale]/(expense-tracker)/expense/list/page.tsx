@@ -1,15 +1,16 @@
-import { CustomTitle } from "@/components";
+import { BackButton, CustomTitle, FormattedAmount } from "@/components";
 import { validateAuth } from "@/features/auth/services/auth.service";
 import { getExpenses } from "@/features/expense/actions/get-expenses.action";
-import { ExpenseCard } from "@/features/expense/components/expense-card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { IoChevronBackOutline } from "react-icons/io5";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
+import ExpenseSummary from "@/features/expense/components/expense-summary";
+import { SerializedExpense } from "@/features/expense/utils/serialize-expense";
 
 export default async function ExpenseListPage() {
   const t = await getTranslations("expense");
+  const locale = await getLocale();
   // Validate authentication
   const auth = await validateAuth();
 
@@ -20,17 +21,19 @@ export default async function ExpenseListPage() {
   // Get expenses
   const expenses = await getExpenses(auth.spaceId);
 
+  const expensesByCurrency = expenses.reduce((acc, expense) => {
+    const currency = expense.currency;
+    acc[currency] = (acc[currency] || 0) + expense.amount;
+    return acc;
+  }, {} as Record<string, number>);
+
   return (
     <div className="flex flex-col items-center justify-center">
       <div className="max-w-4xl w-full">
         {/* Header */}
         <div className="flex justify-between items-center py-3">
           <div className="flex gap-5">
-            <Link href="/">
-              <Button className="btn">
-                <IoChevronBackOutline className="w-4 h-4" />
-              </Button>
-            </Link>
+            <BackButton />
             <CustomTitle tag="h1" title={t("allExpenses")} />
           </div>
           <Link href="/expense/new">
@@ -47,12 +50,28 @@ export default async function ExpenseListPage() {
             </div>
             <div>
               <p className="txt-muted text-sm">{t("totalAmount")}</p>
-              <p className="txt text-2xl font-bold">
-                {new Intl.NumberFormat("es-AR", {
-                  style: "currency",
-                  currency: expenses[0]?.currency || "USD",
-                }).format(expenses.reduce((sum, exp) => sum + exp.amount, 0))}
-              </p>
+              <div className="flex flex-col items-center">
+                {Object.entries(expensesByCurrency).length > 0 ? (
+                  Object.entries(expensesByCurrency).map(
+                    ([currency, total]) => (
+                      <FormattedAmount
+                        key={currency}
+                        amount={total}
+                        currency={currency}
+                        locale={locale}
+                        className="txt text-2xl font-bold"
+                      />
+                    )
+                  )
+                ) : (
+                  <FormattedAmount
+                    amount={0}
+                    currency="USD"
+                    locale={locale}
+                    className="txt text-2xl font-bold"
+                  />
+                )}
+              </div>
             </div>
             <div>
               <p className="txt-muted text-sm">{t("pending")}</p>
@@ -74,7 +93,10 @@ export default async function ExpenseListPage() {
         ) : (
           <div className="space-y-4">
             {expenses.map(expense => (
-              <ExpenseCard key={expense.id} expense={expense} />
+              <ExpenseSummary
+                key={expense.id}
+                expense={expense as SerializedExpense}
+              />
             ))}
           </div>
         )}

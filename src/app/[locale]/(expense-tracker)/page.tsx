@@ -5,7 +5,11 @@ import { Users } from "@/components/custom/user/users-list";
 import { validateAuth } from "@/features/auth/services/auth.service";
 import { redirect } from "next/navigation";
 
-export default async function HomePage({ params }: { params: { locale: string } }) {
+export default async function HomePage({
+  params,
+}: {
+  params: { locale: string };
+}) {
   const { locale } = params;
 
   setRequestLocale(locale);

@@ -89,6 +89,8 @@
     "createExpense": "Crear gasto",
     "expirationDate": "Fecha de expiración",
     "tags": "Tags",
-    "category": "Categoría"
+    "category": "Categoría",
+    "cancelButton": "Cancelar",
+    "deleteDescription": "¿Estás seguro de querer eliminar este gasto?"
   }
 }

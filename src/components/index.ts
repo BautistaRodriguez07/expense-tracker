@@ -25,3 +25,7 @@ export * from "./custom/payments/pending-payments";
 export * from "./custom/history/history-list";
 
 export * from "./custom/category-icon/category-icon";
+
+export * from "./custom/currency/formatted-amount";
+
+export * from "./custom/back-button";

@@ -1,18 +1,23 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale } from "next-intl/server";
 import { IoChevronForwardOutline } from "react-icons/io5";
-import { CategoryIcon } from "@/components";
+import { CategoryIcon, FormattedAmount } from "@/components";
 import { SerializedExpense } from "../utils/serialize-expense";
-import { formatCurrency } from "../utils/currency";
-import { Badge } from "@/components/ui/badge";
+import { Link } from "@/i18n/navigation";
+import { ExpenseStatusBadge } from "./expense-status-badge";
 
 interface ExpenseSummaryProps {
   expense: SerializedExpense;
 }
 
 export const ExpenseSummary = async ({ expense }: ExpenseSummaryProps) => {
-  const t = await getTranslations("historyItem");
-  const t2 = await getTranslations("expense");
+  const locale = await getLocale();
   console.log(expense);
+
+  const formattedDate = new Date(expense.date).toLocaleDateString(locale, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 
   return (
     <div className="flex justify-between items-center card-container mb-2">
@@ -27,18 +32,33 @@ export const ExpenseSummary = async ({ expense }: ExpenseSummaryProps) => {
           <span className="txt-muted text-sm">{expense.responsible?.name}</span>
         </div>
       </div>
+
       <div className="flex items-center gap-3">
-        <div className="flex flex-col items-end">
-          <span className="font-medium txt">{formatCurrency(expense.amount, t2('defaultLocale'), expense.currency)}</span>
-          <span className="txt-muted text-sm">{new Date(expense.created_at).toDateString()}</span>
+        <div className="flex items-center gap-3">
+          <div className="flex flex-col items-end gap-2">
+            <FormattedAmount
+              amount={expense.amount}
+              currency={expense.currency}
+              locale={locale}
+              className="font-medium text-2xl"
+            />
+            <div className="flex items-center gap-2">
+              <span className="txt-muted text-sm">
+                {/* date */}
+                <span className="txt-muted text-sm">{formattedDate}</span>
+              </span>
+              <ExpenseStatusBadge expense={expense} />
+            </div>
+          </div>
         </div>
-        <Badge variant="outline">{expense.status}</Badge>  
-        </div>
-        <IoChevronForwardOutline
-          size={18}
-          className="text-gray-400 dark:hover:text-white hover:text-black hover:scale-150 transition-all"
-        />
+        <Link href={`/expense/${expense.id}`}>
+          <IoChevronForwardOutline
+            size={18}
+            className="text-black dark:text-white hover:scale-150 transition-all"
+          />
+        </Link>
       </div>
+    </div>
   );
 };
 

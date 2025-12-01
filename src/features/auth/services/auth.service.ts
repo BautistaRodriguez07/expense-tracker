@@ -3,7 +3,7 @@ import {
   clerkClient,
   User as ClerkUser,
 } from "@clerk/nextjs/server";
-import { getUserByClerkId } from "@/lib/users";
+import { createOrUpdateUser, getUserByClerkId } from "@/lib/users";
 import { UserInterface } from "@/features/user/types/user.types";
 import prisma from "@/lib/prisma";
 
@@ -22,13 +22,39 @@ export async function validateAuth(): Promise<AuthResult | null> {
   if (!clerkUser) return null;
 
   // 2. get user from database
-  const dbUser = await getUserByClerkId(clerkUser.id);
+  let dbUser = await getUserByClerkId(clerkUser.id);
+  let spaceId = clerkUser.publicMetadata?.activeSpaceId as number | undefined;
+
+  // If user is in Clerk but not in DB, try to sync immediately
+  if (!dbUser) {
+    try {
+      console.log("User found in Clerk but not in DB. Syncing...");
+      const result = await createOrUpdateUser({
+        id: clerkUser.id,
+        firstName: clerkUser.firstName || "",
+        lastName: clerkUser.lastName || "",
+        emailAddresses: clerkUser.emailAddresses.map(e => ({
+          emailAddress: e.emailAddress,
+        })),
+      } as any);
+
+      dbUser = result.user;
+      spaceId = result.spaceId;
+    } catch (error) {
+      console.error("Failed to sync user during auth validation:", error);
+      return null;
+    }
+  }
+
   if (!dbUser) return null;
 
   // 3. get activeSpaceId from Clerk metadata (faster)
-  let spaceId = clerkUser.publicMetadata?.activeSpaceId as number | undefined;
+  // spaceId is already set if we just synced, otherwise check metadata
+  if (!spaceId) {
+    spaceId = clerkUser.publicMetadata?.activeSpaceId as number | undefined;
+  }
 
-  // 4. if not exists in metadata, search in DB (fallback)
+  // 4. if not exists in metadata (and wasn't just synced), search in DB (fallback)
   if (!spaceId) {
     const spaceMember = await prisma.spaceMember.findFirst({
       where: {

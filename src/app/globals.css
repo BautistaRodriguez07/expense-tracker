@@ -97,9 +97,9 @@
 }
 
 .dark {
-  --bg-dark: hsl(223 41% 2%);
-  --bg: hsl(220 26% 5%);
-  --bg-light: hsl(220 15% 9%);
+  --bg-dark: hsl(220 20% 10%);
+  --bg: hsl(220 20% 14%);
+  --bg-light: hsl(220 20% 18%);
   --txt: hsl(220 100% 96%);
   --txt-muted: hsl(220 13% 71%);
   --highlight: hsl(220 9% 40%);

@@ -89,6 +89,8 @@
     "createExpense": "Create expense",
     "expirationDate": "Expiration date",
     "tags": "Tags",
-    "category": "Catégorie"
+    "category": "Catégorie",
+    "cancelButton": "Annuler",
+    "deleteDescription": "Êtes-vous sûr de vouloir supprimer ce dépense?"
   }
 }

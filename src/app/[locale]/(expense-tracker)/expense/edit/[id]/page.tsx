@@ -1,5 +1,5 @@
 // app/[locale]/(expense-tracker)/expense/page.tsx
-import { CustomTitle } from "@/components";
+import { BackButton, CustomTitle } from "@/components";
 import { ExpenseForm } from "@/features/expense/components/expense-form";
 
 import { getSpaceMembers } from "@/features/space/actions/get-space-members.action";
@@ -59,11 +59,7 @@ export default async function ExpenseEditPage({
     <div className="flex flex-col items-center justify-center">
       <div className="max-w-3xl w-full">
         <div className="flex justify-between items-center py-3 w-full px-5">
-          <Link href="/expense/list">
-            <Button className="btn">
-              <IoChevronBackOutline className="w-4 h-4" />
-            </Button>
-          </Link>
+          <BackButton />
           <CustomTitle tag="h1" title="Edit expense" className="py-3" />
         </div>
 
