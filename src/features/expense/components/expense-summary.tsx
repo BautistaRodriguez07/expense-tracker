@@ -40,13 +40,14 @@ export const ExpenseSummary = async ({ expense }: ExpenseSummaryProps) => {
               amount={expense.amount}
               currency={expense.currency}
               locale={locale}
-              className="font-medium text-2xl"
+              className="font-medium text-xl sm:text-2xl"
             />
-            <div className="flex items-center gap-2">
-              <span className="txt-muted text-sm">
-                {/* date */}
-                <span className="txt-muted text-sm">{formattedDate}</span>
+            <div className="flex items-center justify-end gap-2">
+              {/* date */}
+              <span className="txt-muted text-sm hidden sm:block">
+                {formattedDate}
               </span>
+
               <ExpenseStatusBadge expense={expense} />
             </div>
           </div>

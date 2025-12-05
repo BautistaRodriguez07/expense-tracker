@@ -22,7 +22,7 @@ export const HistoryList = async (props: HistoryListProps) => {
           tag="h3"
           className="text-lg py-2 txt-muted"
         />
-        <Link href={"/"} className="link underline font-medium">
+        <Link href={"/expense/list"} className="link underline font-medium">
           {t("viewMore")}
         </Link>
       </div>
