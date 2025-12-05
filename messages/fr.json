@@ -91,6 +91,14 @@
     "tags": "Tags",
     "category": "Catégorie",
     "cancelButton": "Annuler",
-    "deleteDescription": "Êtes-vous sûr de vouloir supprimer ce dépense?"
+    "deleteDescription": "Êtes-vous sûr de vouloir supprimer ce dépense?",
+    "pay": "Payer",
+    "payExpense": "Payer dépense",
+    "uploadReceiptDescription": "Upload a receipt to confirm payment for {currency} {expenseAmount}.",
+    "receipts": "Recibos (Imágenes)",
+    "confirmPayment": "Confirmar pago",
+    "browseFile": "Parcourir le fichier",
+    "imageSelected": "image sélectionnée",
+    "imagesSelected": "images sélectionnées"
   }
 }

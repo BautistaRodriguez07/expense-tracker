@@ -89,7 +89,7 @@ export const AccountInformation = () => {
 
   if (!isLoaded || !user || !t) return <div>Loading...</div>;
 
-  console.log(form.formState.errors);
+  // console.log(form.formState.errors);
 
   return (
     <form onSubmit={form.handleSubmit(handleSubmit)}>

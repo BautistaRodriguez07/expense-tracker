@@ -7,8 +7,8 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 type DeleteExpenseButtonProps = {
-  expenseId: string | number;
-  spaceId: string | number;
+  expenseId: string;
+  spaceId: string;
 };
 
 export function DeleteExpenseButton({
@@ -20,10 +20,7 @@ export function DeleteExpenseButton({
   const router = useRouter();
 
   const handleDelete = async () => {
-    const result = await deleteExpense(
-      expenseId.toString(),
-      spaceId.toString()
-    );
+    const result = await deleteExpense(expenseId, spaceId);
     if (result.success) {
       router.push("/expense/list");
       router.refresh();
@@ -43,7 +40,7 @@ export function DeleteExpenseButton({
       </Button>
 
       {isOpen && (
-        <div className="fixed top-0 left-0 w-full h-full dark:bg-white/50 bg-black/50 flex items-center justify-center">
+        <div className="fixed top-0 left-0 w-full h-full bg-black/50 flex items-center justify-center">
           <div className="card-container">
             <p className="text-sm pb-4">{t("deleteDescription")}</p>
             <div className="flex items-center justify-end gap-2">

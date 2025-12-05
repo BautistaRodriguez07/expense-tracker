@@ -61,7 +61,7 @@ enum expense_status {
 // ---------------------- MODELS ----------------------
 
 model User {
-  id            Int     @id @default(autoincrement())
+  id            String  @id @default(uuid())
   clerk_id      String  @unique
   name          String
   email         String  @unique
@@ -93,10 +93,10 @@ model User {
 // ----------------------------------------------------
 
 model Space {
-  id               Int      @id @default(autoincrement())
+  id               String   @id @default(uuid())
   name             String
   default_currency currency @default(USD)
-  owner_id         Int
+  owner_id         String
 
   created_at DateTime  @default(now())
   updated_at DateTime  @default(now())
@@ -114,9 +114,9 @@ model Space {
 // ----------------------------------------------------
 
 model SpaceMember {
-  id       Int @id @default(autoincrement())
-  user_id  Int
-  space_id Int
+  id       String @id @default(uuid())
+  user_id  String
+  space_id String
 
   role      space_role @default(member)
   joined_at DateTime   @default(now())
@@ -131,9 +131,9 @@ model SpaceMember {
 // ----------------------------------------------------
 
 model SpaceInvitation {
-  id            Int    @id @default(autoincrement())
-  space_id      Int
-  invited_by    Int
+  id            String @id @default(uuid())
+  space_id      String
+  invited_by    String
   invited_email String
 
   status       invitation_status @default(pending)
@@ -167,25 +167,25 @@ model Category {
 // ----------------------------------------------------
 
 model Expense {
-  id          Int      @id @default(autoincrement())
-  space_id    Int
+  id          String   @id @default(uuid())
+  space_id    String
   name        String
   description String?
   amount      Decimal  @db.Decimal(10, 2)
   currency    currency
 
   date           DateTime
-  responsible_id Int?
+  responsible_id String?
   status         expense_status @default(pending)
 
   category_id Int
 
-  created_by Int
+  created_by String
   created_at DateTime  @default(now())
   updated_at DateTime  @default(now())
-  updated_by Int?
+  updated_by String?
   deleted_at DateTime?
-  deleted_by Int?
+  deleted_by String?
 
   space       Space    @relation(fields: [space_id], references: [id])
   responsible User?    @relation("ExpenseResponsible", fields: [responsible_id], references: [id])
@@ -208,9 +208,9 @@ model Expense {
 // ----------------------------------------------------
 
 model ExpenseSplit {
-  id         Int @id @default(autoincrement())
-  expense_id Int
-  user_id    Int
+  id         String @id @default(uuid())
+  expense_id String
+  user_id    String
 
   amount  Decimal   @db.Decimal(10, 2)
   is_paid Boolean   @default(false)
@@ -226,11 +226,11 @@ model ExpenseSplit {
 // ----------------------------------------------------
 
 model ExpenseReceipt {
-  id         Int    @id @default(autoincrement())
-  expense_id Int
+  id         String @id @default(uuid())
+  expense_id String
   file_url   String
 
-  uploaded_by Int
+  uploaded_by String
   uploaded_at DateTime @default(now())
 
   expense    Expense @relation(fields: [expense_id], references: [id])
@@ -242,8 +242,8 @@ model ExpenseReceipt {
 // ----------------------------------------------------
 
 model Tag {
-  id       Int    @id @default(autoincrement())
-  space_id Int
+  id       String @id @default(uuid())
+  space_id String
   name     String
 
   created_at DateTime  @default(now())
@@ -259,8 +259,8 @@ model Tag {
 // ----------------------------------------------------
 
 model ExpenseTag {
-  expense_id Int
-  tag_id     Int
+  expense_id String
+  tag_id     String
 
   expense Expense @relation(fields: [expense_id], references: [id])
   tag     Tag     @relation(fields: [tag_id], references: [id])

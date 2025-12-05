@@ -38,12 +38,12 @@ import { useTranslations } from "next-intl";
 interface ExpenseFormProps {
   categories: Category[];
   spaceMembers: {
-    id: number;
+    id: string;
     name: string;
     email: string;
     role: string;
   }[];
-  spaceId: number;
+  spaceId: string;
   tags: Option[];
   expense?: {
     id: string;
@@ -51,8 +51,8 @@ interface ExpenseFormProps {
     amount: number;
     currency: string;
     date: Date;
-    category_id: string;
-    responsible_id: number;
+    category_id: number;
+    responsible_id: string;
     status?: "pending" | "paid" | "cancelled";
     description?: string;
     tags?: Option[];
@@ -81,8 +81,8 @@ export const ExpenseForm = ({
           amount: expense.amount,
           currency: expense.currency,
           name: expense.name,
-          category: expense.category_id,
-          responsible: expense.responsible_id.toString(),
+          category: expense.category_id.toString(),
+          responsible: expense.responsible_id,
           status: expense.status || "pending",
           expireDate: new Date(expense.date),
           tags: expense.tags || [],
@@ -136,11 +136,10 @@ export const ExpenseForm = ({
     startTransition(async () => {
       // ✅ Call the correct function based on the mode
       const result = isEditing
-        ? await updateExpense(formData, expense!.id, spaceId.toString())
-        : await createExpense(formData, spaceId.toString());
+        ? await updateExpense(formData, expense!.id, spaceId)
+        : await createExpense(formData, spaceId);
 
       if (result?.success) {
-        console.log(`Expense ${isEditing ? "updated" : "created"}!`);
         if (!isEditing) {
           form.reset();
         }
@@ -301,7 +300,7 @@ export const ExpenseForm = ({
                           <SelectItem
                             key={member.id}
                             className="bg text-lg font-semibold"
-                            value={member.id.toString()}
+                            value={member.id}
                           >
                             {member.name}
                           </SelectItem>

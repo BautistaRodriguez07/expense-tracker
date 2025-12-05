@@ -19,8 +19,8 @@ type ActionResult = {
 
 async function processExpenseTags(
   formData: FormData,
-  expenseId: number,
-  spaceId: number,
+  expenseId: string,
+  spaceId: string,
   removeIfEmpty: boolean = false
 ): Promise<void> {
   const tagsJson = formData.get("tags") as string;
@@ -48,22 +48,27 @@ export async function createExpense(
   spaceId: string
 ): Promise<ActionResult> {
   try {
-    const targetSpaceId = parseInt(spaceId);
-
     // generic workspace validation
-    const auth = await requireWorkspaceAccess(targetSpaceId);
+    const auth = await requireWorkspaceAccess(spaceId);
 
     // parse form data
+    const categoryValue = formData.get("category") as string;
+    const categoryId = categoryValue ? parseInt(categoryValue, 10) : null;
+
+    if (!categoryId || isNaN(categoryId)) {
+      throw new Error("Category is required and must be a valid number");
+    }
+
     const data = {
       name: formData.get("name") as string,
       amount: Number(formData.get("amount")),
       currency: formData.get("currency") as string,
       date: new Date(formData.get("expireDate") as string),
-      category_id: parseInt(formData.get("category") as string),
+      category_id: categoryId,
       description: (formData.get("note") as string) || "",
-      space_id: targetSpaceId,
+      space_id: spaceId,
       created_by: auth.dbUser.id,
-      responsible_id: parseInt(formData.get("responsible") as string),
+      responsible_id: formData.get("responsible") as string,
       status:
         (formData.get("status") as "pending" | "paid" | "cancelled") ||
         "pending",
@@ -73,7 +78,7 @@ export async function createExpense(
     const newExpense = await ExpenseService.create(data);
 
     // handle tags
-    await processExpenseTags(formData, newExpense.id, targetSpaceId);
+    await processExpenseTags(formData, newExpense.id, spaceId);
 
     revalidatePath("/");
     revalidatePath("/expense");
@@ -102,14 +107,21 @@ export async function updateExpense(
     });
 
     // parse form data
+    const categoryValue = formData.get("category") as string;
+    const categoryId = categoryValue ? parseInt(categoryValue, 10) : null;
+
+    if (!categoryId || isNaN(categoryId)) {
+      throw new Error("Category is required and must be a valid number");
+    }
+
     const updateData = {
       name: formData.get("name") as string,
       amount: Number(formData.get("amount")),
       currency: formData.get("currency") as string,
       date: new Date(formData.get("expireDate") as string),
-      category_id: parseInt(formData.get("category") as string),
+      category_id: categoryId,
       description: (formData.get("note") as string) || "",
-      responsible_id: parseInt(formData.get("responsible") as string),
+      responsible_id: formData.get("responsible") as string,
       status:
         (formData.get("status") as "pending" | "paid" | "cancelled") ||
         "pending",

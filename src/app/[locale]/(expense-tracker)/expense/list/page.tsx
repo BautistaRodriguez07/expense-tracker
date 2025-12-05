@@ -22,8 +22,10 @@ export default async function ExpenseListPage() {
   const expenses = await getExpenses(auth.spaceId);
 
   const expensesByCurrency = expenses.reduce((acc, expense) => {
-    const currency = expense.currency;
-    acc[currency] = (acc[currency] || 0) + expense.amount;
+    if (expense.status === "paid") {
+      const currency = expense.currency;
+      acc[currency] = (acc[currency] || 0) + expense.amount;
+    }
     return acc;
   }, {} as Record<string, number>);
 
@@ -76,7 +78,7 @@ export default async function ExpenseListPage() {
             <div>
               <p className="txt-muted text-sm">{t("pending")}</p>
               <p className="txt text-2xl font-bold">
-                {expenses.filter(e => !e.deleted_at).length}
+                {expenses.filter(e => e.status === "pending").length}
               </p>
             </div>
           </div>
@@ -93,10 +95,12 @@ export default async function ExpenseListPage() {
         ) : (
           <div className="space-y-4">
             {expenses.map(expense => (
-              <ExpenseSummary
-                key={expense.id}
-                expense={expense as SerializedExpense}
-              />
+              <Link href={`/expense/${expense.id}`} key={expense.id}>
+                <ExpenseSummary
+                  key={expense.id}
+                  expense={expense as SerializedExpense}
+                />
+              </Link>
             ))}
           </div>
         )}

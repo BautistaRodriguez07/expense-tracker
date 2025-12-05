@@ -68,8 +68,6 @@ const ForgotPasswordPage: NextPage = () => {
         router.push("/");
         return;
       }
-
-      console.log("Unexpected result:", result);
     } catch (err: any) {
       console.error("Reset error:", err);
       const message =

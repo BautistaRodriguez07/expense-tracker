@@ -18,7 +18,7 @@ export type SerializedExpense = Omit<
   updated_at: string;
   deleted_at: string | null;
   tags?: {
-    id: number;
+    id: string;
     name: string;
   }[];
   category?: Category;

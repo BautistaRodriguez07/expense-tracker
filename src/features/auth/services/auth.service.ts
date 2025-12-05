@@ -10,7 +10,7 @@ import prisma from "@/lib/prisma";
 export type AuthResult = {
   clerkUser: ClerkUser;
   dbUser: UserInterface;
-  spaceId: number;
+  spaceId: string;
 };
 
 /**
@@ -23,12 +23,11 @@ export async function validateAuth(): Promise<AuthResult | null> {
 
   // 2. get user from database
   let dbUser = await getUserByClerkId(clerkUser.id);
-  let spaceId = clerkUser.publicMetadata?.activeSpaceId as number | undefined;
+  let spaceId = clerkUser.publicMetadata?.activeSpaceId as string | undefined;
 
   // If user is in Clerk but not in DB, try to sync immediately
   if (!dbUser) {
     try {
-      console.log("User found in Clerk but not in DB. Syncing...");
       const result = await createOrUpdateUser({
         id: clerkUser.id,
         firstName: clerkUser.firstName || "",
@@ -51,7 +50,7 @@ export async function validateAuth(): Promise<AuthResult | null> {
   // 3. get activeSpaceId from Clerk metadata (faster)
   // spaceId is already set if we just synced, otherwise check metadata
   if (!spaceId) {
-    spaceId = clerkUser.publicMetadata?.activeSpaceId as number | undefined;
+    spaceId = clerkUser.publicMetadata?.activeSpaceId as string | undefined;
   }
 
   // 4. if not exists in metadata (and wasn't just synced), search in DB (fallback)
@@ -79,8 +78,13 @@ export async function validateAuth(): Promise<AuthResult | null> {
       .catch(console.error);
   }
 
-  // verify that spaceId is number before returning
-  if (!spaceId || typeof spaceId !== "number") {
+  // verify that spaceId is string before returning
+  if (!spaceId || typeof spaceId !== "string") {
+    // If for some reason it's a number (old data), convert it to string?
+    // But if we migrated DB, IDs are UUIDs now, so number IDs are invalid.
+    // However, if Clerk metadata has old number ID, it might be an issue.
+    // Since we are changing everything to UUID, old number IDs are invalid references anyway.
+    // So strictly checking for string is safer, or we might need to handle re-fetching if it's invalid.
     return null;
   }
 

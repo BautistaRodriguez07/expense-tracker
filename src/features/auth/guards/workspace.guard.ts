@@ -10,7 +10,7 @@ export type WorkspaceValidationResult = {
 
 // validate workspace access
 export async function validateWorkspaceAccess(
-  spaceId: number
+  spaceId: string
 ): Promise<WorkspaceValidationResult> {
   // 1. validate authentication (Clerk + DB + workspace default)
   const auth = await validateAuth();
@@ -44,7 +44,7 @@ export async function validateWorkspaceAccess(
 
 // validate and return the AuthResult if has access, or throw error
 export async function requireWorkspaceAccess(
-  spaceId: number
+  spaceId: string
 ): Promise<AuthResult> {
   const { auth } = await validateWorkspaceAccess(spaceId);
   return auth;

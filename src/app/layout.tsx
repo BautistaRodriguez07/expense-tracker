@@ -15,7 +15,11 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html suppressHydrationWarning>
-        <body>{children}</body>
+        <body>
+          {/* Clerk CAPTCHA element - required for bot protection */}
+          <div id="clerk-captcha" style={{ display: "none" }} />
+          {children}
+        </body>
       </html>
     </ClerkProvider>
   );

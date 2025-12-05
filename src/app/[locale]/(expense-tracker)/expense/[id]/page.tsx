@@ -9,9 +9,12 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { validateAuth } from "@/features/auth/services/auth.service";
 import { getExpense } from "@/features/expense/actions/get-expense.action";
+import { getReceipts } from "@/features/expense/actions/get-receipts.action";
 import { DeleteExpenseButton } from "@/features/expense/components/delete-expense-button";
 import { ExpenseStatusBadge } from "@/features/expense/components/expense-status-badge";
+import { PayExpenseDialog } from "@/features/expense/components/pay-expense-dialog";
 import { getTranslations } from "next-intl/server";
+import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { IoCalendarOutline } from "react-icons/io5";
@@ -35,6 +38,8 @@ export default async function ExpensePage({
   }
 
   const t = await getTranslations("expense");
+
+  const receipts = await getReceipts(expense.id);
 
   const formattedDate = new Date(expense.date).toLocaleDateString(locale, {
     weekday: "long",
@@ -88,9 +93,7 @@ export default async function ExpensePage({
               <ExpenseStatusBadge expense={expense} />
             </div>
           </div>
-
           <Separator className="mb-6" />
-
           <div className="flex gap-10 items-center">
             {/* Details Grid */}
             <div className="flex flex-col ">
@@ -122,7 +125,6 @@ export default async function ExpensePage({
               </div>
             )}
           </div>
-
           {/* Description/Note */}
           {expense.description && (
             <div className="mt-6 p-4 bg-muted/50 rounded-lg border border-border/50">
@@ -135,8 +137,40 @@ export default async function ExpensePage({
             </div>
           )}
 
-          <Separator className="my-6" />
+          {/* Receipts Section */}
+          {receipts.length > 0 && (
+            <div className="mt-6">
+              <span className="text-sm font-medium txt-muted block mb-3">
+                Receipts
+              </span>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {receipts.map((receipt: any) => (
+                  <a
+                    key={receipt.id}
+                    href={receipt.file_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="relative group aspect-square block overflow-hidden rounded-xl border border-border/50 bg-muted/30 hover:border-primary/50 transition-colors"
+                  >
+                    <Image
+                      src={receipt.file_url}
+                      alt="Receipt"
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      sizes="(max-width: 768px) 50vw, 25vw"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                      <span className="opacity-0 group-hover:opacity-100 bg-black/60 text-white text-xs px-2 py-1 rounded-md transition-opacity backdrop-blur-sm">
+                        Open
+                      </span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
 
+          <Separator className="my-6" />
           <div className="flex justify-between">
             <div className="space-y-1">
               <span className="text-sm font-medium txt-muted">
@@ -153,21 +187,34 @@ export default async function ExpensePage({
               <p className="txt font-semibold">{expense.createdBy?.name}</p>
             </div>
           </div>
-
           <Separator className="my-6" />
-
           {/* Actions */}
-          <div className="flex flex-row w-full items-center justify-end gap-3">
-            <Link href={`/expense/edit/${expense.id}`} className="w-auto">
-              <Button className="btn w-auto">{t("edit")}</Button>
-            </Link>
-            <div className="w-auto">
-              <DeleteExpenseButton
-                expenseId={expense.id}
-                spaceId={expense.space_id}
-              />
+          {expense.status !== "paid" && (
+            <div className="flex flex-row w-full items-center justify-between gap-3">
+              {expense.status !== "paid" && (
+                <PayExpenseDialog
+                  expenseId={expense.id}
+                  spaceId={expense.space_id}
+                  responsibleId={expense.responsible?.id || ""}
+                  currentUserId={auth.dbUser.id}
+                  expenseAmount={expense.amount}
+                  currency={expense.currency}
+                />
+              )}
+
+              <div className="flex items-center gap-3">
+                <Link href={`/expense/edit/${expense.id}`} className="w-auto">
+                  <Button className="btn w-auto">{t("edit")}</Button>
+                </Link>
+                <div className="w-auto">
+                  <DeleteExpenseButton
+                    expenseId={expense.id}
+                    spaceId={expense.space_id}
+                  />
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

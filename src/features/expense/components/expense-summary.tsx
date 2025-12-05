@@ -11,7 +11,6 @@ interface ExpenseSummaryProps {
 
 export const ExpenseSummary = async ({ expense }: ExpenseSummaryProps) => {
   const locale = await getLocale();
-  console.log(expense);
 
   const formattedDate = new Date(expense.date).toLocaleDateString(locale, {
     year: "numeric",

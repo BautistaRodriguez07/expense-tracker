@@ -5,15 +5,15 @@ import { AuthResult } from "../../auth/services/auth.service";
 import { ExpenseService } from "../services/expense.service";
 
 type ExpenseValidationOptions = {
-  action: "edit" | "delete";
+  action: "edit" | "delete" | "pay";
   errorMessage?: string;
 };
 
 /**
- * Validates expense access and permissions for edit/delete operations
+ * Validates expense access and permissions for edit/delete/pay operations
  *
  * @param expenseId - The expense ID to validate
- * @param spaceId - The workspace ID (as string, will be parsed)
+ * @param spaceId - The workspace ID
  * @param options - Validation options including action type and custom error message
  * @returns AuthResult if validation passes
  * @throws Error if validation fails
@@ -23,25 +23,30 @@ export async function requireExpenseAccess(
   spaceId: string,
   options: ExpenseValidationOptions
 ): Promise<AuthResult> {
-  const targetSpaceId = parseInt(spaceId);
-
   // Validate workspace access
-  const auth = await requireWorkspaceAccess(targetSpaceId);
+  const auth = await requireWorkspaceAccess(spaceId);
 
   // Verify that the expense belongs to the workspace
   const belongsToWorkspace = await ExpenseService.belongsToWorkspace(
     expenseId,
-    targetSpaceId
+    spaceId
   );
 
   if (!belongsToWorkspace) {
     throw new Error("Expense does not belong to this workspace");
   }
 
-  // Verify that the user can perform the action (edit or delete)
+  // Verify that the user can perform the action (edit or delete or pay)
   const canEdit = await ExpenseService.canUserEdit(expenseId, auth.dbUser.id);
 
-  if (!canEdit) {
+  const canDelete = await ExpenseService.canUserDelete(
+    expenseId,
+    auth.dbUser.id
+  );
+
+  const canPay = await ExpenseService.canUserPay(expenseId, auth.dbUser.id);
+
+  if (!canEdit && !canDelete && !canPay) {
     const errorMessage =
       options.errorMessage ||
       `You don't have permission to ${options.action} this expense`;

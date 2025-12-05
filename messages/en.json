@@ -91,6 +91,14 @@
     "tags": "Tags",
     "category": "Category",
     "cancelButton": "Cancel",
-    "deleteDescription": "Are you sure you want to delete this expense?"
+    "deleteDescription": "Are you sure you want to delete this expense?",
+    "pay": "Pay",
+    "payExpense": "Pay expense",
+    "uploadReceiptDescription": "Upload a receipt to confirm payment for {currency} {expenseAmount}.",
+    "receipts": "Receipts (Images)",
+    "confirmPayment": "Confirm payment",
+    "browseFile": "Browse file",
+    "imageSelected": "image selected",
+    "imagesSelected": "images selected"
   }
 }

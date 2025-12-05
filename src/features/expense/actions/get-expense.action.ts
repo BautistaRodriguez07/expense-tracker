@@ -13,7 +13,7 @@ const getExpenseQuery = cache(
   async (expenseId: string): Promise<SerializedExpense> => {
     const expense = await prisma.expense.findUnique({
       where: {
-        id: Number(expenseId),
+        id: expenseId,
         deleted_at: null,
       },
       include: {
@@ -45,8 +45,8 @@ const getExpenseQuery = cache(
 
 export async function getExpense(
   expenseId: string,
-  spaceId: number
+  spaceId: string
 ): Promise<SerializedExpense> {
-  await requireExpenseAccess(expenseId, spaceId.toString(), { action: "edit" });
+  await requireExpenseAccess(expenseId, spaceId, { action: "edit" });
   return getExpenseQuery(expenseId);
 }

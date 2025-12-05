@@ -10,7 +10,7 @@ import {
 
 // get all expenses for a workspace (cached)
 const getExpensesQuery = cache(
-  async (spaceId: number): Promise<SerializedExpense[]> => {
+  async (spaceId: string): Promise<SerializedExpense[]> => {
     const expenses = await prisma.expense.findMany({
       where: {
         space_id: spaceId,
@@ -47,7 +47,7 @@ const getExpensesQuery = cache(
 );
 
 export async function getExpenses(
-  spaceId: number
+  spaceId: string
 ): Promise<SerializedExpense[]> {
   await requireWorkspaceAccess(spaceId);
   return getExpensesQuery(spaceId);

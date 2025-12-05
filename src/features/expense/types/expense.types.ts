@@ -1,14 +1,14 @@
 export interface ExpenseInterface {
-  id: number;
-  space_id: number;
+  id: string;
+  space_id: string;
   name: string;
   description: string;
   amount: number;
   currency: string;
   date: Date;
-  responsible_id: number;
+  responsible_id: string;
   status: "pending" | "paid" | "cancelled";
   category_id: number;
-  created_by: number;
+  created_by: string;
   created_at: Date;
 }
