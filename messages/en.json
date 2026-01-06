@@ -52,7 +52,9 @@
   },
   "sidebar": {
     "home": "Home",
-    "settings": "Settings"
+    "settings": "Settings",
+    "expenses": "Expenses",
+    "newExpense": "New expense"
   },
   "topMenu": {
     "group": "Group",

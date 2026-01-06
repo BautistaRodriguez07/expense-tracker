@@ -52,7 +52,9 @@
   },
   "sidebar": {
     "home": "Accueil",
-    "settings": "Paramètres"
+    "settings": "Paramètres",
+    "expenses": "Dépenses",
+    "newExpense": "Nouveau dépense"
   },
   "topMenu": {
     "group": "Groupe",

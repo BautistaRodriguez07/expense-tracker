@@ -462,6 +462,7 @@ const MultipleSelector = React.forwardRef<
           className={cn(
             "flex items-start justify-between rounded-md border border-input px-3 py-2 text-base ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 md:text-sm",
             "text-lg font-semibold txt card-container w-full",
+            "min-h-[3rem] overflow-hidden gap-2",
             {
               "cursor-text": !disabled && selected.length !== 0,
             },
@@ -472,7 +473,7 @@ const MultipleSelector = React.forwardRef<
             inputRef?.current?.focus();
           }}
         >
-          <div className="relative flex flex-wrap gap-1">
+          <div className="relative flex flex-wrap gap-1 min-w-0 flex-1 overflow-hidden items-start">
             {selected.map(option => {
               return (
                 <Badge
@@ -535,12 +536,20 @@ const MultipleSelector = React.forwardRef<
               }
               className={cn(
                 "flex-1 self-baseline bg-transparent outline-none placeholder:text-muted-foreground",
+                "placeholder:break-words placeholder:whitespace-normal",
+                "min-h-[1.5rem] min-w-0 max-w-full",
                 {
                   "w-full": hidePlaceholderWhenSelected,
                   "ml-1": selected.length !== 0,
                 },
                 inputProps?.className
               )}
+              style={{
+                wordBreak: "break-word",
+                whiteSpace: "normal",
+                overflowWrap: "break-word",
+                lineHeight: "1.5",
+              }}
             />
           </div>
           <button

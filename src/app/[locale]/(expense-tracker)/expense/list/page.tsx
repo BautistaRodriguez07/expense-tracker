@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import ExpenseSummary from "@/features/expense/components/expense-summary";
 import { SerializedExpense } from "@/features/expense/utils/serialize-expense";
+import { IoChevronBackOutline } from "react-icons/io5";
 
 export default async function ExpenseListPage() {
   const t = await getTranslations("expense");
@@ -35,7 +36,12 @@ export default async function ExpenseListPage() {
         {/* Header */}
         <div className="flex justify-between items-center py-3">
           <div className="flex gap-5">
-            <BackButton />
+            <Link href="/">
+              <Button className="rounded-full dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-white text-black bg-gray-100 hover:bg-white">
+                <IoChevronBackOutline className="w-5 h-5" />
+              </Button>
+            </Link>
+
             <CustomTitle tag="h1" title={t("allExpenses")} />
           </div>
           <Link href="/expense/new">
@@ -95,12 +101,10 @@ export default async function ExpenseListPage() {
         ) : (
           <div className="space-y-4">
             {expenses.map(expense => (
-              <Link href={`/expense/${expense.id}`} key={expense.id}>
-                <ExpenseSummary
-                  key={expense.id}
-                  expense={expense as SerializedExpense}
-                />
-              </Link>
+              <ExpenseSummary
+                key={expense.id}
+                expense={expense as SerializedExpense}
+              />
             ))}
           </div>
         )}

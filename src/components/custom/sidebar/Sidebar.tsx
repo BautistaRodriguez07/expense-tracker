@@ -7,8 +7,10 @@ import { useUIStore } from "@/store/ui/ui-store";
 import { SignInButton, SignOutButton, useAuth } from "@clerk/nextjs";
 import { useTranslations } from "next-intl";
 import {
+  IoAddOutline,
   IoCloseOutline,
   IoHomeOutline,
+  IoListOutline,
   IoLogInOutline,
   IoLogOutOutline,
   IoSettingsOutline,
@@ -39,50 +41,54 @@ export const Sidebar = () => {
           <IoCloseOutline size={40} onClick={closeSideMenu} />
         </div>
 
-        {/* if is singed in */}
+        <>
+          <Link
+            onClick={closeSideMenu}
+            href="/"
+            className="flex items-center w-full  my-5 p-3 rounded gap-4"
+          >
+            <IoHomeOutline size={30} />
+            <span className="text-xl w-full">{t("home")}</span>
+          </Link>
 
-        {isSignedIn && (
-          <>
-            <Link
-              onClick={closeSideMenu}
-              href="/"
-              className="flex items-center w-full  my-5 p-3 rounded gap-4"
-            >
-              <IoHomeOutline size={30} />
-              <span className="text-xl w-full">{t("home")}</span>
-            </Link>
+          <Link
+            onClick={closeSideMenu}
+            href="/expense/list"
+            className="flex items-center w-full my-5 p-3 rounded gap-4"
+          >
+            <IoListOutline size={30} />
+            <span className="text-xl w-full">{t("expenses")}</span>
+          </Link>
 
-            <Link
-              onClick={closeSideMenu}
-              href="/settings"
-              className="flex items-center w-full my-5 p-3 rounded gap-4"
-            >
-              <IoSettingsOutline size={30} />
-              <span className="text-xl w-full">{t("settings")}</span>
-            </Link>
+          {/* new expense */}
+          <Link
+            onClick={closeSideMenu}
+            href="/expense/new"
+            className="flex items-center w-full my-5 p-3 rounded gap-4"
+          >
+            <IoAddOutline size={30} />
+            <span className="text-xl w-full">{t("newExpense")}</span>
+          </Link>
 
-            <div
-              onClick={closeSideMenu}
-              className="flex items-center w-full my-5 p-3 rounded gap-4 cursor-pointer"
-            >
-              <IoLogOutOutline size={30} />
-              <span className="text-xl w-full">
-                <SignOutButton />
-              </span>
-            </div>
-          </>
-        )}
-        {!isSignedIn && (
+          <Link
+            onClick={closeSideMenu}
+            href="/settings"
+            className="flex items-center w-full my-5 p-3 rounded gap-4"
+          >
+            <IoSettingsOutline size={30} />
+            <span className="text-xl w-full">{t("settings")}</span>
+          </Link>
+
           <div
             onClick={closeSideMenu}
             className="flex items-center w-full my-5 p-3 rounded gap-4 cursor-pointer"
           >
-            <IoLogInOutline size={30} />
+            <IoLogOutOutline size={30} />
             <span className="text-xl w-full">
-              <SignInButton />
+              <SignOutButton />
             </span>
           </div>
-        )}
+        </>
       </nav>
     </>
   );

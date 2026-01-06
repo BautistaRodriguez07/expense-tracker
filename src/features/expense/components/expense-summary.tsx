@@ -19,7 +19,10 @@ export const ExpenseSummary = async ({ expense }: ExpenseSummaryProps) => {
   });
 
   return (
-    <div className="flex justify-between items-center card-container mb-2">
+    <Link
+      href={`/expense/${expense.id}`}
+      className="flex justify-between items-center card-container mb-2 hover:opacity-80 transition-opacity cursor-pointer"
+    >
       <div className="flex items-center gap-3">
         <CategoryIcon
           iconName={expense.category?.icon}
@@ -51,14 +54,12 @@ export const ExpenseSummary = async ({ expense }: ExpenseSummaryProps) => {
             </div>
           </div>
         </div>
-        <Link href={`/expense/${expense.id}`}>
-          <IoChevronForwardOutline
-            size={18}
-            className="text-black dark:text-white hover:scale-150 transition-all"
-          />
-        </Link>
+        <IoChevronForwardOutline
+          size={18}
+          className="text-black dark:text-white"
+        />
       </div>
-    </div>
+    </Link>
   );
 };
 
