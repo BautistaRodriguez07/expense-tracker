@@ -4,9 +4,15 @@ interface Props {
   userName: string;
   categoryName?: string;
   imageUrl?: string;
+  expenseName?: string;
 }
 
-export const UserAvatar = ({ userName, categoryName, imageUrl }: Props) => {
+export const UserAvatar = ({
+  userName,
+  categoryName,
+  imageUrl,
+  expenseName,
+}: Props) => {
   return (
     <div className="flex flex-col">
       <div className="flex items-center gap-2 p-1">
@@ -14,9 +20,14 @@ export const UserAvatar = ({ userName, categoryName, imageUrl }: Props) => {
           <AvatarImage src={`${imageUrl ?? userName.slice(0, 2)} `} />
           <AvatarFallback>{userName.slice(0, 2)}</AvatarFallback>
         </Avatar>
-        <span className="font-medium">{userName}</span>
+        <span className="font-medium text-lg">{userName}</span>
       </div>
 
+      {expenseName && (
+        <span className="txt-muted ml-2 text-lg font-semibold">
+          {expenseName}
+        </span>
+      )}
       <span className="txt-muted ml-2">{categoryName}</span>
     </div>
   );

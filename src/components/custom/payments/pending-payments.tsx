@@ -66,6 +66,7 @@ export const PendingPayments = async () => {
         {pendingPayments.map(pendingPayment => (
           <PendingPayment
             key={pendingPayment.id}
+            expenseName={pendingPayment.name}
             id={pendingPayment.id}
             userImg={user?.imageUrl || ""}
             userName={pendingPayment.responsible?.name || "Unknown"}

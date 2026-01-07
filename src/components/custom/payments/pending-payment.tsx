@@ -4,12 +4,15 @@ import { UserAvatar } from "@/components/custom/user/user-avatar";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { IoChevronForwardOutline } from "react-icons/io5";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 
 interface Props {
   userImg: string;
   userName: string;
   categoryName: string;
   expirationDate: string;
+  expenseName: string;
   id: string;
 }
 
@@ -18,6 +21,7 @@ export const PendingPayment = ({
   userName,
   categoryName,
   expirationDate,
+  expenseName,
   id,
 }: Props) => {
   const t = useTranslations("pendingPayment");
@@ -31,6 +35,7 @@ export const PendingPayment = ({
           <UserAvatar
             userName={userName}
             imageUrl={userImg}
+            expenseName={expenseName}
             categoryName={categoryName}
           />
           <div className="py-2">
