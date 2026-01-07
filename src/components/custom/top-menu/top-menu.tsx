@@ -1,7 +1,8 @@
 "use client";
 
-import { IoMenu, IoWalletOutline } from "react-icons/io5";
+import { IoMenu } from "react-icons/io5";
 import { useUIStore } from "@/store/ui/ui-store";
+import { Logo } from "@/components/custom/logo/logo";
 
 import {
   DropdownMenu,
@@ -23,7 +24,7 @@ export const TopMenu = () => {
     <div className="flex justify-between items-center p-4 bg">
       {/* logo */}
       <Link href="/">
-        <IoWalletOutline size={40} className="cursor-pointer" />
+        <Logo />
       </Link>
 
       {/* space selector */}

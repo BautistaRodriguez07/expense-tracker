@@ -4,6 +4,8 @@ export * from "./custom/sidebar/sidebar";
 
 export * from "./custom/locale/locale-switcher";
 
+export * from "./custom/logo/logo";
+
 export * from "./custom/theme/theme-provider";
 export * from "./custom/theme/toggle-theme";
 

@@ -62,7 +62,7 @@ export const PendingPayments = async () => {
         className="text-lg py-2 txt-muted"
       />
 
-      <div className="flex overflow-x-auto max-w-[100vw]">
+      <div className="flex overflow-x-auto max-w-[calc(100vw-2rem)]">
         {pendingPayments.map(pendingPayment => (
           <PendingPayment
             key={pendingPayment.id}
