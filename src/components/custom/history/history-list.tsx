@@ -1,4 +1,4 @@
-import { CustomTitle } from "@/components";
+import { CustomTitle } from "@/components/custom/custom-title/custom-title";
 import { getExpenses } from "@/features/expense/actions/get-expenses.action";
 import ExpenseSummary from "@/features/expense/components/expense-summary";
 import { SerializedExpense } from "@/features/expense/utils/serialize-expense";
@@ -6,7 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
 
 interface HistoryListProps {
-  spaceId: number;
+  spaceId: string;
 }
 
 export const HistoryList = async (props: HistoryListProps) => {

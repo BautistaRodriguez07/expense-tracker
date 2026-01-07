@@ -4,8 +4,8 @@ import { cache } from "react";
 import prisma from "@/lib/prisma";
 import { requireWorkspaceAccess } from "@/features/auth/guards/workspace.guard";
 
-type SpaceMemberDTO = {
-  id: number;
+export type SpaceMemberDTO = {
+  id: string;
   name: string;
   email: string;
   role: string;
@@ -13,7 +13,7 @@ type SpaceMemberDTO = {
 
 // get space members query
 const getSpaceMembersQuery = cache(
-  async (spaceId: number): Promise<SpaceMemberDTO[]> => {
+  async (spaceId: string): Promise<SpaceMemberDTO[]> => {
     const spaceMembers = await prisma.spaceMember.findMany({
       where: { space_id: spaceId },
       select: {
@@ -46,7 +46,7 @@ const getSpaceMembersQuery = cache(
 
 // public action with validation
 export async function getSpaceMembers(
-  spaceId: number
+  spaceId: string
 ): Promise<SpaceMemberDTO[]> {
   await requireWorkspaceAccess(spaceId);
   return getSpaceMembersQuery(spaceId);

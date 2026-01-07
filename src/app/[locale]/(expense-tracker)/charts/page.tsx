@@ -1,9 +1,13 @@
-import { ChartPieInteractive } from "@/components";
+// src/app/[locale]/(expense-tracker)/charts/page.tsx
+import { ChartContainer } from "@/components/custom/charts/chart-container";
+import { Users } from "@/components/custom/user/users-list";
 
-export default function ChartsPage() {
+export default async function ChartsPage() {
   return (
-    <div>
-      <ChartPieInteractive />
-    </div>
+    <>
+      <ChartContainer>
+        <Users />
+      </ChartContainer>
+    </>
   );
 }

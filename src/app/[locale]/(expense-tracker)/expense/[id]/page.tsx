@@ -1,9 +1,7 @@
-import {
-  BackButton,
-  CategoryIcon,
-  CustomTitle,
-  FormattedAmount,
-} from "@/components";
+import { BackButton } from "@/components/custom/back-button";
+import { CategoryIcon } from "@/components/custom/category-icon/category-icon";
+import { CustomTitle } from "@/components/custom/custom-title/custom-title";
+import { FormattedAmount } from "@/components/custom/currency/formatted-amount";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";

@@ -1,4 +1,6 @@
-import { BackButton, CustomTitle, FormattedAmount } from "@/components";
+import { BackButton } from "@/components/custom/back-button";
+import { CustomTitle } from "@/components/custom/custom-title/custom-title";
+import { FormattedAmount } from "@/components/custom/currency/formatted-amount";
 import { validateAuth } from "@/features/auth/services/auth.service";
 import { getExpenses } from "@/features/expense/actions/get-expenses.action";
 import { Button } from "@/components/ui/button";

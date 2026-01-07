@@ -1,4 +1,5 @@
-import { CustomTitle, PendingPayment } from "@/components";
+import { CustomTitle } from "@/components/custom/custom-title/custom-title";
+import { PendingPayment } from "@/components/custom/payments/pending-payment";
 import prisma from "@/lib/prisma";
 import { getTranslations } from "next-intl/server";
 import { validateAuth } from "@/features/auth/services/auth.service";

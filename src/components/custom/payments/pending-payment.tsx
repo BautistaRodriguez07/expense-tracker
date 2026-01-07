@@ -1,4 +1,6 @@
-import { UserAvatar } from "@/components";
+"use client";
+
+import { UserAvatar } from "@/components/custom/user/user-avatar";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { IoChevronForwardOutline } from "react-icons/io5";

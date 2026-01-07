@@ -1,4 +1,4 @@
-import { UserAvatar } from "@/components";
+import { UserAvatar } from "@/components/custom/user/user-avatar";
 import { validateAuth } from "@/features/auth/services/auth.service";
 import { getSpaceMembers } from "@/features/space/actions/get-space-members.action";
 import { redirect } from "next/navigation";

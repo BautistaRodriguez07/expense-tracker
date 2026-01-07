@@ -1,11 +1,12 @@
-import { CustomTitle, ToggleTheme } from "@/components";
+import { CustomTitle } from "@/components/custom/custom-title/custom-title";
+import { ToggleTheme } from "@/components/custom/theme/toggle-theme";
 import LocaleSwitcher from "@/components/custom/locale/locale-switcher";
 import { Separator } from "@/components/ui/separator";
-import { useTranslations } from "next-intl";
-import { AccountInformation } from "../../../../features/user/components/account-information";
+import { getTranslations } from "next-intl/server";
+import { AccountInformation } from "@/features/user/components/account-information";
 
-export default function SettingsPage() {
-  const t = useTranslations("settings");
+export default async function SettingsPage() {
+  const t = await getTranslations("settings");
   return (
     <div className="w-full items-center justify-center flex flex-col">
       <div className="md:w-2xl lg:w-3xl w-full">

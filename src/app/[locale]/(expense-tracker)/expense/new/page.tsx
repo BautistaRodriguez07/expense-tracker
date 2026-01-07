@@ -1,5 +1,5 @@
 // app/[locale]/(expense-tracker)/expense/page.tsx
-import { CustomTitle } from "@/components";
+import { CustomTitle } from "@/components/custom/custom-title/custom-title";
 import { ExpenseForm } from "@/features/expense/components/expense-form";
 
 import { getSpaceMembers } from "@/features/space/actions/get-space-members.action";

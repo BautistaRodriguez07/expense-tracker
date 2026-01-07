@@ -1,4 +1,4 @@
-import { CustomTitle } from "@/components";
+import { CustomTitle } from "@/components/custom/custom-title/custom-title";
 import { validateAuth } from "@/features/auth/services/auth.service";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";

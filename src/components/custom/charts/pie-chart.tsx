@@ -1,16 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Label, Pie, PieChart, Sector } from "recharts";
-import { PieSectorDataItem } from "recharts/types/polar/Pie";
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Cell, Label, Pie, PieChart } from "recharts";
 import {
   ChartConfig,
   ChartContainer,
@@ -18,175 +9,213 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import type { SpaceMemberDTO } from "@/features/space/actions/get-space-members.action";
+import { ChartFilters } from "./chart-filters";
+import { Loading } from "../loading/loading";
 
-export const description = "An interactive pie chart";
+export type ChartDataItem = {
+  category: string;
+  categoryId: number;
+  amount: number;
+  count: number;
+  fill: string;
+};
 
-const desktopData = [
-  { month: "january", desktop: 186, fill: "var(--color-january)" },
-  { month: "february", desktop: 305, fill: "var(--color-february)" },
-  { month: "march", desktop: 237, fill: "var(--color-march)" },
-  { month: "april", desktop: 173, fill: "var(--color-april)" },
-  { month: "may", desktop: 209, fill: "var(--color-may)" },
-];
+type ChartPieInteractiveProps = {
+  initialData: ChartDataItem[];
+  spaceId: string;
+  spaceMembers: SpaceMemberDTO[];
+  currencies: string[];
+  onFilterChange: (filters: {
+    days: number;
+    responsibleId: string;
+    currency: string;
+    status: string;
+  }) => Promise<ChartDataItem[]>;
+};
 
-const chartConfig = {
-  visitors: {
-    label: "Visitors",
-  },
-  desktop: {
-    label: "Desktop",
-  },
-  mobile: {
-    label: "Mobile",
-  },
-  january: {
-    label: "January",
-    color: "var(--chart-1)",
-  },
-  february: {
-    label: "February",
-    color: "var(--chart-2)",
-  },
-  march: {
-    label: "March",
-    color: "var(--chart-3)",
-  },
-  april: {
-    label: "April",
-    color: "var(--chart-4)",
-  },
-  may: {
-    label: "May",
-    color: "var(--chart-5)",
-  },
-} satisfies ChartConfig;
-
-export function ChartPieInteractive() {
+export function ChartPieInteractive(props: ChartPieInteractiveProps) {
   const id = "pie-interactive";
-  const [activeMonth, setActiveMonth] = React.useState(desktopData[0].month);
+  const [chartData, setChartData] = React.useState(props.initialData);
 
-  const activeIndex = React.useMemo(
-    () => desktopData.findIndex(item => item.month === activeMonth),
-    [activeMonth]
-  );
-  const months = React.useMemo(() => desktopData.map(item => item.month), []);
+  const [filters, setFilters] = React.useState({
+    days: 30,
+    responsibleId: "all",
+    currency: props.currencies[0] || "USD",
+    status: "all",
+  });
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const data = await props.onFilterChange(filters);
+        setChartData(data);
+      } catch (error) {
+        console.error("Error fetching chart data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters]);
+
+  const chartConfig = React.useMemo(() => {
+    const config: ChartConfig = {
+      amount: {
+        label: "Amount",
+      },
+    };
+
+    chartData.forEach(item => {
+      config[item.category] = {
+        label: item.category,
+        color: item.fill,
+      };
+    });
+
+    return config;
+  }, [chartData]);
+
+  if (chartData.length === 0) {
+    return (
+      <div className="card-container">
+        <p className="text-center txt-muted">
+          No expenses found for the selected filters
+        </p>
+      </div>
+    );
+  }
+
+  const totalAmount = chartData.reduce((sum, item) => sum + item.amount, 0);
 
   return (
-    <Card data-chart={id} className="flex flex-col border-0 shadow-none">
+    <div className="card-container overflow-hidden max-w-full" data-chart={id}>
       <ChartStyle id={id} config={chartConfig} />
-      <CardHeader className="flex-row items-start space-y-0 pb-0">
-        <div className="flex gap-1">
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {/* Left section - Title, Total, and Filters */}
+        <div className="space-y-4">
           <div>
-            <Select value={activeMonth} onValueChange={setActiveMonth}>
-              <SelectTrigger
-                className="ml-auto h-7 w-[130px] rounded-lg pl-2.5"
-                aria-label="Select a value"
-              >
-                <SelectValue placeholder="Select month" />
-              </SelectTrigger>
-              <SelectContent align="end" className="rounded-xl">
-                {months.map(key => {
-                  const config = chartConfig[key as keyof typeof chartConfig];
+            <h4 className="text-lg txt mb-2">Expenses by Category</h4>
+            <h4 className="text-2xl txt-muted font-semibold">
+              ${totalAmount.toLocaleString()}
+            </h4>
+          </div>
 
-                  if (!config) {
-                    return null;
-                  }
+          <ChartFilters
+            filters={filters}
+            onFiltersChange={setFilters}
+            spaceMembers={props.spaceMembers}
+            currencies={props.currencies}
+          />
 
-                  return (
-                    <SelectItem
-                      key={key}
-                      value={key}
-                      className="rounded-lg [&_span]:flex"
-                    >
-                      <div className="flex items-center gap-2 text-xs">
-                        <span
-                          className="flex h-3 w-3 shrink-0 rounded-xs"
-                          style={{
-                            backgroundColor: `var(--color-${key})`,
-                          }}
-                        />
-                        {config?.label}
-                      </div>
-                    </SelectItem>
-                  );
-                })}
-              </SelectContent>
-            </Select>
+          {/* Category breakdown */}
+          <div className="space-y-2">
+            {chartData.map(item => {
+              const percentage = ((item.amount / totalAmount) * 100).toFixed(1);
+
+              return (
+                <div
+                  key={item.categoryId}
+                  className="flex items-center justify-between"
+                >
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="w-3 h-3 rounded-sm shrink-0"
+                      style={{ backgroundColor: item.fill }}
+                    />
+                    <div>
+                      <p className="text-sm txt">{item.category}</p>
+                      <p className="text-xs txt-muted">
+                        {item.count} {item.count === 1 ? "expense" : "expenses"}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-medium txt">
+                      ${item.amount.toLocaleString()}
+                    </p>
+                    <p className="text-xs txt-muted">{percentage}%</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
-      </CardHeader>
-      <CardContent className="flex flex-1 justify-center pb-0">
-        <ChartContainer
-          id={id}
-          config={chartConfig}
-          className="mx-auto aspect-square w-full max-w-[300px]"
-        >
-          <PieChart>
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
-            <Pie
-              data={desktopData}
-              dataKey="desktop"
-              nameKey="month"
-              innerRadius={60}
-              strokeWidth={5}
-              activeIndex={activeIndex}
-              activeShape={({
-                outerRadius = 0,
-                ...props
-              }: PieSectorDataItem) => (
-                <g>
-                  <Sector {...props} outerRadius={outerRadius + 10} />
-                  <Sector
-                    {...props}
-                    outerRadius={outerRadius + 25}
-                    innerRadius={outerRadius + 12}
-                  />
-                </g>
-              )}
+
+        {/* Right section - Chart */}
+        <div className="sm:col-span-2 overflow-hidden min-w-0 w-full">
+          {isLoading ? (
+            <div className="flex items-center justify-center h-[300px]">
+              <Loading />
+            </div>
+          ) : (
+            <ChartContainer
+              id={id}
+              config={chartConfig}
+              className="h-[300px] w-full max-w-full"
             >
-              <Label
-                content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                    return (
-                      <text
-                        x={viewBox.cx}
-                        y={viewBox.cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                      >
-                        <tspan
-                          x={viewBox.cx}
-                          y={viewBox.cy}
-                          className="fill-foreground text-3xl font-bold"
-                        >
-                          {desktopData[activeIndex].desktop.toLocaleString()}
-                        </tspan>
-                        <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 24}
-                          className="fill-muted-foreground"
-                        >
-                          Visitors
-                        </tspan>
-                      </text>
-                    );
-                  }
-                }}
-              />
-            </Pie>
-          </PieChart>
-        </ChartContainer>
-      </CardContent>
-    </Card>
+              <PieChart>
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent hideLabel />}
+                />
+                <Pie
+                  data={chartData}
+                  dataKey="amount"
+                  nameKey="category"
+                  innerRadius={60}
+                  outerRadius={80}
+                  strokeWidth={2}
+                  paddingAngle={2}
+                >
+                  {chartData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.fill} />
+                  ))}
+                  <Label
+                    content={({ viewBox }) => {
+                      if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                        const totalCount = chartData.reduce(
+                          (sum, item) => sum + item.count,
+                          0
+                        );
+
+                        return (
+                          <text
+                            x={viewBox.cx}
+                            y={viewBox.cy}
+                            textAnchor="middle"
+                            dominantBaseline="middle"
+                          >
+                            <tspan
+                              x={viewBox.cx}
+                              y={viewBox.cy}
+                              className="fill-foreground text-3xl font-bold"
+                            >
+                              ${totalAmount.toLocaleString()}
+                            </tspan>
+                            <tspan
+                              x={viewBox.cx}
+                              y={(viewBox.cy || 0) + 24}
+                              className="fill-muted-foreground text-sm"
+                            >
+                              {totalCount} expenses
+                            </tspan>
+                          </text>
+                        );
+                      }
+                    }}
+                  />
+                </Pie>
+              </PieChart>
+            </ChartContainer>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

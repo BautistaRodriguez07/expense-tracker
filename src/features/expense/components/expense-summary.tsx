@@ -1,6 +1,7 @@
 import { getLocale } from "next-intl/server";
 import { IoChevronForwardOutline } from "react-icons/io5";
-import { CategoryIcon, FormattedAmount } from "@/components";
+import { CategoryIcon } from "@/components/custom/category-icon/category-icon";
+import { FormattedAmount } from "@/components/custom/currency/formatted-amount";
 import { SerializedExpense } from "../utils/serialize-expense";
 import { Link } from "@/i18n/navigation";
 import { ExpenseStatusBadge } from "./expense-status-badge";

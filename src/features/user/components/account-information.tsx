@@ -15,6 +15,7 @@ import {
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useEffect } from "react";
+import { Loading } from "@/components/custom/loading/loading";
 
 export const AccountInformation = () => {
   const t = useTranslations("settings");
@@ -87,7 +88,13 @@ export const AccountInformation = () => {
     }
   }, [user, isLoaded, form]);
 
-  if (!isLoaded || !user || !t) return <div>Loading...</div>;
+  if (!isLoaded || !user || !t) {
+    return (
+      <div className="flex items-center justify-center h-[300px]">
+        <Loading />
+      </div>
+    );
+  }
 
   // console.log(form.formState.errors);
 

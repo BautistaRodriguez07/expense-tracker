@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth, useSignIn } from "@clerk/nextjs";
 import type { NextPage } from "next";
 import { useRouter } from "next/navigation";
-import { CustomTitle } from "@/components";
+import { CustomTitle } from "@/components/custom/custom-title/custom-title";
 import { Button } from "@/components/ui/button";
 
 const ForgotPasswordPage: NextPage = () => {

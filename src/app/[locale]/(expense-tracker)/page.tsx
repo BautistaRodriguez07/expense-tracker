@@ -1,6 +1,8 @@
-import { ChartContainer, HistoryList, PendingPayments } from "@/components";
+import { ChartContainer } from "@/components/custom/charts/chart-container";
+import { HistoryList } from "@/components/custom/history/history-list";
+import { PendingPayments } from "@/components/custom/payments/pending-payments";
 import { setRequestLocale } from "next-intl/server";
-import { HomeTitle } from "../../../features/user/components/home-title";
+import { HomeTitle } from "@/features/user/components/home-title";
 import { Users } from "@/components/custom/user/users-list";
 import { validateAuth } from "@/features/auth/services/auth.service";
 import { redirect } from "next/navigation";
@@ -30,7 +32,6 @@ export default async function HomePage({
         <ChartContainer>
           <Users />
         </ChartContainer>
-
         {/* Pending payments */}
         <PendingPayments />
 

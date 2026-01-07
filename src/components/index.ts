@@ -16,6 +16,8 @@ export * from "./custom/custom-title/custom-title";
 
 export * from "./custom/charts/pie-chart";
 export * from "./custom/charts/chart-container";
+export * from "./custom/charts/chart-filters";
+export * from "./custom/charts/expense-chart";
 
 export * from "./custom/user/user-avatar";
 
@@ -29,3 +31,5 @@ export * from "./custom/category-icon/category-icon";
 export * from "./custom/currency/formatted-amount";
 
 export * from "./custom/back-button";
+
+export * from "./custom/loading/loading";
