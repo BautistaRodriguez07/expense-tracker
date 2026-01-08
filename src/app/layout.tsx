@@ -14,8 +14,8 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html suppressHydrationWarning>
-        <body>
+      <html suppressHydrationWarning className="overflow-x-hidden max-w-full">
+        <body className="overflow-x-hidden max-w-full">
           {/* Clerk CAPTCHA element - required for bot protection */}
           <div id="clerk-captcha" style={{ display: "none" }} />
           {children}

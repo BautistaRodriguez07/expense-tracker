@@ -1,4 +1,8 @@
+"use client";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useMessages } from "next-intl";
+import { translateCategory } from "@/lib/translate-category";
 
 interface Props {
   userName: string;
@@ -13,6 +17,11 @@ export const UserAvatar = ({
   imageUrl,
   expenseName,
 }: Props) => {
+  const messages = useMessages();
+  const translatedCategory = categoryName
+    ? translateCategory(categoryName, messages)
+    : "";
+
   return (
     <div className="flex flex-col">
       <div className="flex items-center gap-2 p-1">
@@ -28,7 +37,7 @@ export const UserAvatar = ({
           {expenseName}
         </span>
       )}
-      <span className="txt-muted ml-2">{categoryName}</span>
+      <span className="txt-muted ml-2">{translatedCategory}</span>
     </div>
   );
 };

@@ -4,8 +4,6 @@ import { UserAvatar } from "@/components/custom/user/user-avatar";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { IoChevronForwardOutline } from "react-icons/io5";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
 
 interface Props {
   userImg: string;
@@ -27,10 +25,12 @@ export const PendingPayment = ({
   const t = useTranslations("pendingPayment");
 
   return (
-    <div className=" flex gap-2">
+    <div className="flex gap-2">
       {/* pending payment 1 */}
-
-      <div className="card-container p-3 mb-5 mx-1 min-w-80 flex items-center justify-between">
+      <Link
+        href={`/expense/${id}`}
+        className="card-container p-3 mb-5 mx-1 min-w-80 flex items-center justify-between cursor-pointer hover:opacity-90 transition-opacity"
+      >
         <div>
           <UserAvatar
             userName={userName}
@@ -46,13 +46,11 @@ export const PendingPayment = ({
           </div>
         </div>
 
-        <Link href={`/expense/${id}`}>
-          <IoChevronForwardOutline
-            size={18}
-            className="text-black dark:text-white"
-          />
-        </Link>
-      </div>
+        <IoChevronForwardOutline
+          size={18}
+          className="text-black dark:text-white"
+        />
+      </Link>
     </div>
   );
 };

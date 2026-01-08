@@ -136,6 +136,10 @@ export const AccountInformation = () => {
                 {/* image preview */}
 
                 <div className="relative">
+                  <label
+                    htmlFor="image"
+                    className="flex sm:hidden inset-0 absolute rounded-full hover:bg-black/50 transition-all duration-300 cursor-pointer"
+                  />
                   <Image
                     className="rounded-full object-cover border size-20"
                     src={
@@ -168,7 +172,7 @@ export const AccountInformation = () => {
           />
 
           {/* Edit */}
-          <div>
+          <div className="hidden sm:block">
             <label
               htmlFor="image"
               className="cursor-pointer text-sm font-medium btn px-3 py-2"

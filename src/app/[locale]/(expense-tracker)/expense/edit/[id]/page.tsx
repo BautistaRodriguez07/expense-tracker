@@ -10,9 +10,6 @@ import { getCategories } from "@/features/expense/actions/get-categories.action"
 import { getTags } from "@/features/expense/actions/get-tags.action";
 import { getExpense } from "@/features/expense/actions/get-expense.action";
 import { Option } from "@/components/ui/multiple-selector";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { IoChevronBackOutline } from "react-icons/io5";
 
 export default async function ExpenseEditPage({
   params,
@@ -57,9 +54,9 @@ export default async function ExpenseEditPage({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center overflow-x-hidden">
       <div className="max-w-3xl w-full">
-        <div className="flex justify-between items-center py-3 w-full px-5">
+        <div className="flex justify-between items-center py-3 w-full px-5 gap-5">
           <BackButton />
           <CustomTitle tag="h1" title="Edit expense" className="py-3" />
         </div>

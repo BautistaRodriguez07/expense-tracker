@@ -148,10 +148,19 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+html {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
 body {
   color: var(--text);
   background-color: var(--bg-dark);
   font-size: 16px;
+  overflow-x: hidden;
+  max-width: 100vw;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 /* BACKGROUNDS */

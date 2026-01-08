@@ -44,7 +44,7 @@ export default async function LocaleLayout({ children, params }: Props) {
     >
       <NextIntlClientProvider locale={locale}>
         <div
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden max-w-full`}
         >
           {children}
         </div>

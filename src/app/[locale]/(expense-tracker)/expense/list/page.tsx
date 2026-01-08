@@ -33,7 +33,7 @@ export default async function ExpenseListPage() {
   }, {} as Record<string, number>);
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center overflow-x-hidden">
       <div className="max-w-4xl w-full">
         {/* Header */}
         <div className="flex justify-between items-center py-3">
@@ -53,12 +53,12 @@ export default async function ExpenseListPage() {
 
         {/* Stats Card */}
         <div className="card-container mb-6">
-          <div className="grid grid-cols-3 gap-4 text-center">
-            <div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+            <div className="order-2 sm:order-1">
               <p className="txt-muted text-sm">{t("totalExpenses")}</p>
               <p className="txt text-2xl font-bold">{expenses.length}</p>
             </div>
-            <div>
+            <div className="order-1 sm:order-2">
               <p className="txt-muted text-sm">{t("totalPrice")}</p>
               <div className="flex flex-col items-center">
                 {Object.entries(expensesByCurrency).length > 0 ? (
@@ -83,7 +83,7 @@ export default async function ExpenseListPage() {
                 )}
               </div>
             </div>
-            <div>
+            <div className="order-3 sm:order-3">
               <p className="txt-muted text-sm">{t("pending")}</p>
               <p className="txt text-2xl font-bold">
                 {expenses.filter(e => e.status === "pending").length}

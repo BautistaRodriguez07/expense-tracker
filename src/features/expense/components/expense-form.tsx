@@ -22,7 +22,6 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Form } from "@/components/ui/form";
-import { Field, FieldContent, FieldLabel } from "@/components/ui/field";
 import MultipleSelector from "@/components/ui/multiple-selector";
 import {
   createExpense,
@@ -33,7 +32,8 @@ import { useTransition } from "react";
 import { Category } from "@prisma/client";
 import type { Option } from "@/components/ui/multiple-selector";
 import { Calendar22 } from "@/components/custom/calendar/calendar";
-import { useTranslations } from "next-intl";
+import { useTranslations, useMessages } from "next-intl";
+import { translateCategory } from "@/lib/translate-category";
 
 interface ExpenseFormProps {
   categories: Category[];
@@ -67,6 +67,7 @@ export const ExpenseForm = ({
   expense,
 }: ExpenseFormProps) => {
   const t = useTranslations("expense");
+  const messages = useMessages();
   const [isPending, startTransition] = useTransition();
 
   const isEditing = !!expense?.id;
@@ -226,12 +227,11 @@ export const ExpenseForm = ({
             name="currency"
             control={form.control}
             render={({ field, fieldState }) => (
-              <Field orientation="horizontal" className="!items-center">
-                <FieldLabel className="text-xl font-semibold w-auto">
-                  {t("currency")}
-                </FieldLabel>
-
-                <FieldContent className="items-end">
+              <div className="flex flex-col gap-3">
+                <div className="flex flex-wrap justify-between gap-3 items-center">
+                  <Label className="text-xl font-semibold">
+                    {t("currency")}
+                  </Label>
                   <Select
                     value={field.value}
                     onValueChange={val => field.onChange(val)}
@@ -265,11 +265,13 @@ export const ExpenseForm = ({
                       </SelectGroup>
                     </SelectContent>
                   </Select>
-                  {fieldState.invalid && (
-                    <p className="text-red-500">{fieldState.error?.message}</p>
-                  )}
-                </FieldContent>
-              </Field>
+                </div>
+                {fieldState.invalid && (
+                  <p className="text-red-500 text-end">
+                    {fieldState.error?.message}
+                  </p>
+                )}
+              </div>
             )}
           />
           <Separator className="my-5" />
@@ -278,12 +280,11 @@ export const ExpenseForm = ({
             name="responsible"
             control={form.control}
             render={({ field, fieldState }) => (
-              <Field orientation="horizontal" className="!items-center">
-                <FieldLabel className="text-xl font-semibold w-auto">
-                  {t("responsible")}
-                </FieldLabel>
-
-                <FieldContent className="items-end">
+              <div className="flex flex-col gap-3">
+                <div className="flex flex-wrap justify-between gap-3 items-center">
+                  <Label className="text-xl font-semibold">
+                    {t("responsible")}
+                  </Label>
                   <Select
                     value={field.value}
                     onValueChange={val => field.onChange(val)}
@@ -308,11 +309,13 @@ export const ExpenseForm = ({
                       </SelectGroup>
                     </SelectContent>
                   </Select>
-                  {fieldState.invalid && (
-                    <p className="text-red-500">{fieldState.error?.message}</p>
-                  )}
-                </FieldContent>
-              </Field>
+                </div>
+                {fieldState.invalid && (
+                  <p className="text-red-500 text-end">
+                    {fieldState.error?.message}
+                  </p>
+                )}
+              </div>
             )}
           />
           <Separator className="my-5" />
@@ -321,12 +324,11 @@ export const ExpenseForm = ({
             name="category"
             control={form.control}
             render={({ field, fieldState }) => (
-              <Field orientation="horizontal" className="!items-center">
-                <FieldLabel className="text-xl font-semibold w-auto">
-                  {t("category")}
-                </FieldLabel>
-
-                <FieldContent className="items-end">
+              <div className="flex flex-col gap-3">
+                <div className="flex flex-wrap justify-between gap-3 items-center">
+                  <Label className="text-xl font-semibold">
+                    {t("category")}
+                  </Label>
                   <Select
                     value={field.value}
                     onValueChange={val => field.onChange(val)}
@@ -345,17 +347,19 @@ export const ExpenseForm = ({
                             className="bg text-lg font-semibold"
                             value={category.id.toString()}
                           >
-                            {category.name}
+                            {translateCategory(category.name, messages)}
                           </SelectItem>
                         ))}
                       </SelectGroup>
                     </SelectContent>
                   </Select>
-                  {fieldState.invalid && (
-                    <p className="text-red-500">{fieldState.error?.message}</p>
-                  )}
-                </FieldContent>
-              </Field>
+                </div>
+                {fieldState.invalid && (
+                  <p className="text-red-500 text-end">
+                    {fieldState.error?.message}
+                  </p>
+                )}
+              </div>
             )}
           />
 
@@ -365,27 +369,22 @@ export const ExpenseForm = ({
             name="expireDate"
             control={form.control}
             render={({ field, fieldState }) => (
-              <Field orientation="horizontal" className="!items-center">
-                <div className="flex flex-col w-full">
-                  <div className="flex justify-between w-full">
-                    <FieldLabel className="text-xl font-semibold">
-                      {t("expirationDate")}
-                    </FieldLabel>
-                    <FieldContent className="items-end">
-                      <Calendar22
-                        selectedDate={field.value}
-                        onDateChange={field.onChange}
-                      />
-                    </FieldContent>
-                  </div>
-
-                  {fieldState.invalid && (
-                    <p className="text-red-500 text-end">
-                      {fieldState.error?.message}
-                    </p>
-                  )}
+              <div className="flex flex-col gap-3">
+                <div className="flex flex-wrap justify-between gap-3 items-center">
+                  <Label className="text-xl font-semibold">
+                    {t("expirationDate")}
+                  </Label>
+                  <Calendar22
+                    selectedDate={field.value}
+                    onDateChange={field.onChange}
+                  />
                 </div>
-              </Field>
+                {fieldState.invalid && (
+                  <p className="text-red-500 text-end">
+                    {fieldState.error?.message}
+                  </p>
+                )}
+              </div>
             )}
           />
 
@@ -395,24 +394,20 @@ export const ExpenseForm = ({
             name="tags"
             control={form.control}
             render={({ field }) => (
-              <Field orientation="horizontal" className="!items-center">
-                <FieldLabel className="text-xl font-semibold w-auto">
-                  {t("tags")}
-                </FieldLabel>
-                <FieldContent className="items-end">
-                  <div className="w-56 sm:w-60 md:w-100">
-                    <MultipleSelector
-                      {...field}
-                      defaultOptions={tags}
-                      placeholder={t("selectOrCreateTags")}
-                      creatable
-                      value={field.value}
-                      onChange={field.onChange}
-                      emptyIndicator={<p>{t("noResultsFound")}</p>}
-                    />
-                  </div>
-                </FieldContent>
-              </Field>
+              <div className="flex flex-wrap justify-between gap-3 items-center">
+                <Label className="text-xl font-semibold">{t("tags")}</Label>
+                <div className="w-56 sm:w-60 md:w-100">
+                  <MultipleSelector
+                    {...field}
+                    defaultOptions={tags}
+                    placeholder={t("selectOrCreateTags")}
+                    creatable
+                    value={field.value}
+                    onChange={field.onChange}
+                    emptyIndicator={<p>{t("noResultsFound")}</p>}
+                  />
+                </div>
+              </div>
             )}
           />
 

@@ -82,9 +82,13 @@ export function SignInForm({
                   Sign In with Google
                 </Clerk.Connection>
 
-                <Clerk.Link navigate="sign-up">
-                  <FieldDescription className="text-center txt-muted py-4">
-                    Don&apos;t have an account? <a href="#">Sign up</a>
+                <Clerk.Link
+                  navigate="sign-up"
+                  className="text-center txt-muted py-4"
+                >
+                  <FieldDescription>
+                    Don&apos;t have an account?{" "}
+                    <span className="link underline">Sign up</span>
                   </FieldDescription>
                 </Clerk.Link>
               </FieldGroup>

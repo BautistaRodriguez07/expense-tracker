@@ -27,9 +27,9 @@ export default async function ExpensePage() {
   ]);
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center overflow-x-hidden">
       <div className="max-w-3xl w-full">
-        <div className="flex justify-between items-center py-3 w-full px-5">
+        <div className="flex justify-between items-center py-3 w-full px-5 gap-5">
           <Link href="/expense/list">
             <Button className="btn">
               <IoChevronBackOutline className="w-4 h-4" />

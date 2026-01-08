@@ -13,6 +13,8 @@ import {
 } from "@/components/ui/chart";
 import { Cell, Label, Pie, PieChart } from "recharts";
 import { Loading } from "../loading/loading";
+import { useMessages } from "next-intl";
+import { translateCategory } from "@/lib/translate-category";
 
 type ExpenseChartWrapperProps = {
   initialData: ChartDataItem[];
@@ -29,6 +31,7 @@ type ExpenseChartWrapperProps = {
 
 export function ExpenseChartWrapper(props: ExpenseChartWrapperProps) {
   const id = "pie-interactive";
+  const messages = useMessages();
   const [chartData, setChartData] = React.useState(props.initialData);
 
   const [filters, setFilters] = React.useState({
@@ -181,7 +184,9 @@ export function ExpenseChartWrapper(props: ExpenseChartWrapperProps) {
                 style={{ backgroundColor: item.fill }}
               />
               <div>
-                <p className="text-sm txt">{item.category}</p>
+                <p className="text-sm txt">
+                  {translateCategory(item.category, messages)}
+                </p>
                 <p className="text-xs txt-muted">
                   {item.count} {item.count === 1 ? "expense" : "expenses"}
                 </p>

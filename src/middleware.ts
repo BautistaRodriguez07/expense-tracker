@@ -21,8 +21,12 @@ export default clerkMiddleware((auth, req) => {
     return;
   }
 
-  // 2. Existing Auth logic
-  if (pathname.startsWith("/sign-in") || pathname.startsWith("/sign-up")) {
+  // 2. Existing Auth logic - Skip intl middleware for auth routes
+  if (
+    pathname.startsWith("/sign-in") ||
+    pathname.startsWith("/sign-up") ||
+    pathname.startsWith("/forgot-password")
+  ) {
     if (!isPublicRoute(req)) {
       auth.protect();
     }

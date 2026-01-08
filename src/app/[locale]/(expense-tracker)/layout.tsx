@@ -8,11 +8,13 @@ export default function ExpenseTrackerLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen overflow-x-hidden max-w-full">
       <TopMenu />
-      <div className="flex flex-1">
+      <div className="flex flex-1 overflow-x-hidden">
         <Sidebar />
-        <main className="flex-1 p-5">{children}</main>
+        <main className="flex-1 p-5 overflow-x-hidden max-w-full">
+          {children}
+        </main>
       </div>
       <Footer />
     </div>

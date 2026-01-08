@@ -11,7 +11,8 @@ import { getReceipts } from "@/features/expense/actions/get-receipts.action";
 import { DeleteExpenseButton } from "@/features/expense/components/delete-expense-button";
 import { ExpenseStatusBadge } from "@/features/expense/components/expense-status-badge";
 import { PayExpenseDialog } from "@/features/expense/components/pay-expense-dialog";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getMessages } from "next-intl/server";
+import { translateCategory } from "@/lib/translate-category";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -36,6 +37,7 @@ export default async function ExpensePage({
   }
 
   const t = await getTranslations("expense");
+  const messages = await getMessages();
 
   const receipts = await getReceipts(expense.id);
 
@@ -47,7 +49,7 @@ export default async function ExpensePage({
   });
 
   return (
-    <div className="flex flex-col items-center justify-center w-full p-4">
+    <div className="flex flex-col items-center justify-center w-full p-4 overflow-x-hidden">
       <div className="max-w-3xl w-full space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -98,7 +100,11 @@ export default async function ExpensePage({
               <span className="text-sm font-medium txt-muted">
                 {t("category")}
               </span>
-              <p className="txt font-semibold">{expense.category?.name}</p>
+              <p className="txt font-semibold">
+                {expense.category?.name
+                  ? translateCategory(expense.category.name, messages)
+                  : ""}
+              </p>
             </div>
 
             {/* Tags */}
@@ -188,7 +194,7 @@ export default async function ExpensePage({
           <Separator className="my-6" />
           {/* Actions */}
           {expense.status !== "paid" && (
-            <div className="flex flex-row w-full items-center justify-between gap-3">
+            <div className="flex flex-row w-full items-center justify-between gap-3 overflow-auto">
               {expense.status !== "paid" && (
                 <PayExpenseDialog
                   expenseId={expense.id}
