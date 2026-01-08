@@ -186,11 +186,11 @@ export const ExpenseForm = ({
             render={({ field, fieldState }) => (
               <div className="flex flex-col gap-3">
                 <div className="flex justify-between gap-3">
-                  <Label className="text-xl font-semibold">{t("amount")}</Label>
+                  <Label className="text-xl font-semibold">{t("price")}</Label>
                   <Input
                     className="border-0 shadow-none bg-light text-lg font-semibold md:w-100 sm:w-60 w-full"
                     {...field}
-                    placeholder={t("amount")}
+                    placeholder={t("price")}
                   />
                 </div>
                 {fieldState.invalid && (

@@ -4,6 +4,7 @@ import LocaleSwitcher from "@/components/custom/locale/locale-switcher";
 import { Separator } from "@/components/ui/separator";
 import { getTranslations } from "next-intl/server";
 import { AccountInformation } from "@/features/user/components/account-information";
+import { FontSizeSlider } from "@/components/custom/slider/font-size-slider";
 
 export default async function SettingsPage() {
   const t = await getTranslations("settings");
@@ -33,9 +34,16 @@ export default async function SettingsPage() {
             <ToggleTheme />
           </div>
           <Separator className="my-5" />
+          {/* language switcher */}
           <div className="flex items-center justify-between">
             <p className="txt">{t("language")}</p>
             <LocaleSwitcher />
+          </div>
+          <Separator className="my-5" />
+          {/* font size slider */}
+          <div className="flex items-center justify-between">
+            <p className="txt">{t("fontSize")}</p>
+            <FontSizeSlider />
           </div>
         </div>
       </div>

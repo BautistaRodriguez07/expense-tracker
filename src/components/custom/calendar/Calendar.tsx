@@ -10,6 +10,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useTranslations } from "next-intl";
 
 type Calendar22Props = {
   selectedDate: Date | undefined;
@@ -20,6 +21,7 @@ export function Calendar22({ selectedDate, onDateChange }: Calendar22Props) {
   const [open, setOpen] = React.useState(false);
   const [date, setDate] = React.useState<Date | undefined>(undefined);
 
+  const t = useTranslations("expense");
   return (
     <div className="flex flex-col gap-3">
       <Popover open={open} onOpenChange={setOpen}>
@@ -29,7 +31,7 @@ export function Calendar22({ selectedDate, onDateChange }: Calendar22Props) {
             id="date"
             className="text-lg font-semibold txt card-container justify-between w-56 sm:w-60 md:w-100"
           >
-            {date ? date.toLocaleDateString() : "Select date"}
+            {date ? date.toLocaleDateString() : t("selectDate")}
             <ChevronDownIcon />
           </Button>
         </PopoverTrigger>

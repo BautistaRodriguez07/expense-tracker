@@ -48,7 +48,8 @@
     "firstName": "First name",
     "lastName": "Last name",
     "reset": "Reset",
-    "save": "Save"
+    "save": "Save",
+    "fontSize": "Font size"
   },
   "sidebar": {
     "home": "Home",
@@ -66,7 +67,7 @@
     "newExpense": "New expense",
     "editExpense": "Edit expense",
     "totalExpenses": "Total expenses",
-    "totalAmount": "Total amount",
+    "totalPrice": "Total price",
     "pending": "Pending",
     "noExpenses": "No expenses yet",
     "createYourFirstExpense": "Create your first expense",
@@ -78,7 +79,7 @@
     "delete": "Delete",
     "defaultLocale": "en-US",
     "name": "Name",
-    "amount": "Amount",
+    "price": "Price",
     "currency": "Currency",
     "selectCurrency": "Select currency",
     "selectResponsible": "Select responsible",
@@ -90,6 +91,7 @@
     "updateExpense": "Update expense",
     "createExpense": "Create expense",
     "expirationDate": "Expiration date",
+    "selectDate": "Select date",
     "tags": "Tags",
     "category": "Category",
     "cancelButton": "Cancel",
@@ -102,5 +104,23 @@
     "browseFile": "Browse file",
     "imageSelected": "image selected",
     "imagesSelected": "images selected"
+  },
+  "chartFilters": {
+    "filters": "Filters",
+    "filterOptions": "Filter options",
+    "customizeYourChartView": "Customize your chart view",
+    "period": "Period",
+    "last7Days": "Last 7 days",
+    "last30Days": "Last 30 days",
+    "last60Days": "Last 60 days",
+    "last90Days": "Last 90 days",
+    "responsible": "Responsible",
+    "allUsers": "All users",
+    "currency": "Currency",
+    "status": "Status",
+    "all": "All",
+    "paid": "Paid",
+    "pending": "Pending",
+    "resetFilters": "Reset filters"
   }
 }

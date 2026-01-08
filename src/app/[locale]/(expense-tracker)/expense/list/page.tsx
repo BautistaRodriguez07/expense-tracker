@@ -59,7 +59,7 @@ export default async function ExpenseListPage() {
               <p className="txt text-2xl font-bold">{expenses.length}</p>
             </div>
             <div>
-              <p className="txt-muted text-sm">{t("totalAmount")}</p>
+              <p className="txt-muted text-sm">{t("totalPrice")}</p>
               <div className="flex flex-col items-center">
                 {Object.entries(expensesByCurrency).length > 0 ? (
                   Object.entries(expensesByCurrency).map(

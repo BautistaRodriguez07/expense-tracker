@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import type { SpaceMemberDTO } from "@/features/space/actions/get-space-members.action";
+import { useTranslations } from "next-intl";
 
 type ChartFiltersProps = {
   spaceMembers: SpaceMemberDTO[];
@@ -36,6 +37,7 @@ type ChartFiltersProps = {
 };
 
 export function ChartFilters(props: ChartFiltersProps) {
+  const t = useTranslations("chartFilters");
   const [open, setOpen] = React.useState(false);
 
   // Count active filters
@@ -61,7 +63,7 @@ export function ChartFilters(props: ChartFiltersProps) {
       <PopoverTrigger asChild>
         <Button size="sm" className="relative btn">
           <IoFilterSharp className="h-4 w-4 mr-2" />
-          Filters
+          {t("filters")}
           {activeFiltersCount > 0 && (
             <Badge
               variant="default"
@@ -78,13 +80,13 @@ export function ChartFilters(props: ChartFiltersProps) {
       >
         <div className="space-y-4">
           <div className="space-y-2">
-            <h4 className="txt">Filter Options</h4>
-            <p className="text-xs txt-muted">Customize your chart view</p>
+            <h4 className="txt">{t("filterOptions")}</h4>
+            <p className="text-xs txt-muted">{t("customizeYourChartView")}</p>
           </div>
 
           {/* Period filter */}
           <div className="space-y-2">
-            <label className="text-xs txt-muted">Period</label>
+            <label className="text-xs txt-muted">{t("period")}</label>
             <Select
               value={props.filters.days.toString()}
               onValueChange={value => handleChange("days", Number(value))}
@@ -93,17 +95,17 @@ export function ChartFilters(props: ChartFiltersProps) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="card-container !p-1">
-                <SelectItem value="7">Last 7 days</SelectItem>
-                <SelectItem value="30">Last 30 days</SelectItem>
-                <SelectItem value="60">Last 60 days</SelectItem>
-                <SelectItem value="90">Last 90 days</SelectItem>
+                <SelectItem value="7">{t("last7Days")}</SelectItem>
+                <SelectItem value="30">{t("last30Days")}</SelectItem>
+                <SelectItem value="60">{t("last60Days")}</SelectItem>
+                <SelectItem value="90">{t("last90Days")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           {/* Responsible filter */}
           <div className="space-y-2">
-            <label className="text-xs txt-muted">Responsible</label>
+            <label className="text-xs txt-muted">{t("responsible")}</label>
             <Select
               value={props.filters.responsibleId}
               onValueChange={value => handleChange("responsibleId", value)}
@@ -112,7 +114,7 @@ export function ChartFilters(props: ChartFiltersProps) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="card-container !p-1">
-                <SelectItem value="all">All users</SelectItem>
+                <SelectItem value="all">{t("allUsers")}</SelectItem>
                 {props.spaceMembers.map(member => (
                   <SelectItem key={member.id} value={member.id}>
                     {member.name}
@@ -124,7 +126,7 @@ export function ChartFilters(props: ChartFiltersProps) {
 
           {/* Currency filter */}
           <div className="space-y-2">
-            <label className="text-xs txt-muted">Currency</label>
+            <label className="text-xs txt-muted">{t("currency")}</label>
             <Select
               value={props.filters.currency}
               onValueChange={value => handleChange("currency", value)}
@@ -144,7 +146,7 @@ export function ChartFilters(props: ChartFiltersProps) {
 
           {/* Status filter */}
           <div className="space-y-2">
-            <label className="text-xs txt-muted">Status</label>
+            <label className="text-xs txt-muted">{t("status")}</label>
             <Select
               value={props.filters.status}
               onValueChange={value => handleChange("status", value)}
@@ -153,9 +155,9 @@ export function ChartFilters(props: ChartFiltersProps) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="card-container !p-1">
-                <SelectItem value="all">All</SelectItem>
-                <SelectItem value="paid">Paid</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="all">{t("all")}</SelectItem>
+                <SelectItem value="paid">{t("paid")}</SelectItem>
+                <SelectItem value="pending">{t("pending")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -172,7 +174,7 @@ export function ChartFilters(props: ChartFiltersProps) {
                 setOpen(false);
               }}
             >
-              Reset filters
+              {t("resetFilters")}
             </Button>
           )}
         </div>

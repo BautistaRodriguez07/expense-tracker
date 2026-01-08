@@ -48,7 +48,8 @@
     "firstName": "Prénom",
     "lastName": "Nom",
     "reset": "Réinitialiser",
-    "save": "Enregistrer"
+    "save": "Enregistrer",
+    "fontSize": "Taille de la police"
   },
   "sidebar": {
     "home": "Accueil",
@@ -66,7 +67,7 @@
     "newExpense": "Nouveau dépense",
     "editExpense": "Modifier dépense",
     "totalExpenses": "Total des dépenses",
-    "totalAmount": "Total amount",
+    "totalPrice": "Total price",
     "pending": "Pending",
     "noExpenses": "No expenses yet",
     "createYourFirstExpense": "Create your first expense",
@@ -78,7 +79,7 @@
     "delete": "Delete",
     "defaultLocale": "fr-FR",
     "name": "Name",
-    "amount": "Amount",
+    "price": "Price",
     "currency": "Currency",
     "selectCurrency": "Select currency",
     "selectResponsible": "Select responsible",
@@ -90,6 +91,7 @@
     "updateExpense": "Update expense",
     "createExpense": "Create expense",
     "expirationDate": "Expiration date",
+    "selectDate": "Sélectionner la date",
     "tags": "Tags",
     "category": "Catégorie",
     "cancelButton": "Annuler",
@@ -102,5 +104,23 @@
     "browseFile": "Parcourir le fichier",
     "imageSelected": "image sélectionnée",
     "imagesSelected": "images sélectionnées"
+  },
+  "chartFilters": {
+    "filters": "Filtres",
+    "filterOptions": "Options de filtre",
+    "customizeYourChartView": "Personnaliser votre vue de graphique",
+    "period": "Période",
+    "last7Days": "Derniers 7 jours",
+    "last30Days": "Derniers 30 jours",
+    "last60Days": "Derniers 60 jours",
+    "last90Days": "Derniers 90 jours",
+    "responsible": "Responsable",
+    "allUsers": "Tous les utilisateurs",
+    "currency": "Devise",
+    "status": "Statut",
+    "all": "Tous",
+    "paid": "Payé",
+    "pending": "En attente",
+    "resetFilters": "Réinitialiser les filtres"
   }
 }

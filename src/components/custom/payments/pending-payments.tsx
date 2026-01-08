@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { validateAuth } from "@/features/auth/services/auth.service";
 import { redirect } from "next/navigation";
 import { currentUser } from "@clerk/nextjs/server";
+import { SerializedExpense } from "@/features/expense/utils/serialize-expense";
 
 export const PendingPayments = async () => {
   const t = await getTranslations("pendingPayments");
@@ -63,7 +64,7 @@ export const PendingPayments = async () => {
       />
 
       <div className="flex overflow-x-auto max-w-[calc(100vw-2rem)]">
-        {pendingPayments.map(pendingPayment => (
+        {pendingPayments.map((pendingPayment: SerializedExpense) => (
           <PendingPayment
             key={pendingPayment.id}
             expenseName={pendingPayment.name}
