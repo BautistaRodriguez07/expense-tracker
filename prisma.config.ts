@@ -8,6 +8,7 @@ export default defineConfig({
   },
   engine: "classic",
   datasource: {
+    // provider: "postgresql",
     url: env("DATABASE_URL"),
   },
 });

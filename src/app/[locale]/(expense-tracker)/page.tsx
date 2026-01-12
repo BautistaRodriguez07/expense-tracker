@@ -1,17 +1,30 @@
-import {
-  ChartContainer,
-  CustomTitle,
-  HistoryList,
-  PendingPayments,
-} from "@/components";
-import { useTranslations } from "next-intl";
+import { ChartContainer } from "@/components/custom/charts/chart-container";
+import { PendingPayments } from "@/components/custom/payments/pending-payments";
 import { setRequestLocale } from "next-intl/server";
-import { HomeTitle } from "./components/HomeTitle";
+import { HomeTitle } from "@/features/user/components/home-title";
+import { Users } from "@/components/custom/user/users-list";
+import { validateAuth } from "@/features/auth/services/auth.service";
+import { redirect } from "next/navigation";
+import { LatestList } from "@/components/custom/history/lastest-list";
+import { ExpenseButton } from "@/features/expense/components/add-expense-button";
+import { Suspense } from "react";
+import { Loading } from "@/components";
 
-export default function HomePage({ params }: { params: { locale: string } }) {
+export default async function HomePage({
+  params,
+}: {
+  params: { locale: string };
+}) {
   const { locale } = params;
 
   setRequestLocale(locale);
+
+  // validate authentication
+  const auth = await validateAuth();
+
+  if (!auth) {
+    redirect("/sign-in");
+  }
 
   return (
     <div className=" flex flex-col items-center justify-center min-h-screen">
@@ -19,13 +32,23 @@ export default function HomePage({ params }: { params: { locale: string } }) {
         <HomeTitle />
 
         {/* Chart information */}
-        <ChartContainer />
+        <Suspense fallback={<Loading />}>
+          <ChartContainer>
+            <Users />
+          </ChartContainer>
+        </Suspense>
 
         {/* Pending payments */}
-        <PendingPayments />
+        <Suspense fallback={<Loading />}>
+          <PendingPayments />
+        </Suspense>
 
         {/* history */}
-        <HistoryList />
+        <Suspense fallback={<Loading />}>
+          <LatestList spaceId={auth.spaceId} />
+        </Suspense>
+
+        <ExpenseButton />
       </div>
     </div>
   );

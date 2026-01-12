@@ -1,4 +1,6 @@
-import { CustomTitle } from "@/components";
+"use client";
+
+import { CustomTitle } from "@/components/custom/custom-title/custom-title";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { IoChevronForward } from "react-icons/io5";

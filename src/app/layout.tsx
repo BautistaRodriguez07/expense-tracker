@@ -1,7 +1,7 @@
-// src/app/layout.tsx
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import "./globals.css";
+import { FontSizeInitializer } from "@/components/providers/font-size-initializer";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,8 +15,14 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html suppressHydrationWarning>
-        <body>{children}</body>
+      <html suppressHydrationWarning className="overflow-x-hidden max-w-full">
+        <body className="overflow-x-hidden max-w-full">
+          {/* Initialize font size from localStorage */}
+          <FontSizeInitializer />
+          {/* Clerk CAPTCHA element - required for bot protection */}
+          <div id="clerk-captcha" style={{ display: "none" }} />
+          {children}
+        </body>
       </html>
     </ClerkProvider>
   );
