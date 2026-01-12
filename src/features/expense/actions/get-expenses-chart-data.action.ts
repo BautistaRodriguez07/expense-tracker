@@ -60,7 +60,7 @@ export async function getExpensesChartData(
   // Group by category
   const categoryMap = new Map<number, ChartDataItem>();
 
-  expenses.forEach(expense => {
+  expenses.forEach((expense: any) => {
     const categoryId = expense.category_id;
     const categoryName = expense.category?.name || "Unknown";
     const categoryColor = expense.category?.color || "#888888";

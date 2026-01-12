@@ -18,7 +18,7 @@ export class ExpenseService {
     space_id: string;
     category_id: number;
     responsible_id: string;
-    status?: "pending" | "paid" | "cancelled";
+    status?: "pending" | "paid" | "cancelled" | "overdue";
     created_by: string;
   }): Promise<Expense> {
     // business validations
@@ -46,7 +46,7 @@ export class ExpenseService {
       description: string;
       category_id: number;
       responsible_id: string;
-      status: "pending" | "paid" | "cancelled";
+      status: "pending" | "paid" | "cancelled" | "overdue";
     }>,
     updatedBy: string
   ): Promise<Expense> {

@@ -103,7 +103,11 @@
     "confirmPayment": "Confirm payment",
     "browseFile": "Browse file",
     "imageSelected": "image selected",
-    "imagesSelected": "images selected"
+    "imagesSelected": "images selected",
+    "paymentOverdueWarning": "This payment is overdue",
+    "dueDateWas": "The due date was",
+    "completePaymentSoon": "Please complete the payment as soon as possible.",
+    "overdue": "Overdue"
   },
   "chartFilters": {
     "filters": "Filters",
@@ -182,5 +186,11 @@
     "Investment Income": "Investment Income",
     "Refunds & Reimbursements": "Refunds & Reimbursements",
     "Gifts Received": "Gifts Received"
+  },
+  "statuses": {
+    "pending": "Pending",
+    "paid": "Paid",
+    "overdue": "Overdue",
+    "cancelled": "Cancelled"
   }
 }

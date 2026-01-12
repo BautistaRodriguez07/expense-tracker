@@ -103,7 +103,11 @@
     "confirmPayment": "Confirmar pago",
     "browseFile": "Parcourir le fichier",
     "imageSelected": "image sélectionnée",
-    "imagesSelected": "images sélectionnées"
+    "imagesSelected": "images sélectionnées",
+    "paymentOverdueWarning": "Ce paiement est en retard",
+    "dueDateWas": "La date d'échéance était",
+    "completePaymentSoon": "Veuillez effectuer le paiement dès que possible.",
+    "overdue": "En retard"
   },
   "chartFilters": {
     "filters": "Filtres",
@@ -182,5 +186,11 @@
     "Investment Income": "Revenu des investissements",
     "Refunds & Reimbursements": "Remboursements & Réemboursements",
     "Gifts Received": "Cadeaux reçus"
+  },
+  "statuses": {
+    "pending": "En attente",
+    "paid": "Payé",
+    "overdue": "En retard",
+    "cancelled": "Annulé"
   }
 }

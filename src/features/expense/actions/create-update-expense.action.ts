@@ -70,7 +70,7 @@ export async function createExpense(
       created_by: auth.dbUser.id,
       responsible_id: formData.get("responsible") as string,
       status:
-        (formData.get("status") as "pending" | "paid" | "cancelled") ||
+        (formData.get("status") as "pending" | "paid" | "cancelled" | "overdue") ||
         "pending",
     };
 
@@ -123,7 +123,7 @@ export async function updateExpense(
       description: (formData.get("note") as string) || "",
       responsible_id: formData.get("responsible") as string,
       status:
-        (formData.get("status") as "pending" | "paid" | "cancelled") ||
+        (formData.get("status") as "pending" | "paid" | "cancelled" | "overdue") ||
         "pending",
     };
 

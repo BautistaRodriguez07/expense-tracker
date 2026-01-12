@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, PlusIcon } from "lucide-react";
+import { Loader2, PlusIcon, AlertTriangle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { payExpense } from "../actions/pay-expense.action";
 
@@ -78,6 +78,9 @@ interface PayExpenseDialogProps {
   currentUserId: string;
   expenseAmount: number;
   currency: string;
+  expenseStatus: "pending" | "paid" | "cancelled" | "overdue";
+  expenseDate: Date;
+  locale: string;
   disabled?: boolean;
 }
 
@@ -88,6 +91,9 @@ export function PayExpenseDialog({
   currentUserId,
   expenseAmount,
   currency,
+  expenseStatus,
+  expenseDate,
+  locale,
   disabled = false,
 }: PayExpenseDialogProps) {
   const [open, setOpen] = useState(false);
@@ -97,6 +103,15 @@ export function PayExpenseDialog({
 
   const isResponsible = currentUserId === responsibleId;
   const canPay = isResponsible && !disabled;
+
+  // Format date for display
+  const formatDate = (date: Date) => {
+    return new Date(date).toLocaleDateString(locale, {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -174,6 +189,23 @@ export function PayExpenseDialog({
             })}
           </DialogDescription>
         </DialogHeader>
+
+        {/* Overdue Warning */}
+        {expenseStatus === "overdue" && (
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" />
+              <p className="text-red-700 dark:text-red-300 font-semibold">
+                {t("paymentOverdueWarning")}
+              </p>
+            </div>
+            <p className="text-sm text-red-600 dark:text-red-400 mt-1">
+              {t("dueDateWas")} {formatDate(expenseDate)}.{" "}
+              {t("completePaymentSoon")}
+            </p>
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="grid gap-4 py-4">
           <div className="grid w-full max-w-sm items-center gap-1.5">
             <Label htmlFor="receipt">{t("receipts")} *</Label>

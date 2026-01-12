@@ -23,6 +23,7 @@ export const UserAvatar = ({
     : "";
 
   return (
+    // selected user avatar
     <div className="flex flex-col">
       <div className="flex items-center gap-2 p-1">
         <Avatar className="border-gray-300 border dark:border-0 txt">

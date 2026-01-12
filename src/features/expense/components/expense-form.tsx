@@ -53,7 +53,7 @@ interface ExpenseFormProps {
     date: Date;
     category_id: number;
     responsible_id: string;
-    status?: "pending" | "paid" | "cancelled";
+    status?: "pending" | "paid" | "cancelled" | "overdue";
     description?: string;
     tags?: Option[];
   } | null;
@@ -410,8 +410,6 @@ export const ExpenseForm = ({
               </div>
             )}
           />
-
-          <Separator className="my-5" />
         </div>
         <div className="w-full items-end flex justify-end mt-10">
           <Button type="submit" className="btn" disabled={isPending}>

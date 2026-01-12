@@ -10,20 +10,18 @@ import { SerializedExpense } from "@/features/expense/utils/serialize-expense";
 export const PendingPayments = async () => {
   const t = await getTranslations("pendingPayments");
   const user = await currentUser();
-  // Obtener usuario actual
   const auth = await validateAuth();
 
   if (!auth) {
     redirect("/sign-in");
   }
 
-  // Filtrar gastos pendientes del usuario actual
   const pendingPayments = await prisma.expense.findMany({
     where: {
       status: "pending",
-      responsible_id: auth.dbUser.id, // Solo gastos donde el usuario es responsable
-      space_id: auth.spaceId, // Solo del espacio actual
-      deleted_at: null, // Excluir eliminados
+      responsible_id: auth.dbUser.id,
+      space_id: auth.spaceId,
+      deleted_at: null,
     },
     include: {
       responsible: {
@@ -33,7 +31,6 @@ export const PendingPayments = async () => {
         },
       },
       category: {
-        // Agregar categoria para mostrar el nombre
         select: {
           id: true,
           name: true,
@@ -43,7 +40,7 @@ export const PendingPayments = async () => {
       },
     },
     orderBy: {
-      date: "asc", // Ordenar por fecha más cercana primero
+      date: "asc",
     },
   });
 

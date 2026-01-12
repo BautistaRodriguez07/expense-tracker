@@ -17,6 +17,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { IoCalendarOutline } from "react-icons/io5";
+import { ExpenseReceipt } from "@/generated/prisma/client";
 
 export default async function ExpensePage({
   params,
@@ -148,7 +149,7 @@ export default async function ExpensePage({
                 Receipts
               </span>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {receipts.map((receipt: any) => (
+                {receipts.map((receipt: ExpenseReceipt) => (
                   <a
                     key={receipt.id}
                     href={receipt.file_url}
@@ -175,7 +176,7 @@ export default async function ExpensePage({
           )}
 
           <Separator className="my-6" />
-          <div className="flex justify-between">
+          <div className="flex justify-between sm:justify-start items-center gap-4">
             <div className="space-y-1">
               <span className="text-sm font-medium txt-muted">
                 {t("responsible")}
@@ -191,11 +192,15 @@ export default async function ExpensePage({
               <p className="txt font-semibold">{expense.createdBy?.name}</p>
             </div>
           </div>
-          <Separator className="my-6" />
+          {(expense.status === "pending" || expense.status === "overdue") && (
+            <Separator className="my-6" />
+          )}
+
           {/* Actions */}
           {expense.status !== "paid" && (
             <div className="flex flex-row w-full items-center justify-between gap-3 overflow-auto">
-              {expense.status !== "paid" && (
+              {(expense.status === "pending" ||
+                expense.status === "overdue") && (
                 <PayExpenseDialog
                   expenseId={expense.id}
                   spaceId={expense.space_id}
@@ -203,9 +208,11 @@ export default async function ExpensePage({
                   currentUserId={auth.dbUser.id}
                   expenseAmount={expense.amount}
                   currency={expense.currency}
+                  expenseStatus={expense.status}
+                  expenseDate={expense.date}
+                  locale={locale}
                 />
               )}
-
               <div className="flex items-center gap-3">
                 <Link href={`/expense/edit/${expense.id}`} className="w-auto">
                   <Button className="btn w-auto">{t("edit")}</Button>

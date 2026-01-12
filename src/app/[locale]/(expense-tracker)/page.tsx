@@ -6,6 +6,7 @@ import { Users } from "@/components/custom/user/users-list";
 import { validateAuth } from "@/features/auth/services/auth.service";
 import { redirect } from "next/navigation";
 import { LatestList } from "@/components/custom/history/lastest-list";
+import { ExpenseButton } from "@/features/expense/components/add-expense-button";
 
 export default async function HomePage({
   params,
@@ -37,6 +38,8 @@ export default async function HomePage({
 
         {/* history */}
         <LatestList spaceId={auth.spaceId} />
+
+        <ExpenseButton />
       </div>
     </div>
   );

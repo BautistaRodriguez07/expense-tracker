@@ -103,7 +103,11 @@
     "confirmPayment": "Confirmar pago",
     "browseFile": "Buscar archivo",
     "imageSelected": "imagen seleccionada",
-    "imagesSelected": "imágenes seleccionadas"
+    "imagesSelected": "imágenes seleccionadas",
+    "paymentOverdueWarning": "Este pago está vencido",
+    "dueDateWas": "La fecha de vencimiento fue",
+    "completePaymentSoon": "Por favor, complete el pago lo antes posible.",
+    "overdue": "Vencido"
   },
   "chartFilters": {
     "filters": "Filtros",
@@ -182,5 +186,11 @@
     "Investment Income": "Ingresos por inversiones",
     "Refunds & Reimbursements": "Reembolsos y devoluciones",
     "Gifts Received": "Regalos recibidos"
+  },
+  "statuses": {
+    "pending": "Pendiente",
+    "paid": "Pagado",
+    "overdue": "Vencido",
+    "cancelled": "Cancelado"
   }
 }

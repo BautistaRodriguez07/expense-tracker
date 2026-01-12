@@ -66,7 +66,12 @@ export default async function ExpenseEditPage({
           spaceMembers={spaceMembers}
           spaceId={auth.spaceId}
           tags={tags}
-          expense={expenseForForm}
+          expense={{
+            ...expenseForForm,
+            category_id: Number(expenseForForm.category_id),
+            responsible_id: expenseForForm.responsible_id?.toString?.() ?? "",
+            currency: String(expenseForForm.currency),
+          }}
         />
       </div>
     </div>

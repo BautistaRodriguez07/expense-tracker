@@ -4,14 +4,13 @@ import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { useUIStore } from "@/store/ui/ui-store";
 // import { useTranslations } from "next-intl";
-import { SignInButton, SignOutButton, useAuth } from "@clerk/nextjs";
+import { SignOutButton } from "@clerk/nextjs";
 import { useTranslations } from "next-intl";
 import {
   IoAddOutline,
   IoCloseOutline,
   IoHomeOutline,
   IoListOutline,
-  IoLogInOutline,
   IoLogOutOutline,
   IoSettingsOutline,
 } from "react-icons/io5";
@@ -19,7 +18,6 @@ import {
 export const Sidebar = () => {
   const t = useTranslations("sidebar");
   const { isSideMenuOpen, closeSideMenu } = useUIStore(state => state);
-  const { isSignedIn } = useAuth();
 
   return (
     <>

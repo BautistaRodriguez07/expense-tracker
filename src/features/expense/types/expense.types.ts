@@ -7,7 +7,7 @@ export interface ExpenseInterface {
   currency: string;
   date: Date;
   responsible_id: string;
-  status: "pending" | "paid" | "cancelled";
+  status: "pending" | "paid" | "cancelled" | "overdue";
   category_id: number;
   created_by: string;
   created_at: Date;

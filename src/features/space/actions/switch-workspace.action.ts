@@ -12,7 +12,7 @@ export async function switchWorkspace(newSpaceId: number) {
     }
 
     // verify that the user has access to that workspace
-    await requireWorkspaceAccess(newSpaceId);
+    await requireWorkspaceAccess(String(newSpaceId));
 
     // update activeSpaceId in Clerk metadata
     const clerk = await clerkClient();
