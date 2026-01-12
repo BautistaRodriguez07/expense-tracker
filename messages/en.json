@@ -49,7 +49,9 @@
     "lastName": "Last name",
     "reset": "Reset",
     "save": "Save",
-    "fontSize": "Font size"
+    "fontSize": "Font size",
+    "spaces": "Spaces",
+    "manageSpaces": "Manage your workspaces"
   },
   "sidebar": {
     "home": "Home",
@@ -77,6 +79,7 @@
     "viewDetails": "View details",
     "edit": "Edit",
     "delete": "Delete",
+    "deleting": "Deleting...",
     "defaultLocale": "en-US",
     "name": "Name",
     "price": "Price",
@@ -122,9 +125,6 @@
     "allUsers": "All users",
     "currency": "Currency",
     "status": "Status",
-    "all": "All",
-    "paid": "Paid",
-    "pending": "Pending",
     "resetFilters": "Reset filters"
   },
   "categories": {
@@ -188,9 +188,34 @@
     "Gifts Received": "Gifts Received"
   },
   "statuses": {
+    "all": "All",
     "pending": "Pending",
     "paid": "Paid",
     "overdue": "Overdue",
     "cancelled": "Cancelled"
+  },
+  "spaces": {
+    "My Personal Space": "My Personal Space",
+    "createSpace": "Create Space",
+    "createSpaceTitle": "Create New Space",
+    "createSpaceDescription": "Create a new space to organize your expenses",
+    "spaceName": "Space Name",
+    "spaceNamePlaceholder": "e.g., Family Expenses, Vacation Trip",
+    "defaultCurrency": "Default Currency",
+    "cancel": "Cancel",
+    "create": "Create",
+    "creating": "Creating...",
+    "deleteSpaceTitle": "Delete Space",
+    "deleteSpaceWarning": "This action cannot be undone. All data associated with this space will be permanently deleted.",
+    "deleteSpaceConfirmPrompt": "Type the space name to confirm",
+    "confirmationMismatch": "Space name doesn't match",
+    "delete": "Delete",
+    "deleting": "Deleting...",
+    "current": "Current",
+    "owner": "Owner",
+    "default": "Default",
+    "member": "member",
+    "members": "members",
+    "expenses": "expenses"
   }
 }

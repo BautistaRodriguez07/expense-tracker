@@ -9,11 +9,11 @@ import { useTranslations } from "next-intl";
 const FONT_SIZES_MOBILE = [10, 12, 16, 18];
 const FONT_SIZES_DESKTOP = [14, 16, 18, 20];
 const STORAGE_KEY = "font-size-preference";
+const DEFAULT_SIZE_INDEX = 1; // M size by default
 
 export const FontSizeSlider = () => {
   const t = useTranslations("settings");
-  const [value, setValue] = useState<number[]>([1]);
-  const [isMounted, setIsMounted] = useState(false);
+  const [value, setValue] = useState<number[]>([DEFAULT_SIZE_INDEX]);
   const fontSizeLabels = ["S", "M", "L", "XL"];
 
   // Function to apply font size based on screen width
@@ -25,36 +25,23 @@ export const FontSizeSlider = () => {
     document.documentElement.style.fontSize = `${fontSize}px`;
   }, []);
 
-  // Load saved preference on mount
+  // Load current saved preference on mount (already initialized by FontSizeInitializer)
   useEffect(() => {
-    setIsMounted(true);
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved !== null) {
-      const savedValue = parseInt(saved, 10);
-      setValue([savedValue]);
-      applyFontSize(savedValue);
+      setValue([parseInt(saved, 10)]);
     }
-  }, [applyFontSize]);
+  }, []);
 
-  // Handle value changes
-  useEffect(() => {
-    if (!isMounted) return;
-
-    applyFontSize(value[0]);
-    localStorage.setItem(STORAGE_KEY, value[0].toString());
-  }, [value, isMounted, applyFontSize]);
-
-  // Handle window resize
-  useEffect(() => {
-    if (!isMounted) return;
-
-    const handleResize = () => {
-      applyFontSize(value[0]);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [value, isMounted, applyFontSize]);
+  // Handle value changes (only when user interacts with slider)
+  const handleValueChange = useCallback(
+    (newValue: number[]) => {
+      setValue(newValue);
+      applyFontSize(newValue[0]);
+      localStorage.setItem(STORAGE_KEY, newValue[0].toString());
+    },
+    [applyFontSize]
+  );
 
   return (
     <div className="flex w-full max-w-md flex-col gap-2">
@@ -68,7 +55,7 @@ export const FontSizeSlider = () => {
         id="slider"
         max={3}
         min={0}
-        onValueChange={setValue}
+        onValueChange={handleValueChange}
         step={1}
         value={value}
       />

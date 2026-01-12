@@ -13,6 +13,7 @@ const ForgotPasswordPage: NextPage = () => {
   const [successfulCreation, setSuccessfulCreation] = useState(false);
   const [secondFactor, setSecondFactor] = useState(false);
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
   const { isSignedIn } = useAuth();
@@ -28,6 +29,7 @@ const ForgotPasswordPage: NextPage = () => {
   async function create(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
 
     try {
       await signIn?.create({
@@ -42,12 +44,15 @@ const ForgotPasswordPage: NextPage = () => {
         err?.message ||
         "Failed to send reset email. Please try again.";
       setError(message);
+    } finally {
+      setIsLoading(false);
     }
   }
 
   async function reset(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
 
     try {
       const result = await signIn?.attemptFirstFactor({
@@ -60,6 +65,7 @@ const ForgotPasswordPage: NextPage = () => {
 
       if (result.status === "needs_second_factor") {
         setSecondFactor(true);
+        setIsLoading(false);
         return;
       }
 
@@ -75,6 +81,8 @@ const ForgotPasswordPage: NextPage = () => {
         err?.message ||
         "Failed to reset password. Please check your code and try again.";
       setError(message);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -100,8 +108,8 @@ const ForgotPasswordPage: NextPage = () => {
                   onChange={e => setEmail(e.target.value)}
                   required
                 />
-                <Button type="submit" className="btn w-full">
-                  Send password reset code
+                <Button type="submit" className="btn w-full" disabled={isLoading}>
+                  {isLoading ? "Sending..." : "Send password reset code"}
                 </Button>
                 {error && <p className="text-red-500 text-sm mt-3">{error}</p>}
               </>
@@ -132,8 +140,8 @@ const ForgotPasswordPage: NextPage = () => {
                   required
                 />
 
-                <Button type="submit" className="btn w-full">
-                  Reset password
+                <Button type="submit" className="btn w-full" disabled={isLoading}>
+                  {isLoading ? "Resetting..." : "Reset password"}
                 </Button>
 
                 {error && <p className="text-red-500 text-sm mt-3">{error}</p>}

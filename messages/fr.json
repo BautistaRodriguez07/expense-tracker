@@ -44,6 +44,8 @@
     "signin": "Se connecter",
     "signout": "Se déconnecter",
     "theme": "Thème",
+    "spaces": "Espaces",
+    "manageSpaces": "Gérez vos espaces de travail",
     "title": "Profil",
     "firstName": "Prénom",
     "lastName": "Nom",
@@ -77,6 +79,7 @@
     "viewDetails": "View details",
     "edit": "Edit",
     "delete": "Delete",
+    "deleting": "Suppression...",
     "defaultLocale": "fr-FR",
     "name": "Name",
     "price": "Price",
@@ -122,9 +125,6 @@
     "allUsers": "Tous les utilisateurs",
     "currency": "Devise",
     "status": "Statut",
-    "all": "Tous",
-    "paid": "Payé",
-    "pending": "En attente",
     "resetFilters": "Réinitialiser les filtres"
   },
   "categories": {
@@ -188,9 +188,34 @@
     "Gifts Received": "Cadeaux reçus"
   },
   "statuses": {
+    "all": "Tous",
     "pending": "En attente",
     "paid": "Payé",
     "overdue": "En retard",
     "cancelled": "Annulé"
+  },
+  "spaces": {
+    "My Personal Space": "Mon Espace Personnel",
+    "createSpace": "Créer un Espace",
+    "createSpaceTitle": "Créer un Nouvel Espace",
+    "createSpaceDescription": "Créez un nouvel espace pour organiser vos dépenses",
+    "spaceName": "Nom de l'Espace",
+    "spaceNamePlaceholder": "par ex., Dépenses Familiales, Voyage de Vacances",
+    "defaultCurrency": "Devise par Défaut",
+    "cancel": "Annuler",
+    "create": "Créer",
+    "creating": "Création...",
+    "deleteSpaceTitle": "Supprimer l'Espace",
+    "deleteSpaceWarning": "Cette action ne peut pas être annulée. Toutes les données associées à cet espace seront définitivement supprimées.",
+    "deleteSpaceConfirmPrompt": "Tapez le nom de l'espace pour confirmer",
+    "confirmationMismatch": "Le nom de l'espace ne correspond pas",
+    "delete": "Supprimer",
+    "deleting": "Suppression...",
+    "current": "Actuel",
+    "owner": "Propriétaire",
+    "default": "Par défaut",
+    "member": "membre",
+    "members": "membres",
+    "expenses": "dépenses"
   }
 }

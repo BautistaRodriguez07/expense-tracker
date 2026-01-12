@@ -45,11 +45,7 @@ export const PendingPayments = async () => {
   });
 
   if (pendingPayments.length === 0) {
-    return (
-      <div className="txt-muted text-center py-4">
-        {t("noPayments") || "No pending payments"}
-      </div>
-    );
+    return <div></div>;
   }
 
   return (

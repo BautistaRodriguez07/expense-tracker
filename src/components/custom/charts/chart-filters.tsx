@@ -38,6 +38,7 @@ type ChartFiltersProps = {
 
 export function ChartFilters(props: ChartFiltersProps) {
   const t = useTranslations("chartFilters");
+  const status = useTranslations("statuses");
   const [open, setOpen] = React.useState(false);
 
   // Count active filters
@@ -155,9 +156,10 @@ export function ChartFilters(props: ChartFiltersProps) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="card-container !p-1">
-                <SelectItem value="all">{t("all")}</SelectItem>
-                <SelectItem value="paid">{t("paid")}</SelectItem>
-                <SelectItem value="pending">{t("pending")}</SelectItem>
+                <SelectItem value="all">{status("all")}</SelectItem>
+                <SelectItem value="paid">{status("paid")}</SelectItem>
+                <SelectItem value="pending">{status("pending")}</SelectItem>
+                <SelectItem value="overdue">{status("overdue")}</SelectItem>
               </SelectContent>
             </Select>
           </div>

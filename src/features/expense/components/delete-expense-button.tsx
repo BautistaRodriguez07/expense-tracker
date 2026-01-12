@@ -16,16 +16,19 @@ export function DeleteExpenseButton({
   spaceId,
 }: DeleteExpenseButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const t = useTranslations("expense");
   const router = useRouter();
 
   const handleDelete = async () => {
+    setIsDeleting(true);
     const result = await deleteExpense(expenseId, spaceId);
     if (result.success) {
       router.push("/expense/list");
       router.refresh();
     } else {
       alert(result.error || "Failed to delete expense");
+      setIsDeleting(false);
     }
   };
 
@@ -55,8 +58,9 @@ export function DeleteExpenseButton({
                 size="sm"
                 className="btn-danger rounded-xl"
                 onClick={handleDelete}
+                disabled={isDeleting}
               >
-                {t("delete")}
+                {isDeleting ? t("deleting") : t("delete")}
               </Button>
             </div>
           </div>

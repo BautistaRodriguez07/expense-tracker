@@ -4,7 +4,14 @@ import { currentUser, clerkClient } from "@clerk/nextjs/server";
 import { requireWorkspaceAccess } from "@/features/auth/guards/workspace.guard";
 import { revalidatePath } from "next/cache";
 
-export async function switchWorkspace(newSpaceId: number) {
+type ActionResult = {
+  success: boolean;
+  error?: string;
+};
+
+export async function switchWorkspace(
+  newSpaceId: string
+): Promise<ActionResult> {
   try {
     const user = await currentUser();
     if (!user) {
@@ -12,7 +19,7 @@ export async function switchWorkspace(newSpaceId: number) {
     }
 
     // verify that the user has access to that workspace
-    await requireWorkspaceAccess(String(newSpaceId));
+    await requireWorkspaceAccess(newSpaceId);
 
     // update activeSpaceId in Clerk metadata
     const clerk = await clerkClient();

@@ -7,6 +7,8 @@ import { validateAuth } from "@/features/auth/services/auth.service";
 import { redirect } from "next/navigation";
 import { LatestList } from "@/components/custom/history/lastest-list";
 import { ExpenseButton } from "@/features/expense/components/add-expense-button";
+import { Suspense } from "react";
+import { Loading } from "@/components";
 
 export default async function HomePage({
   params,
@@ -30,14 +32,21 @@ export default async function HomePage({
         <HomeTitle />
 
         {/* Chart information */}
-        <ChartContainer>
-          <Users />
-        </ChartContainer>
+        <Suspense fallback={<Loading />}>
+          <ChartContainer>
+            <Users />
+          </ChartContainer>
+        </Suspense>
+
         {/* Pending payments */}
-        <PendingPayments />
+        <Suspense fallback={<Loading />}>
+          <PendingPayments />
+        </Suspense>
 
         {/* history */}
-        <LatestList spaceId={auth.spaceId} />
+        <Suspense fallback={<Loading />}>
+          <LatestList spaceId={auth.spaceId} />
+        </Suspense>
 
         <ExpenseButton />
       </div>

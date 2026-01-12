@@ -5,6 +5,10 @@ import { Separator } from "@/components/ui/separator";
 import { getTranslations } from "next-intl/server";
 import { AccountInformation } from "@/features/user/components/account-information";
 import { FontSizeSlider } from "@/components/custom/slider/font-size-slider";
+import { CreateSpaceDialog } from "@/features/space/components/create-space-dialog";
+import { SpaceList } from "@/features/space/components/space-list";
+import { Suspense } from "react";
+import { Loading } from "@/components";
 
 export default async function SettingsPage() {
   const t = await getTranslations("settings");
@@ -21,6 +25,23 @@ export default async function SettingsPage() {
         <div className="card-container">
           <AccountInformation />
         </div>
+
+        {/* spaces section */}
+        <CustomTitle
+          title={t("spaces")}
+          tag="h2"
+          className="py-3 txt-muted text-xl"
+        />
+        <div className="card-container">
+          <div className="flex justify-between items-center mb-4">
+            <p className="txt-muted text-sm">{t("manageSpaces")}</p>
+            <CreateSpaceDialog />
+          </div>
+          <Suspense fallback={<Loading />}>
+            <SpaceList />
+          </Suspense>
+        </div>
+
         {/* preferences */}
         <CustomTitle
           title={t("preferences")}

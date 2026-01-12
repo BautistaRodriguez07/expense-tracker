@@ -1,15 +1,20 @@
 import { CustomTitle } from "@/components/custom/custom-title/custom-title";
 import { validateAuth } from "@/features/auth/services/auth.service";
 import { redirect } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getMessages } from "next-intl/server";
 import { getSpace } from "@/features/space/actions/get-space.action";
+import { translateSpace } from "@/lib/translate-space";
 
 export const HomeTitle = async () => {
   const t = await getTranslations("home");
+  const messages = await getMessages();
   const auth = await validateAuth();
   if (!auth) redirect("/sign-in");
 
   const space = await getSpace(auth.spaceId);
+  const translatedSpaceName = space?.name
+    ? translateSpace(space.name, messages)
+    : "Unknown Space";
 
   return (
     <div>
@@ -19,7 +24,7 @@ export const HomeTitle = async () => {
         className="txt"
       />
       <CustomTitle
-        title={`${t("subTitle")}, ${space?.name ?? "Unknown Space"}`}
+        title={`${t("subTitle")}, ${translatedSpaceName}`}
         tag="h2"
         className="text-xl txt-muted"
       />

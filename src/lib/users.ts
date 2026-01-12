@@ -194,6 +194,7 @@ export async function createOrUpdateUser(
             name: "My Personal Space",
             default_currency: "USD",
             owner_id: newUser.id,
+            is_default: true,
             members: {
               create: {
                 user_id: newUser.id,

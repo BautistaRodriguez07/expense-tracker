@@ -44,6 +44,8 @@
     "signin": "Iniciar sesión",
     "signout": "Cerrar sesión",
     "theme": "Tema",
+    "spaces": "Espacios",
+    "manageSpaces": "Administra tus espacios de trabajo",
     "title": "Perfil",
     "firstName": "Nombre",
     "lastName": "Apellido",
@@ -77,6 +79,7 @@
     "viewDetails": "Ver detalles",
     "edit": "Editar",
     "delete": "Eliminar",
+    "deleting": "Eliminando...",
     "defaultLocale": "es-AR",
     "name": "Nombre",
     "price": "Precio",
@@ -121,11 +124,7 @@
     "responsible": "Responsable",
     "allUsers": "Todos los usuarios",
     "currency": "Moneda",
-    "status": "Estado",
-    "all": "Todos",
-    "paid": "Pagado",
-    "pending": "Pendiente",
-    "resetFilters": "Restablecer filtros"
+    "status": "Estado"
   },
   "categories": {
     "Rent / Mortgage": "Alquiler / Hipoteca",
@@ -188,9 +187,34 @@
     "Gifts Received": "Regalos recibidos"
   },
   "statuses": {
+    "all": "Todos",
     "pending": "Pendiente",
     "paid": "Pagado",
     "overdue": "Vencido",
     "cancelled": "Cancelado"
+  },
+  "spaces": {
+    "My Personal Space": "Mi Espacio Personal",
+    "createSpace": "Crear Espacio",
+    "createSpaceTitle": "Crear Nuevo Espacio",
+    "createSpaceDescription": "Crea un nuevo espacio para organizar tus gastos",
+    "spaceName": "Nombre del Espacio",
+    "spaceNamePlaceholder": "ej., Gastos Familiares, Viaje de Vacaciones",
+    "defaultCurrency": "Moneda Predeterminada",
+    "cancel": "Cancelar",
+    "create": "Crear",
+    "creating": "Creando...",
+    "deleteSpaceTitle": "Eliminar Espacio",
+    "deleteSpaceWarning": "Esta acción no se puede deshacer. Todos los datos asociados con este espacio serán eliminados permanentemente.",
+    "deleteSpaceConfirmPrompt": "Escribe el nombre del espacio para confirmar",
+    "confirmationMismatch": "El nombre del espacio no coincide",
+    "delete": "Eliminar",
+    "deleting": "Eliminando...",
+    "current": "Actual",
+    "owner": "Propietario",
+    "default": "Predeterminado",
+    "member": "miembro",
+    "members": "miembros",
+    "expenses": "gastos"
   }
 }

@@ -7,17 +7,19 @@ import { Logo } from "@/components/custom/logo/logo";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 // import { UserAvatar } from "@/components";
 import { Link } from "@/i18n/navigation";
-import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
+import { ReactNode } from "react";
 
-export const TopMenu = () => {
-  const t = useTranslations("topMenu");
+type Props = {
+  spaceSelector?: ReactNode;
+  currentSpaceName: string;
+};
 
+export const TopMenu = (props: Props) => {
   const openMenu = useUIStore(state => state.openSideMenu);
 
   return (
@@ -32,13 +34,12 @@ export const TopMenu = () => {
       <div className="flex-1 items-center justify-center flex">
         <DropdownMenu>
           <DropdownMenuTrigger className="btn p-2 txt mx-5 rounded-xl w-full max-w-xl">
-            {t("spaceSelector")}
+            {props.currentSpaceName}
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className={cn("card-container txt-muted font-medium", "!p-1")}
           >
-            <DropdownMenuItem>{t("personalAccount")}</DropdownMenuItem>
-            <DropdownMenuItem>{t("group")} 1</DropdownMenuItem>
+            {props.spaceSelector}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
