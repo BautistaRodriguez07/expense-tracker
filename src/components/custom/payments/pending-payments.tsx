@@ -18,7 +18,9 @@ export const PendingPayments = async () => {
 
   const pendingPayments = await prisma.expense.findMany({
     where: {
-      status: "pending",
+      status: {
+        in: ["pending", "overdue"],
+      },
       responsible_id: auth.dbUser.id,
       space_id: auth.spaceId,
       deleted_at: null,

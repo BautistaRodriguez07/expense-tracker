@@ -110,7 +110,8 @@
     "paymentOverdueWarning": "Este pago está vencido",
     "dueDateWas": "La fecha de vencimiento fue",
     "completePaymentSoon": "Por favor, complete el pago lo antes posible.",
-    "overdue": "Vencido"
+    "overdue": "Vencido",
+    "dueSoon": "Vence pronto"
   },
   "chartFilters": {
     "filters": "Filtros",

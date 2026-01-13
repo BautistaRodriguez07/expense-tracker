@@ -8,7 +8,6 @@ import { CustomTitle } from "../custom/custom-title/custom-title";
 import { IoLogoGoogle } from "react-icons/io5";
 import * as Clerk from "@clerk/elements/common";
 import * as SignIn from "@clerk/elements/sign-in";
-// import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 
 export function SignInForm({
@@ -36,7 +35,7 @@ export function SignInForm({
             </CardHeader>
             <CardContent>
               <FieldGroup>
-                <Clerk.GlobalError className="block text-sm text-red-600" />
+                <Clerk.GlobalError className="block text-sm text-red-600 p-2 mb-2 bg-red-50 dark:bg-red-950 rounded-lg" />
                 <Clerk.Field name="identifier" className="group/field relative">
                   <Clerk.Input
                     type="email"
@@ -64,9 +63,19 @@ export function SignInForm({
                     <span className="link underline">Forgot password?</span>
                   </Link>
                 </div>
-                <SignIn.Action submit className="btn p-1 mt-3">
-                  Sign In
-                </SignIn.Action>
+
+                {/* Clerk CAPTCHA Component */}
+                <Clerk.Loading>
+                  {isLoading => (
+                    <SignIn.Action
+                      submit
+                      className="btn p-1 mt-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? "Signing in..." : "Sign In"}
+                    </SignIn.Action>
+                  )}
+                </Clerk.Loading>
 
                 {/* <div className="flex items-center gap-3 ">
                   <Separator className="flex-1" />

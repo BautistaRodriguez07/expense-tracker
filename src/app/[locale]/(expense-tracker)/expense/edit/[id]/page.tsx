@@ -14,8 +14,10 @@ import { Option } from "@/components/ui/multiple-selector";
 export default async function ExpenseEditPage({
   params,
 }: {
-  params: { id: string; locale: string };
+  params: Promise<{ id: string; locale: string }>;
 }) {
+  const { id } = await params;
+
   // validate authentication
   const auth = await validateAuth();
 
@@ -24,7 +26,7 @@ export default async function ExpenseEditPage({
   }
 
   //get expense
-  const expense = await getExpense(params.id, auth.spaceId);
+  const expense = await getExpense(id, auth.spaceId);
 
   if (!expense) {
     redirect("/expense/list");

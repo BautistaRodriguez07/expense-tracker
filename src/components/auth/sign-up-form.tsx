@@ -4,10 +4,10 @@ import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FieldDescription, FieldGroup } from "@/components/ui/field";
 import { CustomTitle } from "../custom/custom-title/custom-title";
-import { IoLogoGoogle } from "react-icons/io5";
+// import { IoLogoGoogle } from "react-icons/io5";
 import * as Clerk from "@clerk/elements/common";
 import * as SignUp from "@clerk/elements/sign-up";
-import { Separator } from "@/components/ui/separator";
+// import { Separator } from "@/components/ui/separator";
 
 export function SignUpForm({
   className,
@@ -20,7 +20,7 @@ export function SignUpForm({
     >
       <Card className="card-container">
         <SignUp.Root>
-          {/* Step 1: Registro */}
+          {/* Step 1: Registration */}
           <SignUp.Step name="start">
             <CardHeader>
               <CardTitle>
@@ -38,9 +38,9 @@ export function SignUpForm({
             </CardHeader>
             <CardContent>
               <FieldGroup>
-                <Clerk.GlobalError className="block text-sm text-red-600" />
+                <Clerk.GlobalError className="block text-sm text-red-600 p-2 mb-2 bg-red-50 dark:bg-red-950 rounded-lg" />
 
-                {/* Email */}
+                {/* Email field */}
                 <Clerk.Field
                   name="emailAddress"
                   className="group/field relative"
@@ -54,7 +54,7 @@ export function SignUpForm({
                   <Clerk.FieldError className="mt-2 block text-xs text-red-600" />
                 </Clerk.Field>
 
-                {/* Password */}
+                {/* Password field */}
                 <Clerk.Field name="password" className="group/field relative">
                   <Clerk.Input
                     type="password"
@@ -65,9 +65,18 @@ export function SignUpForm({
                   <Clerk.FieldError className="mt-2 block text-xs text-red-600" />
                 </Clerk.Field>
 
-                <SignUp.Action submit className="btn p-1 mt-3">
-                  Sign Up
-                </SignUp.Action>
+                {/* Clerk CAPTCHA Component */}
+                <Clerk.Loading>
+                  {isLoading => (
+                    <SignUp.Action
+                      submit
+                      className="btn p-1 mt-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? "Creating account..." : "Sign Up"}
+                    </SignUp.Action>
+                  )}
+                </Clerk.Loading>
 
                 {/* 
                 <div className="flex items-center gap-3">

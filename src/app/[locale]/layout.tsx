@@ -3,6 +3,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
+import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { setRequestLocale } from "next-intl/server";
@@ -35,6 +36,9 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   setRequestLocale(locale);
 
+  // Load messages for the locale
+  const messages = await getMessages();
+
   return (
     <ThemeProvider
       attribute="class"
@@ -42,7 +46,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       enableSystem
       disableTransitionOnChange
     >
-      <NextIntlClientProvider locale={locale}>
+      <NextIntlClientProvider locale={locale} messages={messages}>
         <div
           className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden max-w-full`}
         >

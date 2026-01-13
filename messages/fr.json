@@ -110,7 +110,8 @@
     "paymentOverdueWarning": "Ce paiement est en retard",
     "dueDateWas": "La date d'échéance était",
     "completePaymentSoon": "Veuillez effectuer le paiement dès que possible.",
-    "overdue": "En retard"
+    "overdue": "En retard",
+    "dueSoon": "Prochainement"
   },
   "chartFilters": {
     "filters": "Filtres",

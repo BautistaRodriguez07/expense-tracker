@@ -224,3 +224,30 @@ body {
 .link {
   color: var(--info);
 }
+
+/* Loading Animation */
+@keyframes highBounce {
+  0%,
+  100% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateY(-150%);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+.bounce-high-1 {
+  animation: highBounce 1s infinite;
+  animation-delay: -0.32s;
+}
+
+.bounce-high-2 {
+  animation: highBounce 1s infinite;
+  animation-delay: -0.16s;
+}
+
+.bounce-high-3 {
+  animation: highBounce 1s infinite;
+}

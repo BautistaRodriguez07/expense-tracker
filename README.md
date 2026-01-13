@@ -38,7 +38,7 @@ bun install
 
 ### 3. Configurar variables de entorno
 
-Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
+Crea un archivo `.env.local` en la raíz del proyecto con las siguientes variables:
 
 ```env
 # Base de datos (PostgreSQL)
@@ -47,6 +47,12 @@ DATABASE_URL="postgresql://user:password@host:port/database?sslmode=require"
 # Clerk Authentication
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="pk_test_..."
 CLERK_SECRET_KEY="sk_test_..."
+
+# Clerk URLs (IMPORTANTE)
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
 
 # Clerk Webhook (para desarrollo local)
 CLERK_WEBHOOK_SECRET="whsec_..."
@@ -62,10 +68,17 @@ NEXT_PUBLIC_APP_URL="http://localhost:3000"
 3. Copia las claves de API:
    - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` (Dashboard → API Keys)
    - `CLERK_SECRET_KEY` (Dashboard → API Keys)
-4. Configura el webhook:
+4. **⚠️ IMPORTANTE - Configurar Bot Protection** (previene errores de CAPTCHA):
+   - Ve a **User & Authentication** → **Attack Protection**
+   - Activa **Bot Protection**
+   - Selecciona **Turnstile** (Cloudflare - Gratis)
+   - Completa la configuración
+5. Configura el webhook:
    - URL: `https://tu-dominio.com/api/webhooks/clerk`
    - Eventos: `user.created`, `user.updated`, `user.deleted`
    - Copia el `CLERK_WEBHOOK_SECRET`
+
+> 📚 **Guía detallada**: [`documentation/clerk-setup.md`](./documentation/clerk-setup.md)
 
 ### 5. Configurar Base de Datos
 
@@ -242,6 +255,16 @@ El proyecto soporta tema claro y oscuro. El toggle se encuentra en el sidebar.
 
 ## 🐛 Solución de Problemas
 
+### 🔥 Problemas Comunes - Acceso Rápido
+
+| Problema                         | Solución Rápida                              | Documentación                                          |
+| -------------------------------- | -------------------------------------------- | ------------------------------------------------------ |
+| Pantalla blanca en móvil         | Configurar Bot Protection en Clerk           | [`QUICK-START.md`](./QUICK-START.md)                   |
+| "CAPTCHA verification failed"    | Activar Attack Protection en Clerk Dashboard | [`clerk-setup.md`](./documentation/clerk-setup.md)     |
+| Chrome error pero Brave funciona | Protección ya implementada, prueba incógnito | [`fixes-applied.md`](./documentation/fixes-applied.md) |
+| Error `window.ethereum`          | Ya está solucionado en el código             | [`fixes-applied.md`](./documentation/fixes-applied.md) |
+| Loading infinito                 | Verificar variables de entorno               | [`QUICK-START.md`](./QUICK-START.md)                   |
+
 ### Error: "Cannot find module '@prisma/client'"
 
 ```bash
@@ -256,8 +279,9 @@ bunx prisma generate
 
 ### Error: "Clerk authentication failed"
 
-- Verifica que las claves de Clerk estén correctas en `.env`
+- Verifica que las claves de Clerk estén correctas en `.env.local`
 - Asegúrate de que el webhook esté configurado correctamente
+- **NUEVO**: Verifica que Bot Protection esté activado (ver [`clerk-setup.md`](./documentation/clerk-setup.md))
 
 ### Error: "Prisma migrate reset"
 
@@ -268,6 +292,14 @@ bunx prisma migrate reset --force
 bunx prisma migrate dev
 bun prisma/seed.ts
 ```
+
+### 📱 Problemas Específicos de Móvil
+
+Si experimentas problemas en dispositivos móviles:
+
+1. Consulta [`QUICK-START.md`](./QUICK-START.md) para configuración rápida
+2. Revisa [`documentation/CHECKLIST.md`](./documentation/CHECKLIST.md) para lista completa
+3. Lee [`documentation/fixes-applied.md`](./documentation/fixes-applied.md) para detalles técnicos
 
 ## 📚 Tecnologías
 

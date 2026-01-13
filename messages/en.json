@@ -110,7 +110,8 @@
     "paymentOverdueWarning": "This payment is overdue",
     "dueDateWas": "The due date was",
     "completePaymentSoon": "Please complete the payment as soon as possible.",
-    "overdue": "Overdue"
+    "overdue": "Overdue",
+    "dueSoon": "Due soon"
   },
   "chartFilters": {
     "filters": "Filters",
