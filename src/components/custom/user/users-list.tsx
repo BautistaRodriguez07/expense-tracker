@@ -19,7 +19,7 @@ export const Users = async () => {
             <UserAvatar
               key={member.id}
               userName={member.name}
-              title={member.name}
+              imageUrl={member.imageUrl}
             />
           ))}
         </div>

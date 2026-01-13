@@ -13,7 +13,7 @@ export function ToggleTheme() {
   };
 
   return (
-    <div className="relative inline-block w-14 h-7">
+    <div suppressHydrationWarning className="relative inline-block w-14 h-7">
       <input
         type="checkbox"
         checked={isDark}
