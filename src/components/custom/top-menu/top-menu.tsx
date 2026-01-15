@@ -1,6 +1,6 @@
 "use client";
 
-import { IoMenu } from "react-icons/io5";
+import { IoMenu, IoNotifications } from "react-icons/io5";
 import { useUIStore } from "@/store/ui/ui-store";
 import { Logo } from "@/components/custom/logo/logo";
 
@@ -13,6 +13,7 @@ import {
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
+import { NotificationsBell } from "../notifications/notifications-bell";
 
 type Props = {
   spaceSelector?: ReactNode;
@@ -44,11 +45,9 @@ export const TopMenu = (props: Props) => {
         </DropdownMenu>
       </div>
 
-      <div className="flex gap-3">
-        {/* profile */}
-        {/* <Link href="/profile">
-          <UserAvatar userName="David" />
-        </Link> */}
+      <div className="flex gap-3 items-center">
+        {/* notification */}
+        <NotificationsBell />
 
         {/* menu */}
 
