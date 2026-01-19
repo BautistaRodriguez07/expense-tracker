@@ -84,10 +84,10 @@ export const CreateSpaceDialog = () => {
                 defaultValue="USD"
                 disabled={isLoading}
               >
-                <SelectTrigger>
+                <SelectTrigger className="btn !p-4">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="card-container !p-1">
                   <SelectItem value="USD">USD</SelectItem>
                   <SelectItem value="EUR">EUR</SelectItem>
                   <SelectItem value="ARS">ARS</SelectItem>
@@ -98,14 +98,18 @@ export const CreateSpaceDialog = () => {
           </div>
           <DialogFooter>
             <Button
+              className="btn"
               type="button"
-              variant="outline"
               onClick={() => setOpen(false)}
               disabled={isLoading}
             >
               {t("cancel")}
             </Button>
-            <Button type="submit" disabled={isLoading}>
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="btn-success rounded-xl"
+            >
               {isLoading ? t("creating") : t("create")}
             </Button>
           </DialogFooter>

@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 import { DeleteSpaceDialog } from "./delete-space-dialog";
 import { Badge } from "@/components/ui/badge";
 import { getTranslations } from "next-intl/server";
+import { Button } from "@/components/ui/button";
+import { IoAddOutline } from "react-icons/io5";
 
 type SpaceWithDetails = Awaited<ReturnType<typeof getUserSpaces>>[number];
 
@@ -43,6 +45,11 @@ export const SpaceList = async () => {
             </div>
             {isOwner && !isDefault && (
               <DeleteSpaceDialog spaceId={space.id} spaceName={space.name} />
+            )}
+            {!isDefault && (
+              <Button variant="outline" size="icon">
+                <IoAddOutline />
+              </Button>
             )}
           </div>
         );
