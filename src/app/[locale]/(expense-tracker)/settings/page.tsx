@@ -14,7 +14,7 @@ export default async function SettingsPage() {
   const t = await getTranslations("settings");
   return (
     <div className="w-full items-center justify-center flex flex-col">
-      <div className="md:w-2xl lg:w-3xl w-full">
+      <div className="md:w-2xl lg:w-3xl w-full ">
         <CustomTitle title={t("title")} tag="h1" className="py-3" />
         <CustomTitle
           title={t("account")}
@@ -29,7 +29,7 @@ export default async function SettingsPage() {
         {/* spaces section */}
         <CustomTitle
           title={t("spaces")}
-          tag="h2"
+          tag="h4"
           className="py-3 txt-muted text-xl"
         />
         <div className="card-container">

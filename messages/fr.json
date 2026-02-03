@@ -16,6 +16,59 @@
     "subTitle": "Groupe",
     "title": "Bonjour"
   },
+  "invitations": {
+    "unexpectedError": "Une erreur inattendue est survenue",
+    "notifications": "Notifications",
+    "accepting": "Acceptation...",
+    "rejecting": "Rejet...",
+    "deleting": "Suppression...",
+    "delete": "Supprimer",
+    "cancel": "Annuler",
+    "deleteNotificationDescription": "Êtes-vous sûr de vouloir supprimer cette notification? Cette action ne peut pas être annulée.",
+    "deleteNotification": "Supprimer la notification",
+    "invitationAcceptedSuccess": "Invitation acceptée! Vous êtes maintenant membre de l'espace.",
+    "invite": "Inviter Membre",
+    "inviteTo": "Inviter à {spaceName}",
+    "inviteDescription": "Envoyez une invitation pour rejoindre cet espace. L'invité recevra un email avec instructions.",
+    "emailAddress": "Adresse email",
+    "enterEmail": "Entrez l'adresse email",
+    "sendInvitation": "Envoyer l'Invitation",
+    "sending": "Envoi...",
+    "invitationSent": "Invitation envoyée avec succès!",
+    "invitationError": "Échec de l'envoi de l'invitation",
+    "youreInvited": "Vous êtes Invité!",
+    "invitationAcceptedTitle": "Invitation Acceptée!",
+    "invitationAcceptedMessage": "{userName} a accepté votre invitation à rejoindre \"{spaceName}\".",
+    "invitationRejectedTitle": "Invitation Refusée!",
+    "invitationRejectedMessage": "{userName} a refusé votre invitation à rejoindre \"{spaceName}\".",
+    "invitationDeclined": "Invitation Refusée",
+    "invitationDeclinedMessage": "{userName} a décliné votre invitation à rejoindre \"{spaceName}\".",
+    "invitedToJoin": "Vous avez été invité à rejoindre {spaceName}",
+    "invitedBy": "Invité par {name}",
+    "haveAccount": "Avez-vous un compte?",
+    "signInToAccept": "Se Connecter pour Accepter",
+    "createAccount": "Créer un Compte",
+    "declineInvitation": "Décliner l'Invitation",
+    "invitationAccepted": "Invitation acceptée avec succès!",
+    "invitationRejected": "Invitation déclinée",
+    "invalidInvitation": "Invitation invalide ou expirée",
+    "emailRequired": "Veuillez vérifier votre email d'invitation pour le lien complet.",
+    "pendingInvitations": "Invitations en Attente",
+    "noPendingInvitations": "Aucune invitation en attente",
+    "accept": "Accepter",
+    "reject": "Décliner",
+    "member": "Membre",
+    "members": "Membres",
+    "owner": "Propriétaire",
+    "current": "Actuel",
+    "default": "Par défaut",
+    "expenses": "Dépenses",
+    "retry": "Réessayer",
+    "noNotifications": "Aucune notification",
+    "processing": "Traitement de l'invitation...",
+    "invitationAcceptedError": "Échec de l'acceptation de l'invitation",
+    "invitationRejectedError": "Échec du rejet de l'invitation"
+  },
   "locale": {
     "en": "Anglais",
     "es": "Espagnol",
@@ -57,7 +110,12 @@
     "home": "Accueil",
     "settings": "Paramètres",
     "expenses": "Dépenses",
-    "newExpense": "Nouveau dépense"
+    "newExpense": "Nouveau dépense",
+    "notifications": "Notifications",
+    "signOut": "Se déconnecter",
+    "analytics": "Analyses",
+    "resume": "Résumé",
+    "trends": "Tendances"
   },
   "topMenu": {
     "group": "Groupe",
@@ -110,7 +168,8 @@
     "paymentOverdueWarning": "Ce paiement est en retard",
     "dueDateWas": "La date d'échéance était",
     "completePaymentSoon": "Veuillez effectuer le paiement dès que possible.",
-    "overdue": "En retard"
+    "overdue": "En retard",
+    "dueSoon": "Prochainement"
   },
   "chartFilters": {
     "filters": "Filtres",
@@ -194,7 +253,19 @@
     "overdue": "En retard",
     "cancelled": "Annulé"
   },
+
   "spaces": {
+    "noUserFound": "Aucun utilisateur trouvé avec cette adresse e-mail. L’utilisateur doit avoir un compte pour être invité.",
+  "userAlreadyMember": "Cet utilisateur est déjà membre de cet espace.",
+  "invitationAlreadySent": "Une invitation a déjà été envoyée à cette adresse e-mail.",
+  "failedToSendInvitation": "Échec de l’envoi de l’invitation",
+  "sending": "Envoi en cours...",
+  "sendInvitation": "Envoyer l’invitation",
+  "inviteTo": "Inviter à ",
+  "emailAddress": "Adresse e-mail",
+  "enterEmailAddress": "Entrez l’adresse e-mail",
+  "inviteMemberDescription": "Envoyez une invitation pour rejoindre cet espace. L’utilisateur doit déjà avoir un compte pour recevoir l’invitation.",
+  "invitationSent": "Invitation envoyée avec succès ! L’utilisateur recevra une notification.",
     "My Personal Space": "Mon Espace Personnel",
     "createSpace": "Créer un Espace",
     "createSpaceTitle": "Créer un Nouvel Espace",
@@ -216,6 +287,12 @@
     "default": "Par défaut",
     "member": "membre",
     "members": "membres",
-    "expenses": "dépenses"
+    "expenses": "dépenses",
+    "createSpaceError": "Erreur lors de la création de l'espace"
+  },
+  "pagination": {
+    "previous": "Précédent",
+    "next": "Suivant",
+    "morePages": "Plus de pages"
   }
 }

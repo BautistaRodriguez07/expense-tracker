@@ -56,23 +56,21 @@ export default function LocaleSwitcher() {
   };
 
   return (
-    <>
-      <Select value={locale} onValueChange={switchLocale}>
-        <SelectTrigger className="text-lg font-semibold txt card-container">
-          <SelectValue placeholder="language" />
-        </SelectTrigger>
-        <SelectContent className={cn("card-container ", "!p-1")}>
-          {LOCALE_OPTIONS.map(({ value, label }) => (
-            <SwitcherOption
-              country=""
-              key={value}
-              value={value}
-              label={label}
-              isActive={value === locale}
-            />
-          ))}
-        </SelectContent>
-      </Select>
-    </>
+    <Select value={locale} onValueChange={switchLocale}>
+      <SelectTrigger className="text-lg font-semibold txt card-container">
+        <SelectValue placeholder="language" />
+      </SelectTrigger>
+      <SelectContent className={cn("card-container ", "!p-1")}>
+        {LOCALE_OPTIONS.map(({ value, label }) => (
+          <SwitcherOption
+            country=""
+            key={value}
+            value={value}
+            label={label}
+            isActive={value === locale}
+          />
+        ))}
+      </SelectContent>
+    </Select>
   );
 }

@@ -124,7 +124,7 @@ export const ExpenseForm = ({
 
     //handle receipts
     if (data.receipt && data.receipt.length > 0) {
-      data.receipt.forEach(file => {
+      data.receipt.forEach((file) => {
         formData.append("receipt", file);
       });
     }
@@ -234,7 +234,7 @@ export const ExpenseForm = ({
                   </Label>
                   <Select
                     value={field.value}
-                    onValueChange={val => field.onChange(val)}
+                    onValueChange={(val) => field.onChange(val)}
                   >
                     <SelectTrigger className="text-lg font-semibold txt card-container w-56 sm:w-60 md:w-100">
                       <SelectValue placeholder={t("selectCurrency")} />
@@ -287,7 +287,7 @@ export const ExpenseForm = ({
                   </Label>
                   <Select
                     value={field.value}
-                    onValueChange={val => field.onChange(val)}
+                    onValueChange={(val) => field.onChange(val)}
                   >
                     <SelectTrigger className="text-lg font-semibold txt card-container w-56 sm:w-60 md:w-100">
                       <SelectValue placeholder={t("selectResponsible")} />
@@ -297,7 +297,7 @@ export const ExpenseForm = ({
                       className={cn("card-container", "!p-1")}
                     >
                       <SelectGroup>
-                        {spaceMembers.map(member => (
+                        {spaceMembers.map((member) => (
                           <SelectItem
                             key={member.id}
                             className="bg text-lg font-semibold"
@@ -331,7 +331,7 @@ export const ExpenseForm = ({
                   </Label>
                   <Select
                     value={field.value}
-                    onValueChange={val => field.onChange(val)}
+                    onValueChange={(val) => field.onChange(val)}
                   >
                     <SelectTrigger className="text-lg font-semibold txt card-container w-56 sm:w-60 md:w-100">
                       <SelectValue placeholder={t("selectCategory")} />
@@ -341,7 +341,7 @@ export const ExpenseForm = ({
                       className={cn("card-container", "!p-1")}
                     >
                       <SelectGroup className="max-h-40 overflow-y-auto">
-                        {categories.map(category => (
+                        {categories.map((category) => (
                           <SelectItem
                             key={category.id}
                             className="bg text-lg font-semibold"
@@ -418,8 +418,8 @@ export const ExpenseForm = ({
                 ? t("updating")
                 : t("creating")
               : isEditing
-              ? t("updateExpense")
-              : t("createExpense")}
+                ? t("updateExpense")
+                : t("createExpense")}
           </Button>
         </div>
       </form>

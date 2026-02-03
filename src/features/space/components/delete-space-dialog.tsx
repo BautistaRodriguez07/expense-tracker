@@ -54,7 +54,7 @@ export const DeleteSpaceDialog = (props: Props) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="destructive" size="sm">
+        <Button className="btn-danger rounded-xl" size="sm">
           <IoTrash className="w-4 h-4" />
         </Button>
       </DialogTrigger>
@@ -82,7 +82,7 @@ export const DeleteSpaceDialog = (props: Props) => {
         <DialogFooter>
           <Button
             type="button"
-            variant="outline"
+            className="btn"
             onClick={() => setOpen(false)}
             disabled={isLoading}
           >
@@ -90,7 +90,7 @@ export const DeleteSpaceDialog = (props: Props) => {
           </Button>
           <Button
             type="button"
-            variant="destructive"
+            className="btn-danger rounded-xl"
             onClick={handleDelete}
             disabled={isLoading || confirmText !== props.spaceName}
           >

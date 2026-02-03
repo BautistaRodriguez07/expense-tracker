@@ -2,14 +2,17 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
-import { createOrUpdateUser } from "@/lib/users";
+import { createUserWithDefaultSpace, syncUserFromClerk } from "@/lib/users";
+import { UserInterface } from "@/features/user/types/user.types";
+import prisma from "@/lib/prisma";
 
 export async function POST(req: Request) {
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
 
   if (!WEBHOOK_SECRET) {
+    console.error("❌ WEBHOOK_SECRET not configured");
     throw new Error(
-      "Please add WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local"
+      "Please add WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local",
     );
   }
 
@@ -20,6 +23,7 @@ export async function POST(req: Request) {
   const svix_signature = headerPayload.get("svix-signature");
 
   if (!svix_id || !svix_timestamp || !svix_signature) {
+    console.error("❌ Missing svix headers");
     return new Response("Error: missing svix headers", {
       status: 400,
     });
@@ -39,41 +43,65 @@ export async function POST(req: Request) {
       "svix-signature": svix_signature,
     }) as WebhookEvent;
   } catch (err) {
-    console.error("Error verifying webhook:", err);
+    console.error("❌ Error verifying webhook:", err);
     return new Response("Error verifying webhook", {
       status: 400,
     });
   }
 
-  // Handle the event
-  const eventType = evt.type;
+  const { type, data } = evt;
 
-  if (eventType === "user.created" || eventType === "user.updated") {
-    const { id, email_addresses, first_name, last_name } = evt.data;
+  try {
+    switch (type) {
+      case "user.created": {
+        await createUserWithDefaultSpace({
+          id: data.id,
+          firstName: data.first_name,
+          lastName: data.last_name,
+          imageUrl: data.image_url,
+          emailAddresses: data.email_addresses?.map((email) => ({
+            emailAddress: email.email_address,
+          })),
+        } as UserInterface);
 
-    try {
-      // ✅ Create/update user and get spaceId
-      const result = await createOrUpdateUser({
-        id: id,
-        firstName: first_name,
-        lastName: last_name,
-        emailAddresses: email_addresses?.map(email => ({
-          emailAddress: email.email_address,
-        })),
-      } as any);
+        break;
+      }
 
-      console.log(
-        `✅ User ${eventType === "user.created" ? "created" : "updated"}:`,
-        id,
-        `- Active Space: ${result.spaceId}`
-      );
+      case "user.updated": {
+        await syncUserFromClerk({
+          clerkId: data.id,
+          email: data.email_addresses?.[0]?.email_address || "",
+          firstName: data.first_name,
+          lastName: data.last_name,
+          imageUrl: data.image_url,
+        });
 
-      return new Response("User created/updated", { status: 200 });
-    } catch (error) {
-      console.error("Error processing user data:", error);
-      return new Response("Error processing user data", { status: 500 });
+        break;
+      }
+
+      case "user.deleted": {
+        await prisma.user.update({
+          where: { clerk_id: data.id! },
+          data: {
+            is_active: false,
+            updated_at: new Date(),
+          },
+        });
+        break;
+      }
+
+      default:
+        console.log(`ℹ️ Unhandled webhook event type: ${type}`);
+        break;
     }
-  }
 
-  return new Response("", { status: 200 });
+    return new Response("Webhook processed successfully", { status: 200 });
+  } catch (error) {
+    console.error(`❌ Error processing webhook event ${type}:`, error);
+    if (error instanceof Error) {
+      console.error("Error message:", error.message);
+      console.error("Error stack:", error.stack);
+    }
+    return new Response(`Error processing webhook: ${type}`, { status: 500 });
+  }
 }

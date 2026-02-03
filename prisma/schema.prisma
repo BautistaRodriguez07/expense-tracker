@@ -67,6 +67,7 @@ model User {
   name          String
   email         String  @unique
   password_hash String?
+  profile_image String?
 
   is_system_admin Boolean @default(false)
 
@@ -87,6 +88,8 @@ model User {
   expenses_deleted     Expense[]         @relation("ExpenseDeletedBy")
   expenseSplits        ExpenseSplit[]
   receiptsUploaded     ExpenseReceipt[]
+  notifications        Notification[]    @relation("NotificationReceiver")
+  notificationsSent    Notification[]    @relation("NotificationInviter")
 
   @@map("user")
 }
@@ -239,6 +242,28 @@ model ExpenseReceipt {
   uploadedBy User    @relation(fields: [uploaded_by], references: [id])
 
   @@map("expense_receipt")
+}
+
+// ----------------------------------------------------
+
+model Notification {
+  id         String   @id @default(uuid())
+  user_id    String
+  inviter_id String?
+  type       String // 'invitation' | 'invitation_accepted' | 'invitation_rejected' | 'system'
+  title      String
+  message    String
+  data       Json?    @default("{}")
+  read       Boolean  @default(false)
+  created_at DateTime @default(now())
+
+  user    User  @relation("NotificationReceiver", fields: [user_id], references: [id], onDelete: Cascade)
+  inviter User? @relation("NotificationInviter", fields: [inviter_id], references: [id], onDelete: SetNull)
+
+  @@index([user_id, created_at])
+  @@index([user_id, read])
+  @@index([inviter_id])
+  @@map("notification")
 }
 
 // ----------------------------------------------------

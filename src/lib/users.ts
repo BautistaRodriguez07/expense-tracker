@@ -4,7 +4,7 @@ import prisma from "./prisma";
 import { SpaceInterface } from "@/features/space/types/space.types";
 import { ExpenseInterface } from "@/features/expense/types/expense.types";
 import { clerkClient } from "@clerk/nextjs/server";
-import type { Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { randomUUID } from "crypto";
 
 type CreateUserResult = {
@@ -12,8 +12,204 @@ type CreateUserResult = {
   spaceId: string;
 };
 
+type SyncUserData = {
+  clerkId: string;
+  email: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  imageUrl?: string | null;
+};
+
+function combineNames(
+  firstName?: string | null,
+  lastName?: string | null,
+  email?: string,
+): string {
+  const fullName = `${firstName || ""} ${lastName || ""}`.trim();
+  if (fullName) return fullName;
+
+  if (email) {
+    const emailUsername = email.split("@")[0];
+    if (emailUsername) return emailUsername;
+  }
+
+  return "User";
+}
+
+export async function syncUserFromClerk(data: SyncUserData) {
+  try {
+    const fullName = combineNames(data.firstName, data.lastName, data.email);
+
+    const user = await prisma.user.upsert({
+      where: { clerk_id: data.clerkId },
+      update: {
+        email: data.email,
+        name: fullName,
+        profile_image: data.imageUrl?.trim() || null,
+        updated_at: new Date(),
+      },
+      create: {
+        clerk_id: data.clerkId,
+        email: data.email,
+        name: fullName,
+        profile_image: data.imageUrl?.trim() || null,
+      },
+    });
+
+    return user;
+  } catch (error) {
+    console.error(`❌ Error syncing user from Clerk (${data.clerkId}):`, error);
+    throw error;
+  }
+}
+
+export async function createUserWithDefaultSpace(
+  clerkUser: UserInterface,
+): Promise<CreateUserResult> {
+  try {
+    if (!clerkUser.id) {
+      throw new Error("Missing clerk user id");
+    }
+
+    if (!clerkUser.emailAddresses?.[0]?.emailAddress) {
+      throw new Error("Missing user email address");
+    }
+
+    const email = clerkUser.emailAddresses[0].emailAddress.trim();
+    const fullName = combineNames(
+      clerkUser.firstName,
+      clerkUser.lastName,
+      email,
+    );
+
+    const result = await prisma.$transaction(
+      async (tx: Prisma.TransactionClient) => {
+        const newUser = await tx.user.create({
+          data: {
+            clerk_id: clerkUser.id,
+            name: fullName,
+            email: email,
+            profile_image: clerkUser.imageUrl || null,
+          },
+        });
+
+        const newSpace = await tx.space.create({
+          data: {
+            name: "My Personal Space",
+            default_currency: "USD",
+            owner_id: newUser.id,
+            is_default: true,
+            members: {
+              create: {
+                user_id: newUser.id,
+                role: "owner",
+              },
+            },
+          },
+        });
+
+        return {
+          user: newUser as unknown as UserInterface,
+          spaceId: newSpace.id,
+        };
+      },
+    );
+
+    const clerk = await clerkClient();
+    await clerk.users.updateUserMetadata(clerkUser.id, {
+      publicMetadata: {
+        activeSpaceId: result.spaceId,
+      },
+    });
+
+    return result;
+  } catch (error) {
+    console.error(
+      `❌ Error creating user with space (${clerkUser.id}):`,
+      error,
+    );
+    throw error;
+  }
+}
+
+export async function updateUserBoth(
+  clerkId: string,
+  data: {
+    firstName?: string;
+    lastName?: string;
+    imageUrl?: string;
+  },
+) {
+  try {
+    const clerk = await clerkClient();
+    await clerk.users.updateUser(clerkId, {
+      firstName: data.firstName,
+      lastName: data.lastName,
+    });
+
+    const updateData: Prisma.UserUpdateInput = {
+      updated_at: new Date(),
+    };
+
+    if (data.firstName || data.lastName) {
+      updateData.name = combineNames(data.firstName, data.lastName);
+    }
+
+    if (data.imageUrl !== undefined) {
+      updateData.profile_image = data.imageUrl;
+    }
+
+    let updatedUser;
+
+    try {
+      updatedUser = await prisma.user.update({
+        where: { clerk_id: clerkId },
+        data: updateData,
+      });
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === "P2025"
+      ) {
+        const clerk = await clerkClient();
+        const clerkUser = await clerk.users.getUser(clerkId);
+        const email = clerkUser.emailAddresses[0]?.emailAddress || "";
+
+        if (!email) {
+          throw new Error(`Missing email for Clerk user ${clerkId}`);
+        }
+
+        const fullName = combineNames(
+          data.firstName ?? clerkUser.firstName,
+          data.lastName ?? clerkUser.lastName,
+          email,
+        );
+
+        updatedUser = await prisma.user.create({
+          data: {
+            clerk_id: clerkId,
+            name: fullName,
+            email,
+            profile_image: data.imageUrl ?? clerkUser.imageUrl ?? null,
+          },
+        });
+      } else {
+        throw error;
+      }
+    }
+
+    return updatedUser;
+  } catch (error) {
+    console.error(
+      `❌ Error updating user in both systems (${clerkId}):`,
+      error,
+    );
+    throw error;
+  }
+}
+
 export async function createOrUpdateUser(
-  clerkUser: UserInterface
+  clerkUser: UserInterface,
 ): Promise<CreateUserResult> {
   try {
     // Validate clerk_id - required field
@@ -24,8 +220,8 @@ export async function createOrUpdateUser(
     ) {
       throw new Error(
         `Cannot create user: Clerk ID is required but not provided. Received: ${JSON.stringify(
-          clerkUser.id
-        )}`
+          clerkUser.id,
+        )}`,
       );
     }
 
@@ -37,8 +233,8 @@ export async function createOrUpdateUser(
     ) {
       throw new Error(
         `Cannot create user: email address is required but not provided. Received: ${JSON.stringify(
-          clerkUser.emailAddresses
-        )}`
+          clerkUser.emailAddresses,
+        )}`,
       );
     }
 
@@ -47,8 +243,8 @@ export async function createOrUpdateUser(
     if (!email || email === "") {
       throw new Error(
         `Cannot create user: email address is empty. Received: ${JSON.stringify(
-          email
-        )}`
+          email,
+        )}`,
       );
     }
 
@@ -101,11 +297,15 @@ export async function createOrUpdateUser(
 
         // If the user already exists, only update basic data
         if (existingUser) {
+          // Get profile image from Clerk user
+          const profileImage = clerkUser.imageUrl || null;
+
           const updatedUser = await tx.user.update({
             where: { id: existingUser.id },
             data: {
               name: fullName,
               email: email,
+              profile_image: profileImage,
               updated_at: new Date(),
             },
           });
@@ -127,6 +327,7 @@ export async function createOrUpdateUser(
         const clerkId = String(clerkUser.id).trim();
         const userName = String(fullName).trim();
         const userEmail = String(email).trim();
+        const profileImage = clerkUser.imageUrl || null;
 
         if (!clerkId || clerkId === "") {
           throw new Error(`Invalid clerk_id: ${JSON.stringify(clerkId)}`);
@@ -145,6 +346,7 @@ export async function createOrUpdateUser(
           clerk_id: clerkId,
           name: userName,
           email: userEmail,
+          profile_image: profileImage,
           // Don't set password_hash - let it be null by default
         };
 
@@ -173,13 +375,13 @@ export async function createOrUpdateUser(
             console.error("Code:", prismaError.code);
             console.error(
               "Meta (full):",
-              JSON.stringify(prismaError.meta, null, 2)
+              JSON.stringify(prismaError.meta, null, 2),
             );
             console.error("Target fields:", prismaError.meta?.target);
             console.error("Cause:", prismaError.meta?.cause);
             console.error(
               "Data that failed:",
-              JSON.stringify(userCreateData, null, 2)
+              JSON.stringify(userCreateData, null, 2),
             );
             console.error("===========================");
           } else {
@@ -208,7 +410,7 @@ export async function createOrUpdateUser(
           user: newUser,
           spaceId: newSpace.id,
         };
-      }
+      },
     );
 
     // ✅ Update Clerk metadata with the activeSpaceId
@@ -229,7 +431,7 @@ export async function createOrUpdateUser(
 }
 
 export async function getUserByClerkId(
-  clerkId: string
+  clerkId: string,
 ): Promise<UserInterface | null> {
   try {
     const user = await prisma.user.findUnique({
@@ -244,7 +446,7 @@ export async function getUserByClerkId(
 }
 
 export async function getSpaceById(
-  spaceId: string
+  spaceId: string,
 ): Promise<SpaceInterface | null> {
   try {
     const space = await prisma.space.findUnique({
@@ -258,7 +460,7 @@ export async function getSpaceById(
 }
 
 export async function getExpenseById(
-  expenseId: string
+  expenseId: string,
 ): Promise<ExpenseInterface | null> {
   try {
     const expense = await prisma.expense.findUnique({
@@ -268,5 +470,28 @@ export async function getExpenseById(
   } catch (error) {
     console.error("Error getting expense by id:", error);
     throw error;
+  }
+}
+
+// Function to sync profile image manually
+export async function syncUserProfileImage(clerkId: string): Promise<boolean> {
+  try {
+    const clerk = await clerkClient();
+    const clerkUser = await clerk.users.getUser(clerkId);
+
+    await createOrUpdateUser({
+      id: clerkUser.id,
+      firstName: clerkUser.firstName || "",
+      lastName: clerkUser.lastName || "",
+      imageUrl: clerkUser.imageUrl,
+      emailAddresses: clerkUser.emailAddresses.map((e) => ({
+        emailAddress: e.emailAddress,
+      })),
+    } as UserInterface);
+
+    return true;
+  } catch (error) {
+    console.error("Error syncing profile image:", error);
+    return false;
   }
 }
