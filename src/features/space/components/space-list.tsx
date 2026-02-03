@@ -3,10 +3,9 @@ import { getSpace } from "../actions/get-space.action";
 import { validateAuth } from "@/features/auth/services/auth.service";
 import { redirect } from "next/navigation";
 import { DeleteSpaceDialog } from "./delete-space-dialog";
+import { InviteMemberDialog } from "./invite-member-dialog";
 import { Badge } from "@/components/ui/badge";
 import { getTranslations } from "next-intl/server";
-import { Button } from "@/components/ui/button";
-import { IoAddOutline } from "react-icons/io5";
 
 type SpaceWithDetails = Awaited<ReturnType<typeof getUserSpaces>>[number];
 
@@ -44,12 +43,13 @@ export const SpaceList = async () => {
               </p>
             </div>
             {isOwner && !isDefault && (
-              <DeleteSpaceDialog spaceId={space.id} spaceName={space.name} />
+              <div className="flex items-center gap-2">
+                <InviteMemberDialog spaceId={space.id} spaceName={space.name} />
+                <DeleteSpaceDialog spaceId={space.id} spaceName={space.name} />
+              </div>
             )}
-            {!isDefault && (
-              <Button variant="outline" size="icon">
-                <IoAddOutline />
-              </Button>
+            {!isOwner && !isDefault && (
+              <InviteMemberDialog spaceId={space.id} spaceName={space.name} />
             )}
           </div>
         );

@@ -12,17 +12,16 @@ export const Users = async () => {
   const spaceMembers = await getSpaceMembers(auth.spaceId);
 
   return (
-    <div className="overflow-auto sm:p-0 py-6">
-      <div className="flex gap-2 sm:block flex-nowrap">
-        <div className="flex gap-2 items-center justify-start btn btn-info p-1 mb-2">
-          {spaceMembers.map(member => (
+    <div className="sm:p-0 py-6">
+      <div className="flex gap-2 p-1 sm:flex-col overflow-x-auto">
+        {spaceMembers.map((member) => (
+          <div key={member.id} className="btn btn-info p-1">
             <UserAvatar
-              key={member.id}
               userName={member.name}
-              imageUrl={member.imageUrl}
+              imageUrl={member.imageUrl || undefined}
             />
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   );

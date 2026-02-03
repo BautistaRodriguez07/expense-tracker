@@ -32,10 +32,11 @@ export async function validateAuth(): Promise<AuthResult | null> {
         id: clerkUser.id,
         firstName: clerkUser.firstName || "",
         lastName: clerkUser.lastName || "",
-        emailAddresses: clerkUser.emailAddresses.map(e => ({
+        imageUrl: clerkUser.imageUrl,
+        emailAddresses: clerkUser.emailAddresses.map((e) => ({
           emailAddress: e.emailAddress,
         })),
-      } as any);
+      } as UserInterface);
 
       dbUser = result.user;
       spaceId = result.spaceId;

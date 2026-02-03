@@ -32,26 +32,42 @@ export const CreateSpaceDialog = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+    if (!newOpen) {
+      setError(null);
+      setIsLoading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
 
-    const formData = new FormData(e.currentTarget);
-    const result = await createSpace(formData);
+    try {
+      const formData = new FormData(e.currentTarget);
+      const result = await createSpace(formData);
 
-    if (result.success) {
-      setOpen(false);
-      router.refresh();
-    } else {
-      setError(result.error || "Failed to create space");
+      if (result?.success) {
+        setOpen(false);
+        e.currentTarget.reset();
+        router.refresh();
+      } else {
+        setError(
+          result?.error || t("createSpaceError") || "Failed to create space",
+        );
+      }
+    } catch (err) {
+      console.error("Error creating space:", err);
+      setError(t("createSpaceError") || "An unexpected error occurred");
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button className="btn">
           <IoAdd className="w-4 h-4 mr-2" />

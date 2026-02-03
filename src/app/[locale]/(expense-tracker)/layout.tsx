@@ -25,7 +25,7 @@ export default async function ExpenseTrackerLayout({
 
   if (auth.spaceId) {
     // Run in the background without blocking the UI
-    checkAndMarkOverdueExpenses(auth.spaceId).catch(error => {
+    checkAndMarkOverdueExpenses(auth.spaceId).catch((error) => {
       console.error("Error checking overdue expenses:", error);
     });
   }

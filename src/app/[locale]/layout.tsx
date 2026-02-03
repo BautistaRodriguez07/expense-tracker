@@ -7,6 +7,7 @@ import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { setRequestLocale } from "next-intl/server";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,7 +25,7 @@ type Props = {
 };
 
 export function generateStaticParams() {
-  return routing.locales.map(locale => ({ locale }));
+  return routing.locales.map((locale) => ({ locale }));
 }
 
 export default async function LocaleLayout({ children, params }: Props) {
@@ -46,12 +47,13 @@ export default async function LocaleLayout({ children, params }: Props) {
       enableSystem
       disableTransitionOnChange
     >
-      <NextIntlClientProvider locale={locale} messages={messages}>
+      <NextIntlClientProvider messages={messages}>
         <div
           className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden max-w-full`}
         >
           {children}
         </div>
+        <Toaster />
       </NextIntlClientProvider>
     </ThemeProvider>
   );

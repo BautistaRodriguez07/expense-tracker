@@ -58,7 +58,7 @@ export const PendingPayments = async () => {
         className="text-lg py-2 txt-muted"
       />
 
-      <div className="flex overflow-x-auto max-w-[calc(100vw-2rem)]">
+      <div className="flex overflow-x-auto minimal-scrollbar max-w-[calc(100vw-2rem)]">
         {pendingPayments.map((pendingPayment: SerializedExpense) => (
           <PendingPayment
             key={pendingPayment.id}

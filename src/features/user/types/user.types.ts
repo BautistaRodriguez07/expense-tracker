@@ -4,8 +4,13 @@ export interface UserInterface {
   fullName: string;
   firstName: string;
   lastName: string;
-  emailAddresses: { emailAddress: string }[];
+  email: string;
+  emailAddresses: Array<{
+    emailAddress: string;
+  }>;
   password_hash: string;
+  profile_image?: string;
+  imageUrl?: string;
   settings_theme: string;
   settings_language: string;
   settings_font_size: string;
@@ -13,4 +18,7 @@ export interface UserInterface {
   created_at: Date;
   updated_at: Date;
   is_system_admin: boolean;
+  publicMetadata?: {
+    activeSpaceId?: string;
+  };
 }

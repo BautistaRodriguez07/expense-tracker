@@ -39,7 +39,6 @@ export * from "./custom/loading/page-loading";
 
 export * from "./providers/font-size-initializer";
 
-export * from "./custom/notifications/notifications-list";
 export * from "./custom/notifications/notifications-bell";
 export * from "./custom/notifications/notifications-badge";
-export * from "./custom/notifications/notifications-item";
+

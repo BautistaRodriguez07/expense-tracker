@@ -31,7 +31,6 @@ export const PendingPayment = ({
 
   return (
     <div className="flex gap-2">
-      {/* pending payment 1 */}
       <Link
         href={`/expense/${id}`}
         className="card-container p-3 mb-5 mx-1 min-w-80 flex items-center justify-between cursor-pointer hover:opacity-90 transition-opacity"

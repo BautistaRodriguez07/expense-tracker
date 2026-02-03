@@ -27,7 +27,7 @@ export const UserAvatar = ({
     <div className="flex flex-col">
       <div className="flex items-center gap-2 p-1">
         <Avatar className="border-gray-300 border dark:border-0 txt">
-          <AvatarImage src={`${imageUrl ?? userName.slice(0, 2)} `} />
+          <AvatarImage src={imageUrl} />
           <AvatarFallback>{userName.slice(0, 2)}</AvatarFallback>
         </Avatar>
         <span className="font-medium text-lg">{userName}</span>

@@ -1,6 +1,6 @@
 "use client";
 
-import { IoMenu, IoNotifications } from "react-icons/io5";
+import { IoMenu } from "react-icons/io5";
 import { useUIStore } from "@/store/ui/ui-store";
 import { Logo } from "@/components/custom/logo/logo";
 
@@ -21,7 +21,7 @@ type Props = {
 };
 
 export const TopMenu = (props: Props) => {
-  const openMenu = useUIStore(state => state.openSideMenu);
+  const openMenu = useUIStore((state) => state.openSideMenu);
 
   return (
     <div className="flex justify-between items-center p-4 bg">
@@ -34,7 +34,10 @@ export const TopMenu = (props: Props) => {
 
       <div className="flex-1 items-center justify-center flex">
         <DropdownMenu>
-          <DropdownMenuTrigger className="btn p-2 txt mx-5 rounded-xl w-full max-w-xl">
+          <DropdownMenuTrigger
+            className="btn p-2 txt mx-5 rounded-xl w-full max-w-xl"
+            suppressHydrationWarning
+          >
             {props.currentSpaceName}
           </DropdownMenuTrigger>
           <DropdownMenuContent
